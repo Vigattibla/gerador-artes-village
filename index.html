@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gerador de Artes – Village Resort</title>
+<script src="dados.js"></script>
+<style>
+  @font-face { font-family: Montserrat; font-weight: 500; src: url(fonts/Montserrat-Medium.ttf); }
+  @font-face { font-family: Montserrat; font-weight: 600; src: url(fonts/Montserrat-SemiBold.ttf); }
+  @font-face { font-family: Montserrat; font-weight: 700; src: url(fonts/Montserrat-Bold.ttf); }
+  @font-face { font-family: Montserrat; font-weight: 800; src: url(fonts/Montserrat-ExtraBold.ttf); }
+  @font-face { font-family: Montserrat; font-weight: 900; src: url(fonts/Montserrat-Black.ttf); }
+  /* Montserrat com dígitos tabulares (tnum) no lugar dos normais: número não muda de largura */
+  @font-face { font-family: MontserratTab; font-weight: 700; src: url(fonts/MontserratTab-Bold.ttf); }
+  @font-face { font-family: MontserratTab; font-weight: 800; src: url(fonts/MontserratTab-ExtraBold.ttf); }
+  :root { --navy: #26324f; --amarelo: #fcc62c; --cinza: #f2f2f0; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; font: 500 14px Montserrat, sans-serif; background: var(--cinza); color: var(--navy); }
+  header { background: var(--navy); color: #fff; padding: 12px 20px; font-size: 16px; }
+  header b { color: var(--amarelo); font-weight: 800; }
+  main { display: flex; align-items: flex-start; }
+  aside { width: 380px; padding: 16px; height: calc(100vh - 45px); overflow: auto; background: #fff; }
+  #palco { flex: 1; min-width: 0; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  #arte { width: min(100%, calc((100vh - 150px) * 0.8)); box-shadow: 0 4px 16px #0003; cursor: grab; touch-action: pan-y; }
+  .dica { font-size: 12px; color: #666; }
+  #modelos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+  #modelos button { padding: 4px; background: var(--cinza); border: 2px solid transparent; font-size: 12px; }
+  #modelos button.on { border-color: var(--amarelo); background: #fff7dc; }
+  .mini-arte { aspect-ratio: 4 / 5; border-radius: 4px; margin-bottom: 4px; background-size: 100% 100%, cover; background-position: center; }
+  section { margin-bottom: 18px; }
+  h3, summary { font-weight: 800; text-transform: uppercase; font-size: 12px; margin: 0 0 8px; }
+  summary { cursor: pointer; }
+  label { display: block; font-size: 12px; color: #555; margin-bottom: 8px; }
+  input, textarea { display: block; width: 100%; margin-top: 2px; padding: 8px; font: 500 14px Montserrat; border: 1px solid #ccc; border-radius: 6px; color: #000; }
+  input:invalid { border-color: #d33; }
+  input[type=range] { padding: 0; border: 0; }
+  button { font: 700 14px Montserrat; padding: 9px 14px; border-radius: 8px; border: 0; cursor: pointer; background: var(--amarelo); color: var(--navy); }
+  button.sec { background: var(--navy); color: #fff; }
+  button.leve { background: var(--cinza); font-size: 12px; }
+  .foto-atual { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+  .foto-atual img { width: 88px; height: 88px; object-fit: cover; border-radius: 6px; }
+  .chave { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--navy); }
+  .chave input { width: auto; margin: 0; }
+  .acoes { display: flex; gap: 8px; }
+  dialog { width: min(960px, 94vw); border: 0; border-radius: 12px; padding: 16px; }
+  dialog::backdrop { background: #0009; }
+  .topo { display: flex; justify-content: space-between; align-items: center; }
+  .cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .cats button { padding: 6px 12px; font-size: 12px; background: var(--cinza); }
+  .cats button.on { background: var(--amarelo); }
+  .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; max-height: 65vh; overflow: auto; }
+  .grade img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; cursor: pointer; border: 3px solid transparent; }
+  .grade img.on { border-color: var(--amarelo); }
+  @media (max-width: 800px) {
+    main { flex-direction: column-reverse; }
+    aside { width: 100%; height: auto; }
+    #arte { width: 100%; }
+  }
+  body.only { background: none; }
+  body.only img { width: 1080px; display: block; }
+</style>
+</head>
+<body>
+<header><b>Village Resort</b> · Gerador de artes</header>
+<main>
+  <aside>
+    <div id="modelos"></div>
+    <form id="form"></form>
+  </aside>
+  <section id="palco">
+    <canvas id="arte" width="2160" height="2700"></canvas>
+    <div class="dica">Arraste a foto na arte para ajustar o enquadramento</div>
+    <div class="acoes">
+      <button id="baixar" type="button">Baixar PNG</button>
+      <button id="copiar" type="button" class="sec">Copiar imagem</button>
+    </div>
+  </section>
+</main>
+<dialog id="banco">
+  <div class="topo"><h3>Escolha a foto</h3><button type="button" class="leve" id="fechar">Fechar</button></div>
+  <div class="cats" id="cats"></div>
+  <div class="grade" id="grade"></div>
+</dialog>
+<template id="tpl-foto">
+  <section data-grupo="Foto">
+    <h3>Foto</h3>
+    <div class="foto-atual"><img id="foto-mini" alt=""><button type="button" id="trocar">Trocar foto</button></div>
+    <label>Zoom <input type="range" id="zoom" min="1" max="3" step="0.01" value="1"></label>
+    <button type="button" class="leve" id="padrao">Voltar ao enquadramento padrão</button>
+  </section>
+  <section data-grupo="Personagem">
+    <h3>Personagem</h3>
+    <label class="chave"><input type="checkbox" id="pers"> Mostrar personagem</label>
+  </section>
+</template>
+<script>
+// Tudo vem do dados.js (gerado pelo extrair.py a partir do .ai). Coordenadas em pt; canvas em 2x.
+const S = 2, TAB = 'MontserratTab';
+const q = new URLSearchParams(location.search);
+const only = q.has('only'); // modo headless: ?only&layout=1&preco_1=... -> só a arte, 1080px
+let salvo = {};
+try { if (!only) salvo = JSON.parse(localStorage.gerador2 || '{}'); } catch {}
+
+const estado = {
+  atual: Math.min(LAYOUTS.length - 1, q.has('layout') ? q.get('layout') - 1 : salvo.atual ?? 0),
+  foto: q.get('foto') ?? salvo.foto ?? 'layout',
+  personagem: q.has('personagem') ? q.get('personagem') !== '0' : salvo.personagem ?? true,
+  ajuste: salvo.ajuste ?? {},
+};
+
+// ---------- campos ----------
+// o vendedor só mexe nisto (marcação do usuário, 15/09); o resto vem travado do .ai
+const EDITAVEL = /^(preco|ida|volta)_\d+$|^(parcelas|local|telefone|titulo\d+)$/;
+const ROTULOS = { parcelas: 'Parcelas', local: 'Local', telefone: 'Telefone', titulo1: 'Linha 1', titulo2: 'Linha 2' };
+const rotulo = k => ROTULOS[k] ?? (k.startsWith('preco_') ? 'Valor por dia (casal)' : k.startsWith('ida_') ? 'Ida' : 'Volta');
+const grupo = k => /_\d+$/.test(k) ? 'Pacote ' + k.split('_')[1]
+  : { parcelas: 'Condições', local: 'Condições', telefone: 'Contato', titulo1: 'Título', titulo2: 'Título' }[k];
+const chaves = L => L.textos.flatMap(t => t.tipo === 'titulo' ? t.linhas.map(l => l.key) : [t.key]);
+
+const form = document.getElementById('form');
+const pacotes = [...new Set(Object.keys(VALORES).filter(k => /_\d+$/.test(k)).map(grupo))].sort();
+const secoes = {};
+for (const g of [...pacotes, 'Condições', 'Contato', 'Foto', 'Título']) {
+  if (g === 'Foto') { form.append(document.getElementById('tpl-foto').content.cloneNode(true)); continue; }
+  const s = form.appendChild(document.createElement('section'));
+  s.dataset.grupo = g;
+  s.append(Object.assign(document.createElement('h3'), { textContent: g }));
+  secoes[g] = s;
+}
+const ordem = k => ['preco_', 'ida_', 'volta_'].findIndex(p => k.startsWith(p)) >>> 0; // resto vai pro fim, na ordem do .ai
+for (const k of Object.keys(VALORES).filter(k => EDITAVEL.test(k)).sort((a, b) => ordem(a) - ordem(b))) {
+  const lb = secoes[grupo(k)].appendChild(document.createElement('label'));
+  lb.dataset.key = k;
+  lb.append(rotulo(k));
+  const el = lb.appendChild(document.createElement('input'));
+  if (/^(ida|volta)_/.test(k)) el.type = 'date';
+  if (k.startsWith('preco_')) Object.assign(el, { inputMode: 'decimal', pattern: '\\d{1,3}([,.]\\d{2})?' });
+  el.name = k;
+  el.value = q.get(k) ?? salvo[k] ?? VALORES[k];
+}
+const $ = id => document.getElementById(id);
+const cv = $('arte'), zoom = $('zoom'), pers = $('pers');
+pers.checked = estado.personagem;
+
+// ---------- imagens ----------
+const IMGS = {};
+let agendado = 0;
+function img(src) {
+  if (!IMGS[src]) {
+    IMGS[src] = new Image();
+    IMGS[src].onload = () => agendado ||= setTimeout(() => { agendado = 0; render(); }, 0);
+    IMGS[src].src = src;
+  }
+  return IMGS[src];
+}
+const pronta = im => im.complete && im.naturalWidth > 0;
+const fotoItem = () => BANCO.find(b => b.id === estado.foto) ?? BANCO[0];
+const aj = () => estado.ajuste[estado.atual] ??= { dx: 0, dy: 0, zoom: 1 };
+
+// ---------- desenho ----------
+const F = (w, s, fam = 'Montserrat') => `${w} ${s}px ${fam}`;
+const dataBR = d => d ? d.split('-').reverse().join('/') : '';
+
+function quebrar(c, s, maxW) {
+  const out = [];
+  for (const par of s.split('\n')) {
+    let linha = '';
+    for (const w of par.split(' ')) {
+      const t = linha ? linha + ' ' + w : w;
+      if (linha && c.measureText(t).width > maxW) { out.push(linha); linha = w; } else linha = t;
+    }
+    out.push(linha);
+  }
+  return out;
+}
+
+function fotoRet(L, item, im) {
+  const f = L.foto, a = aj();
+  const [bx0, by0, bx1, by1] = f.box, [vx0, vy0, vx1, vy1] = f.visivel;
+  let x, y, w, h;
+  if (item.id === 'layout') { // foto da arte: exatamente onde o designer pôs
+    [x, y] = f.original; w = f.original[2] - x; h = f.original[3] - y;
+  } else { // cobre a área, centraliza na parte visível e ancora pela base
+    const e = Math.max((bx1 - bx0) / im.naturalWidth, (by1 - by0) / im.naturalHeight);
+    w = im.naturalWidth * e; h = im.naturalHeight * e;
+    x = (vx0 + vx1) / 2 - w / 2; y = by1 - h;
+  }
+  const cx = (vx0 + vx1) / 2, cy = (vy0 + vy1) / 2;
+  x = cx + (x - cx) * a.zoom + a.dx; y = cy + (y - cy) * a.zoom + a.dy; w *= a.zoom; h *= a.zoom;
+  const lx = Math.min(bx0, Math.max(bx1 - w, x)), ly = Math.min(by0, Math.max(by1 - h, y)); // sem buraco
+  return { r: [lx, ly, w, h], corr: [lx - x, ly - y] };
+}
+
+const off = Object.assign(document.createElement('canvas'), { width: 1080 * S, height: 1350 * S });
+function desenharFoto(c, L, item, im) {
+  const o = off.getContext('2d');
+  o.setTransform(S, 0, 0, S, 0, 0);
+  o.globalCompositeOperation = 'source-over';
+  o.clearRect(0, 0, 1080, 1350);
+  o.drawImage(im, ...fotoRet(L, item, im).r);
+  o.globalCompositeOperation = 'destination-in';
+  o.drawImage(img(L.foto.mascara), 0, 0, 1080, 1350);
+  c.drawImage(off, 0, 0, 1080, 1350);
+}
+
+function texto(c, t, v) {
+  const fam = t.tab ? TAB : 'Montserrat';
+  const val = t.tab ? dataBR(v[t.key]) : v[t.key] ?? '';
+  let tam = t.tam, ls = t.ls || 0;
+  c.save();
+  c.translate(t.x, t.y);
+  if (t.vscale) c.scale(1, t.vscale);
+  c.font = F(t.peso, tam, fam); c.letterSpacing = ls + 'px';
+  if (t.maxW) {
+    const m = c.measureText(val).width;
+    if (m > t.maxW) { tam *= t.maxW / m; ls *= t.maxW / m; c.font = F(t.peso, tam, fam); c.letterSpacing = ls + 'px'; }
+  }
+  const linhas = t.quebra ? quebrar(c, val, t.quebra) : [val];
+  if (t.traco) {
+    c.lineJoin = 'round'; c.lineWidth = t.traco.larg; c.strokeStyle = t.traco.cor;
+    for (const dy of t.traco.dys) linhas.forEach((l, i) => c.strokeText(l, 0, i * (t.lh || 0) + dy));
+  }
+  c.fillStyle = t.cor;
+  linhas.forEach((l, i) => c.fillText(l, 0, i * (t.lh || 0)));
+  c.restore();
+}
+
+function preco(c, t, v) {
+  // dígitos tabulares são mais largos: tracking -30/1000 e escala fixa pra "000,00" ocupar a largura do .ai
+  const [int, cents = '00'] = String(v[t.key] ?? '').replace('.', ',').split(',');
+  const LS = -0.03 * t.tam;
+  c.font = F(t.peso, t.tam, TAB); c.letterSpacing = LS + 'px';
+  const wi = c.measureText(int).width, w000 = c.measureText('000').width;
+  c.font = F(t.peso, t.tamCents, TAB); c.letterSpacing = '0px';
+  const k = t.larg / (w000 + 1.7 + c.measureText(',00').width);
+  c.fillStyle = t.cor;
+  c.font = F(t.peso, t.tam * k, TAB); c.letterSpacing = LS * k + 'px';
+  c.fillText(int, t.x + 0.5, t.y);
+  c.font = F(t.peso, t.tamCents * k, TAB); c.letterSpacing = '0px';
+  c.fillText(',' + cents, t.x + (wi + 1.7) * k, t.y);
+}
+
+function titulo(c, t, v) {
+  // contorno de todas as letras primeiro (empilhado = sombra), depois o preenchimento, igual ao .ai
+  const linhas = t.linhas.map(l => {
+    const s = (v[l.key] ?? '').trim();
+    if (!s) return [];
+    c.font = F(l.peso, l.tam); c.letterSpacing = '0px';
+    const cap = c.measureText('H').actualBoundingBoxAscent, adv = ch => c.measureText(ch).width;
+    if (!l.curva) {
+      const ini = adv(s[0]) / 2, fim = adv(s) + l.ls * (s.length - 1) - adv(s.at(-1)) / 2;
+      return [{ s, l, cap, x: l.x, y: l.y, k: 0, dx: 0, ls: l.ls, ini, fim }];
+    }
+    const { a, b, d, xmin, xmax } = l.curva, out = [];
+    let pen = l.x;
+    for (const ch of s) {
+      const w = adv(ch), cx = pen + w / 2;
+      const u = Math.min(xmax, Math.max(xmin, cx)) / 1000;
+      const k = cx < xmin || cx > xmax ? 0 : (a + 2 * b * u + 3 * d * u * u) / 1000;
+      if (ch.trim()) out.push({ s: ch, l, cap, x: cx, y: l.y + a * u + b * u * u + d * u * u * u, k, dx: -w / 2, ls: 0, ini: 0, fim: 0 });
+      pen += w + l.ls;
+    }
+    return out;
+  });
+  const glifos = linhas.flat();
+  // cisalhamento vertical = distorção "bandeira"
+  const pt = (g, px, py, dy) => [g.x + px, g.y + dy + g.k * px + py];
+  const passo = (g, dy, modo) => {
+    c.save();
+    c.transform(1, g.k, 0, 1, g.x, g.y + dy);
+    c.font = F(g.l.peso, g.l.tam); c.letterSpacing = g.ls + 'px';
+    if (modo === 'traco') c.strokeText(g.s, g.dx, 0); else { c.fillStyle = g.l.cor; c.fillText(g.s, g.dx, 0); }
+    c.restore();
+  };
+  // ponte entre letras vizinhas na altura das maiúsculas: o contorno não abre fresta (L|A, espaço)
+  const pontes = linhas.flatMap(gs => gs.length === 1 ? [[gs[0], gs[0]]] : gs.slice(1).map((g, i) => [gs[i], g]));
+  const ponte = ([g1, g2], dy) => {
+    c.beginPath();
+    [pt(g1, g1.ini, 0, dy), pt(g1, g1.ini, -g1.cap, dy), pt(g2, g2.fim, -g2.cap, dy), pt(g2, g2.fim, 0, dy)]
+      .forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y));
+    c.closePath(); c.fill(); c.stroke();
+  };
+  c.lineJoin = 'round'; c.lineWidth = t.traco.larg; c.strokeStyle = c.fillStyle = t.traco.cor;
+  for (const dy of t.traco.dys) {
+    pontes.forEach(p => ponte(p, dy));
+    glifos.forEach(g => passo(g, dy, 'traco'));
+  }
+  glifos.forEach(g => passo(g, 0, 'fill'));
+}
+
+const DESENHA = { texto, preco, titulo };
+let fontesOk = false, entregue = false;
+
+function render() {
+  const L = LAYOUTS[estado.atual], item = fotoItem(), im = img(item.src);
+  const pers = estado.personagem && L.foto.personagem;
+  const precisa = [im, img(L.foto.base), img(L.foto.mascara), ...(pers ? [img(pers.src)] : [])];
+  if (!fontesOk || !precisa.every(pronta)) return; // onload das imagens chama de novo
+  const campos = Object.fromEntries(new FormData(form));
+  const v = { ...VALORES, ...campos }; // travados vêm sempre do .ai
+  const c = cv.getContext('2d');
+  c.setTransform(S, 0, 0, S, 0, 0);
+  c.fillStyle = '#fff';
+  c.fillRect(0, 0, 1080, 1350);
+  desenharFoto(c, L, item, im);
+  c.drawImage(img(L.foto.base), 0, 0, 1080, 1350);
+  if (pers) { const [x0, y0, x1, y1] = pers.rect; c.drawImage(img(pers.src), x0, y0, x1 - x0, y1 - y0); }
+  for (const t of L.textos) DESENHA[t.tipo](c, t, v);
+  $('foto-mini').src = item.mini;
+  if (only) {
+    if (!entregue) document.body.replaceChildren(Object.assign(new Image(), { src: cv.toDataURL() }));
+    entregue = true;
+    return;
+  }
+  try { localStorage.gerador2 = JSON.stringify({ ...campos, ...estado }); } catch {}
+}
+
+// ---------- interface ----------
+LAYOUTS.forEach((L, i) => {
+  const bt = document.createElement('button');
+  bt.type = 'button';
+  const mini = bt.appendChild(document.createElement('div'));
+  mini.className = 'mini-arte';
+  mini.style.backgroundImage = `url(${L.foto.base}), url(${BANCO[0].mini})`;
+  bt.append(L.nome);
+  bt.onclick = () => selecionar(i);
+  $('modelos').append(bt);
+});
+
+function selecionar(i) {
+  estado.atual = i;
+  const L = LAYOUTS[i], ks = chaves(L);
+  document.querySelectorAll('#modelos button').forEach((b, j) => b.classList.toggle('on', j === i));
+  for (const lb of form.querySelectorAll('label[data-key]')) lb.hidden = !ks.includes(lb.dataset.key);
+  for (const s of form.querySelectorAll('[data-grupo]')) {
+    s.hidden = s.dataset.grupo === 'Personagem' ? !L.foto.personagem
+      : s.dataset.grupo !== 'Foto' && !s.querySelector('label[data-key]:not([hidden])');
+  }
+  zoom.value = aj().zoom;
+  render();
+}
+
+function limitar() {
+  const L = LAYOUTS[estado.atual], item = fotoItem(), im = img(item.src), a = aj();
+  if (!pronta(im)) return;
+  const { corr } = fotoRet(L, item, im);
+  a.dx += corr[0]; a.dy += corr[1];
+}
+
+let arrasto = null;
+cv.addEventListener('pointerdown', e => { arrasto = [e.clientX, e.clientY]; cv.setPointerCapture(e.pointerId); });
+cv.addEventListener('pointermove', e => {
+  if (!arrasto) return;
+  const k = 1080 / cv.clientWidth, a = aj();
+  a.dx += (e.clientX - arrasto[0]) * k; a.dy += (e.clientY - arrasto[1]) * k;
+  arrasto = [e.clientX, e.clientY];
+  limitar(); render();
+});
+cv.addEventListener('pointerup', () => arrasto = null);
+cv.addEventListener('pointercancel', () => arrasto = null);
+
+zoom.oninput = () => { aj().zoom = +zoom.value; limitar(); render(); };
+$('padrao').onclick = () => { estado.ajuste[estado.atual] = { dx: 0, dy: 0, zoom: 1 }; zoom.value = 1; render(); };
+pers.onchange = () => { estado.personagem = pers.checked; render(); };
+form.oninput = render;
+
+// banco de fotos
+const CATS = ['Todas', ...new Set(BANCO.map(b => b.cat))];
+let cat = 'Todas';
+function montarBanco() {
+  $('cats').replaceChildren(...CATS.map(n => Object.assign(document.createElement('button'),
+    { type: 'button', textContent: n, className: n === cat ? 'on' : '', onclick: () => { cat = n; montarBanco(); } })));
+  $('grade').replaceChildren(...BANCO.filter(b => cat === 'Todas' || b.cat === cat).map(b => Object.assign(
+    document.createElement('img'), { src: b.mini, loading: 'lazy', alt: b.cat, className: b.id === estado.foto ? 'on' : '',
+      onclick: () => { estado.foto = b.id; estado.ajuste = {}; zoom.value = 1; $('banco').close(); render(); } })));
+}
+$('trocar').onclick = () => { montarBanco(); $('banco').showModal(); };
+$('fechar').onclick = () => $('banco').close();
+
+$('baixar').onclick = () => cv.toBlob(b => Object.assign(document.createElement('a'),
+  { href: URL.createObjectURL(b), download: `village-${LAYOUTS[estado.atual].nome.replace(/\s+/g, '-')}.png` }).click());
+const copiar = $('copiar');
+copiar.onclick = async () => {
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': new Promise(ok => cv.toBlob(ok)) })]);
+    copiar.textContent = 'Copiado!';
+  } catch { copiar.textContent = 'Não deu pra copiar'; }
+  setTimeout(() => copiar.textContent = 'Copiar imagem', 1500);
+};
+
+if (only) document.body.classList.add('only');
+Promise.all([
+  ...[500, 600, 700, 800, 900].map(w => document.fonts.load(F(w, 20))),
+  ...[700, 800].map(w => document.fonts.load(F(w, 20, TAB))),
+]).then(() => { fontesOk = true; selecionar(estado.atual); });
+</script>
+</body>
+</html>
