@@ -25,9 +25,12 @@ Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inc
 7. Posição e estilo idênticos ao `.ai`; ajustes do designer entram rodando a extração.
 
 ## Contas e biblioteca (pedido de 15/09/2026)
-8. Login por e-mail e senha (Supabase; o site continua no GitHub Pages).
-9. Papéis: **chefe da área** (login próprio; autoriza, cria e desativa contas de vendedores; vê o
-   painel geral com as excursões de todos) e **vendedor** (vê e mexe só nas próprias excursões).
+8. Login por e-mail e senha. Contas e excursões numa **planilha Google do resort**, servida por
+   Apps Script (escolha do usuário em 15/09/2026: grátis, com o que já tem). Site continua no GitHub Pages.
+9. Papéis: **conta master** (chefe da área; a própria pessoa cria a master no site escolhendo a senha;
+   cria as outras contas, desativa, troca senha; vê o painel geral com as excursões de todos) e
+   **vendedor** (vê e mexe só nas próprias excursões). Conta nova recebe senha provisória da master e
+   a pessoa cria a própria senha ao entrar (pedido de 15/09/2026).
 10. Biblioteca do vendedor: cada excursão guarda a arte pronta (tudo que foi preenchido), nome interno,
     observações, vagas (total e vendidas) e contato do responsável pelo grupo. Dá pra abrir, editar,
     baixar de novo e duplicar.

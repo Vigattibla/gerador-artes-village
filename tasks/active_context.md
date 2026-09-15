@@ -29,8 +29,18 @@
   pelas datas; abrir, duplicar, excluir. Ainda não publicado. Troca o armazenamento pelo Supabase na fase de contas.
 
 ## Próximos passos
-1. Contas e biblioteca de excursões (PRD itens 8–11): especificar, usuário cria o projeto Supabase,
-   construir login, biblioteca, painel do chefe e cadastro de vendedores.
+1. Contas e biblioteca (PRD itens 8–11) em planilha Google + Apps Script (`apps-script/Codigo.gs`,
+   `docs/spec-contas.md`). Usuário cria a planilha, cola o script, roda `configurar` (anota o código de
+   instalação), implanta e passa a URL `/exec`; depois: criar master / entrar / criar senha, biblioteca na
+   planilha, dados da excursão, painel e contas. Papel "chefe" virou "master" (15/09).
+- 15/09: usuário criou a planilha, rodou `configurar` e implantou. App da Web:
+  https://script.google.com/macros/s/AKfycbyq6BPUme8ez58eYseXBpRAk1xLaAlwHith0EH952rB9Apm-bS2Bb2jMz8hFcHbqawD/exec
+  Testado: status → precisaMaster true; entrar inválido e ação desconhecida → erro certo. Latência 2–6 s,
+  picos 12–40 s → site local-first com sincronização. Master ainda não criada (código fica com o usuário).
+- 15/09: site ligado à planilha (ainda não publicado): Entrar / Criar conta master / Crie sua senha; caixa de
+  espera explícita com contador em toda chamada lenta (pedido do usuário); excursões no aparelho + envio em
+  segundo plano com nova tentativa; passo "Dados da excursão"; Painel e Contas da master. Testado de ponta a
+  ponta com `tests/mock_planilha.py` (master, vendedora, provisória, senha, sincronização, painel, desativar).
 2. Decidir posição do "7x de".
 3. Site definitivo.
 

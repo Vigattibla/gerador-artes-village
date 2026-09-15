@@ -15,10 +15,15 @@ Vigattibla/gerador-artes-village).
 - `dados.js`, `camadas/`, `banco/` — gerados, não editar.
 - `fonts/` — Montserrat + `MontserratTab` (dígitos tabulares, gerada com fontTools).
 - `gerador.html` — só redireciona o link antigo para a raiz.
+- `tests/mock_planilha.py` — servidor falso da planilha (mesmas ações do Apps Script) pra testar o site sem
+  mexer na planilha real: servidor `mock-planilha` (porta 8766) + `http://localhost:8765/?api=http://localhost:8766`.
+  `?api=` só vale em localhost (em produção mandaria senhas pra outro servidor).
+- O site é local-first: grava as excursões no aparelho na hora e sincroniza com a planilha em segundo plano
+  (o Apps Script grátis leva 2–12 s e às vezes devolve página HTML; `api()` tenta de novo).
 - `docs/spec-contas.md` — especificação de contas, biblioteca e painel do chefe (próxima fase).
-- `supabase/esquema.sql` — tabelas + regras de acesso (RLS); rodar no SQL Editor do Supabase.
-- `supabase/functions/vendedores/` — Edge Function: chefe cria/desativa vendedor e define senha.
-  Chave de serviço só dentro da função; no site vão apenas URL e chave pública.
+- `apps-script/Codigo.gs` — servidor das contas: planilha Google + Apps Script publicado como App da Web.
+  O segredo das sessões fica nas propriedades do script; no site vai só a URL `/exec`.
+  Mudou o arquivo → nova versão da implantação no Apps Script.
 
 ## Regras
 - O `.ai` é a fonte da verdade. Posições, fontes, tamanhos e cores saem do script de extração,

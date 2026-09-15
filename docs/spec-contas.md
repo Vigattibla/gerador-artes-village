@@ -1,70 +1,83 @@
-# Especificação – Contas e biblioteca de excursões
+# Especificação – Contas e biblioteca de excursões (planilha Google)
 
-Pedido do usuário em 15/09/2026. Requisitos no PRD (itens 8–11).
+Pedido do usuário em 15/09/2026. Escolha: grátis, com o que já tem → **planilha Google + Apps Script**.
+Requisitos no PRD (itens 8–11).
 
 ## Objetivo
-Cada vendedor entra com e-mail e senha e tem a própria biblioteca de excursões: cria, edita, duplica,
-baixa a arte de novo e acompanha vagas. O chefe da área cria e controla os acessos e vê tudo.
+Cada pessoa entra com e-mail e senha. A **conta master** (chefe da área) cria as outras contas,
+desativa, troca senha e vê todas as excursões. **Vendedor** vê e mexe só nas próprias.
 
-## Papéis
-| Papel | Pode |
-|---|---|
-| Chefe da área | Entrar; criar vendedor (nome, e-mail, senha provisória); desativar/reativar; definir nova senha provisória; ver painel com as excursões de todos; ter as próprias excursões |
-| Vendedor | Entrar; trocar a senha provisória no 1º acesso; criar, editar, duplicar e excluir **só as próprias** excursões |
+## Planilha (conta Google do resort) – criada por `configurar()` do `apps-script/Codigo.gs`
+**Vendedores:** Email · Nome · Papel (`vendedor`/`master`) · Ativo (`SIM`/`NÃO`) · Senha provisória ·
+Senha (oculta, só hash) · Criado em.
 
-Não existe cadastro aberto: o "sign up" do Supabase fica desligado.
+**Excursoes:** ID · Vendedor (e-mail) · Nome · Observações · Ida · Volta · Vagas · Vendidas ·
+Responsável do grupo · Telefone do grupo · Atualizada em · Arte (oculta, JSON) · Miniatura (oculta).
 
-## Telas
-1. **Entrar** – e-mail, senha, "Entrar". Erro claro ("E-mail ou senha incorretos."). Conta desativada não entra.
-2. **Trocar senha** – aparece só no 1º acesso (ou depois que o chefe define uma senha nova).
-3. **Minhas excursões** – abas *Acontecendo*, *Próximas*, *Encerradas*; cartão com nome, datas, vagas
-   (vendidas/total) e miniatura da arte; ações: Abrir, Duplicar, Excluir (com confirmação).
-   Botão principal: "Nova excursão". Lista vazia vira convite pra criar a primeira.
-4. **Editor** – o passo a passo atual com um passo novo no começo, *Dados da excursão*:
-   nome, observações, vagas (total e vendidas), responsável do grupo (nome e telefone).
-   Salva sozinho a cada alteração ("Salvo" discreto). Baixar/Enviar continuam no último passo.
-5. **Painel do chefe** – todas as excursões com vendedor, datas, situação e vagas; filtro por vendedor
-   e por situação; totais de vagas vendidas.
-6. **Vendedores** (só chefe) – lista com situação da conta; "Adicionar vendedor"; desativar/reativar;
-   "Definir nova senha".
+## Fluxos
+- **Criar conta master (uma vez):** o site mostra "Criar conta master" enquanto não existe master ativa.
+  A pessoa escolhe nome, e-mail e senha e digita o **código de instalação**, que só aparece no
+  registro do Apps Script ao rodar `configurar` (ninguém de fora cria a master antes). Depois some.
+- **Master cria conta:** nome + e-mail → o site mostra uma **senha provisória** de 6 dígitos para
+  passar à pessoa (também fica na coluna "Senha provisória" até ser usada).
+- **Entrar:** e-mail + senha. Com a senha provisória, o site pede para criar a senha própria
+  (mín. 8, diferente da provisória) e já entra. Sessão assinada vale 30 dias.
+- **Esqueceu a senha:** master usa "Nova senha provisória" (site) ou escreve uma na coluna. A senha
+  antiga e as sessões abertas param de valer.
+- **Desativar:** Ativo = NÃO (site ou planilha). A sessão cai na próxima ação.
+- **Recuperar a master:** Ativo da master = NÃO na planilha + rodar `configurar` → código novo.
 
-Situação calculada pelas datas do pacote (menor ida e maior volta entre os pacotes da arte):
-*Próxima* (ida > hoje) · *Acontecendo* (ida ≤ hoje ≤ volta) · *Encerrada* (volta < hoje).
+## Telas do site
+1. Criar conta master (só enquanto não existe) · Entrar · Criar sua senha.
+2. Início (atalhos + continuar de onde parou).
+3. Minhas excursões – abas Acontecendo / Próximas / Encerradas (pelas datas); abrir, duplicar, excluir.
+4. Editor – passo a passo atual + passo "Dados da excursão" (nome, observações, vagas, vendidas,
+   responsável e telefone do grupo). Salva sozinho na planilha ("Salvando…" / "Salvo").
+5. Painel (master) – todas as excursões com a pessoa; filtro por pessoa e situação; total de vagas.
+6. Contas (master) – adicionar, ativar/desativar, nova senha provisória.
 
-## Dados (Supabase / Postgres) – `supabase/esquema.sql`
-- `perfis`: id (= usuário do Auth), nome, papel (`chefe`|`vendedor`), ativo, trocar_senha.
-- `excursoes`: vendedor_id, nome, observacoes, arte (jsonb com o estado do editor: arte escolhida,
-  campos, foto, ajuste, personagem), ida, volta, vagas_total, vagas_vendidas, grupo_responsavel,
-  grupo_telefone, criada_em, atualizada_em.
+## Servidor (Apps Script, App da Web)
+POST com JSON em texto (sem pré-verificação de CORS). Resposta `{ ok, ...dados }` ou `{ ok: false, erro }`.
 
-## Segurança
-- Row Level Security em todas as tabelas. Vendedor ativo lê/grava só `vendedor_id = auth.uid()`;
-  chefe lê tudo. Checagem de papel em função `privado.eh_chefe()` (security definer,
-  `search_path = ''`, schema fora da API) pra não entrar em recursão.
-- Criar/desativar/trocar senha de vendedor só pela Edge Function `vendedores`, que confere que quem
-  chamou é chefe ativo antes de usar a chave de serviço. A chave de serviço nunca vai pro site.
-- No site só vão a URL do projeto e a chave pública (anon/publishable), feitas pra ficar no navegador.
-- Conta desativada: `ban_duration` no Auth (não entra) + `perfis.ativo = false` (RLS bloqueia dados).
-- Sem e-mail automático: o envio embutido do Supabase só manda 2 por hora. O chefe passa a senha
-  provisória ao vendedor; recuperação de senha também passa pelo chefe.
+| Ação | Quem | Faz |
+|---|---|---|
+| `status` | todos | `{ precisaMaster }` |
+| `criarMaster` {nome, email, senha, codigoInstalacao} | todos, só sem master | cria master e entra |
+| `entrar` {email, senha} | todos | token + usuário, ou `{ precisaNovaSenha }` com a provisória |
+| `criarSenha` {email, provisoria, senha} | todos | troca provisória pela senha própria e entra |
+| `eu` {token} | logado | confere sessão |
+| `listar` {token} | logado | vendedor: as próprias; master: todas (+ nome da pessoa) |
+| `salvar` {token, excursao} | logado | cria ou atualiza (só o dono) |
+| `excluir` {token, id} | logado | só o dono |
+| `contas` {token} | master | lista contas |
+| `salvarConta` {token, email, nome?, ativo?, novaProvisoria?} | master | cria/altera vendedor; devolve provisória |
 
-## Riscos e decisões pendentes
-- **Plano grátis pausa o projeto após 1 semana sem uso.** Com vendedores usando toda semana não pausa;
-  se pausar, o login para até alguém retomar no painel do Supabase. Alternativa: plano Pro (US$ 25/mês).
-- Fotos continuam no GitHub Pages (públicas); só os dados das excursões ficam no Supabase.
+## Segurança e limites
+- Login feito à mão (não é um serviço de autenticação pronto). Senha: HMAC com segredo do script +
+  sal por pessoa + 500 rodadas de SHA-256; nunca em texto na planilha (a provisória fica até ser usada).
+- Token assinado com o segredo; conta desativada ou com provisória nova perde a sessão.
+- 5 erros seguidos bloqueiam 10 minutos (por e-mail; criação da master tem o próprio limite).
+- Códigos de 6 dígitos gerados a partir de UUID (aleatório seguro).
+- Textos começando com `= + - @` entram como texto (sem virar fórmula na planilha).
+- Quem tiver acesso de edição à planilha vê e altera tudo: deixar só com a master.
+- Lentidão medida em 15/09/2026 (App da Web implantado): 2–6 s por chamada, picos de ~12 s e uma acima
+  de 30 s, inclusive em chamada que nem abre a planilha (é do Google, não do script). Às vezes volta uma
+  página HTML no lugar do JSON. Por isso o site é **local-first**: salva no aparelho na hora e sincroniza
+  com a planilha em segundo plano, com nova tentativa; só o login espera o servidor.
 
 ## Passos do usuário (não automatizáveis por mim)
-1. Criar conta em supabase.com e um projeto (região São Paulo). Guardar a senha do banco no gerenciador de senhas.
-2. SQL Editor → colar e rodar `supabase/esquema.sql`.
-3. Authentication → Sign In / Providers → desligar "Allow new users to sign up".
-4. Authentication → Users → "Add user" com o e-mail e senha do chefe → rodar o trecho "primeiro chefe" do fim do `esquema.sql`.
-5. Edge Functions → criar a função `vendedores` com o conteúdo de `supabase/functions/vendedores/index.ts`.
-6. Me passar a **Project URL** e a **chave pública (anon/publishable)**. Nunca a service_role/secret.
+1. Criar uma planilha nova na conta Google do resort (ex.: "Village – Excursões").
+2. Extensões → Apps Script → colar `apps-script/Codigo.gs` → Salvar.
+3. Selecionar `configurar` → Executar → autorizar ("app não verificado": Avançado → acessar).
+   Anotar o **código de instalação** que aparece no registro de execução.
+4. Implantar → Nova implantação → App da Web → Executar como: Eu; Quem pode acessar: Qualquer pessoa.
+5. Me passar a URL do App da Web (termina em `/exec`). O código de instalação fica com vocês.
+6. Depois que eu ligar o site: "Criar conta master" com nome, e-mail, senha e o código.
 
-## Construção (depois dos passos acima)
-1. Cliente Supabase no site + tela Entrar/Trocar senha.
-2. Minhas excursões (lista, abas, duplicar, excluir).
-3. Editor: passo "Dados da excursão" + salvar sozinho + abrir excursão existente.
-4. Painel do chefe + Vendedores.
-5. Verificação: vendedor A não vê dados de B (teste direto na API), conta desativada não entra,
-   chefe vê tudo, arte reabre igual ao que foi salvo, celular.
+## Construção
+1. Cliente do servidor no site + Criar master / Entrar / Criar sua senha + sessão.
+2. Minhas excursões lendo/gravando na planilha (as salvas no aparelho podem ser enviadas uma vez).
+3. Passo "Dados da excursão".
+4. Painel e Contas da master.
+5. Verificação: vendedor não vê/altera de outro (chamando o servidor direto), master não pode ser
+   criada de novo, desativado cai, provisória nova derruba sessão, arte reabre igual, celular.
