@@ -24,6 +24,16 @@ Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inc
 6. Baixar PNG e copiar imagem.
 7. Posição e estilo idênticos ao `.ai`; ajustes do designer entram rodando a extração.
 
+## Contas e biblioteca (pedido de 15/09/2026)
+8. Login por e-mail e senha (Supabase; o site continua no GitHub Pages).
+9. Papéis: **chefe da área** (login próprio; autoriza, cria e desativa contas de vendedores; vê o
+   painel geral com as excursões de todos) e **vendedor** (vê e mexe só nas próprias excursões).
+10. Biblioteca do vendedor: cada excursão guarda a arte pronta (tudo que foi preenchido), nome interno,
+    observações, vagas (total e vendidas) e contato do responsável pelo grupo. Dá pra abrir, editar,
+    baixar de novo e duplicar.
+11. Situação calculada pelas datas: próxima (ida depois de hoje), acontecendo (entre ida e volta),
+    encerrada (volta antes de hoje).
+
 ## Fora de escopo / decisões
 - Preço com 4 dígitos (não existe).
 - Posição do "7x de" sobre o preço: decidir depois.

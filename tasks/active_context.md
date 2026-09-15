@@ -22,8 +22,15 @@
   campo; o trecho editado fica aceso; telefone formatado; parcelas com −/+. Base: NN/g (wizards),
   GOV.UK (uma coisa por vez), Canva (modelo travado), Baymard (campos no celular).
 
+- 15/09: interface passo a passo publicada (commit fac1297); usuário enviou pra aprovação.
+- 15/09: menu no topo (casinha Início, Criar arte, Minhas excursões; saiu "Gerador de artes"), site abre na
+  tela Início. Minhas excursões já funciona salvando no aparelho (localStorage `village.excursoes`):
+  cada arte vira excursão com salvamento automático e miniatura; abas Acontecendo/Próximas/Encerradas
+  pelas datas; abrir, duplicar, excluir. Ainda não publicado. Troca o armazenamento pelo Supabase na fase de contas.
+
 ## Próximos passos
-1. Confirmar com o usuário e publicar a interface passo a passo.
+1. Contas e biblioteca de excursões (PRD itens 8–11): especificar, usuário cria o projeto Supabase,
+   construir login, biblioteca, painel do chefe e cadastro de vendedores.
 2. Decidir posição do "7x de".
 3. Site definitivo.
 

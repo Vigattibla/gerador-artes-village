@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gerador de Artes – Village Resort</title>
+<title>Village Resort</title>
 <script src="dados.js"></script>
 <style>
   @font-face { font-family: Montserrat; font-weight: 500; src: url(fonts/Montserrat-Medium.ttf); }
@@ -26,10 +26,50 @@
   button, input { font: inherit; color: inherit; }
   :focus-visible { outline: 3px solid var(--sol-forte); outline-offset: 2px; }
 
-  .topo { height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 20px; background: var(--navy); color: #fff; font-size: 15px; }
-  .topo b { color: var(--sol); font-weight: 800; }
+  /* ---------- topo com menu ---------- */
+  .topo { height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px 0 20px; background: var(--navy); color: #fff; }
+  .marca { font-size: 16px; font-weight: 800; color: var(--sol); text-decoration: none; }
+  .menu { display: flex; height: 100%; }
+  .menu a { display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 3px solid transparent; font-size: 15px; font-weight: 600; color: #fff; text-decoration: none; }
+  .menu a:hover { background: rgba(255, 255, 255, .08); }
+  .menu a[aria-current=page] { border-bottom-color: var(--sol); color: var(--sol); }
+  .menu svg { width: 22px; height: 22px; flex: none; }
+  .curto { display: none; }
 
-  .app { display: grid; grid-template-columns: minmax(0, 1fr) 460px; height: calc(100% - 52px); }
+  /* ---------- telas de início e excursões ---------- */
+  .tela { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+  .tela h1 { margin: 0 0 22px; font-size: 30px; font-weight: 800; line-height: 1.15; color: var(--navy); }
+  .atalhos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .atalho { display: flex; flex-direction: column; gap: 4px; padding: 22px; border: 2px solid var(--linha); border-radius: 16px; background: #fff; color: var(--suave); text-decoration: none; }
+  .atalho svg { width: 34px; height: 34px; margin-bottom: 8px; color: var(--navy); }
+  .atalho strong { font-size: 21px; font-weight: 800; color: var(--navy); }
+  .atalho.principal { border-color: var(--sol); background: var(--sol); color: var(--navy); }
+  .atalho:hover { border-color: var(--navy); }
+  .continuar { display: flex; align-items: center; gap: 14px; margin-top: 26px; padding: 12px; border: 2px solid var(--linha); border-radius: 14px; background: #fff; color: var(--suave); text-decoration: none; }
+  .continuar:hover { border-color: var(--navy); }
+  .continuar img, .continuar .sem-mini { width: 72px; flex: none; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; background: var(--fundo); }
+  .continuar strong { display: block; font-size: 16px; font-weight: 800; color: var(--navy); }
+  .continuar small { display: block; font-size: 13px; }
+  .rotulo-secao { margin: 30px 0 10px; font-size: 18px; font-weight: 800; color: var(--navy); }
+
+  .abas { display: flex; gap: 8px; margin-bottom: 16px; padding-bottom: 4px; overflow-x: auto; }
+  .abas button { flex: none; height: 44px; padding: 0 16px; border: 2px solid var(--linha); border-radius: 22px; background: #fff; font-size: 15px; font-weight: 700; color: var(--navy); cursor: pointer; }
+  .abas button[aria-pressed=true] { border-color: var(--navy); background: var(--navy); color: #fff; }
+  .lista { display: grid; gap: 12px; }
+  .excursao { display: grid; grid-template-columns: 88px 1fr; gap: 14px; padding: 12px; border: 2px solid var(--linha); border-radius: 14px; background: #fff; }
+  .excursao img, .excursao .sem-mini { width: 88px; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; background: var(--fundo); }
+  .excursao h2 { margin: 2px 0 4px; font-size: 16px; font-weight: 800; line-height: 1.25; color: var(--navy); }
+  .excursao p { margin: 0; font-size: 14px; color: var(--suave); }
+  .acoes-card { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .acoes-card a, .acoes-card button { display: inline-flex; align-items: center; height: 42px; padding: 0 16px; border: 2px solid var(--linha); border-radius: 10px; background: #fff; font-size: 14px; font-weight: 700; color: var(--navy); text-decoration: none; cursor: pointer; }
+  .acoes-card .abrir { border-color: var(--sol); background: var(--sol); }
+  .acoes-card .perigo { color: var(--erro); }
+  .vazio { padding: 28px 20px; border: 2px dashed var(--linha); border-radius: 14px; text-align: center; color: var(--suave); }
+  .vazio a { display: inline-flex; align-items: center; height: 48px; margin-top: 12px; padding: 0 20px; border-radius: 12px; background: var(--sol); font-weight: 800; color: var(--navy); text-decoration: none; }
+  .nota { margin: 18px 0 0; font-size: 13px; color: var(--suave); }
+
+  /* ---------- editor ---------- */
+  .app { display: grid; grid-template-columns: minmax(0, 1fr) 460px; height: calc(100% - 56px); }
   .palco { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; min-height: 0; }
   .arte-wrap { position: relative; width: min(100%, calc((100vh - 150px) * .8)); aspect-ratio: 4 / 5; overflow: hidden; border-radius: 4px; box-shadow: 0 12px 32px rgba(38, 50, 79, .22); }
   #arte { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
@@ -44,7 +84,7 @@
   .passos button::before { content: ""; display: block; height: 8px; border-radius: 4px; background: var(--agua-clara); }
   .passos button.feito::before { background: var(--agua); }
   .passos button[aria-current=step]::before { background: var(--navy); }
-  .contagem { margin: 2px 0 0; font-size: 14px; color: var(--suave); }
+  .contagem { display: flex; justify-content: space-between; gap: 12px; margin: 2px 0 0; font-size: 14px; color: var(--suave); }
 
   form { flex: 1; overflow: auto; padding: 6px 24px 28px; }
   .passo h2 { margin: 0 0 18px; font-size: 26px; font-weight: 800; line-height: 1.15; color: var(--navy); }
@@ -56,9 +96,8 @@
   .campo:focus { border-color: var(--navy); }
   .maiusculas { text-transform: uppercase; }
   .dinheiro { display: block; position: relative; margin-top: 6px; }
-  .dinheiro .campo { margin-top: 0; }
+  .dinheiro .campo { margin-top: 0; padding-left: 52px; }
   .dinheiro span { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--suave); }
-  .dinheiro .campo { padding-left: 52px; }
   .dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .ajuda { display: block; margin-top: 6px; font-size: 13px; font-weight: 500; color: var(--suave); }
   .erro { margin: -6px 0 16px; font-size: 14px; font-weight: 600; color: var(--erro); }
@@ -88,7 +127,7 @@
   .barra { display: flex; gap: 10px; padding: 14px 24px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--linha); background: #fff; }
   .barra button { height: 56px; border: 0; border-radius: 14px; font-size: 17px; font-weight: 800; cursor: pointer; }
   .principal { flex: 1; background: var(--sol); color: var(--navy); }
-  .principal:hover { background: #ffd34f; }
+  .barra .principal:hover { background: #ffd34f; }
   .secundario { padding: 0 18px; background: var(--fundo); color: var(--navy); }
   .aviso { position: fixed; left: 50%; bottom: 100px; z-index: 10; transform: translateX(-50%); padding: 12px 18px; border-radius: 10px; background: var(--navy); color: #fff; font-weight: 600; }
 
@@ -101,14 +140,61 @@
     form { overflow: visible; }
     .barra { position: fixed; right: 0; bottom: 0; left: 0; z-index: 3; }
   }
+  @media (max-width: 600px) {
+    .marca { display: none; }
+    .menu { width: 100%; justify-content: space-around; }
+    .menu a { padding: 0 8px; }
+    .longo { display: none; }
+    .curto { display: inline; }
+    .tela { padding-top: 24px; }
+    .tela h1 { font-size: 26px; }
+    .atalhos { grid-template-columns: 1fr; }
+  }
   @media (prefers-reduced-motion: reduce) { .alvo { transition: none; } }
   body.only { background: none; }
   body.only img { display: block; width: 1080px; }
 </style>
 </head>
 <body>
-<header class="topo"><b>Village Resort</b> Gerador de artes</header>
-<main class="app">
+<header class="topo">
+  <a class="marca" href="#/">Village Resort</a>
+  <nav class="menu" aria-label="Menu principal">
+    <a href="#/" data-tela="inicio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>
+      Início</a>
+    <a href="#/nova" data-tela="editor">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      <span class="longo">Criar arte</span><span class="curto">Criar</span></a>
+    <a href="#/excursoes" data-tela="excursoes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span class="longo">Minhas excursões</span><span class="curto">Excursões</span></a>
+  </nav>
+</header>
+
+<section class="tela" id="inicio" hidden>
+  <h1>O que você quer fazer?</h1>
+  <div class="atalhos">
+    <a class="atalho principal" href="#/nova">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      <strong>Criar arte</strong>Monte a arte de uma excursão em 4 passos</a>
+    <a class="atalho" href="#/excursoes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <strong>Minhas excursões</strong><span id="inicio-qtd"></span></a>
+  </div>
+  <div id="inicio-ultima" hidden>
+    <h2 class="rotulo-secao">Continuar de onde parou</h2>
+    <a class="continuar" id="continuar-link"></a>
+  </div>
+</section>
+
+<section class="tela" id="excursoes" hidden>
+  <h1>Minhas excursões</h1>
+  <div class="abas" id="abas"></div>
+  <div class="lista" id="lista"></div>
+  <p class="nota">Por enquanto as excursões ficam salvas neste aparelho. Quando as contas ficarem prontas, elas passam a acompanhar o seu login.</p>
+</section>
+
+<main class="app" id="editor" hidden>
   <section class="palco" aria-label="Arte">
     <div class="arte-wrap">
       <canvas id="arte" width="2160" height="2700"></canvas>
@@ -120,7 +206,7 @@
   <section class="painel" aria-label="Edição">
     <nav class="passos" aria-label="Passos">
       <ol id="passos"></ol>
-      <p class="contagem" id="contagem"></p>
+      <p class="contagem"><span id="contagem"></span><span id="salvo" aria-live="polite"></span></p>
     </nav>
 
     <form id="form" novalidate>
@@ -177,14 +263,12 @@
 const S = 2, TAB = 'MontserratTab';
 const q = new URLSearchParams(location.search);
 const only = q.has('only'); // modo headless: ?only&layout=1&preco_1=... -> só a arte, 1080px
-let salvo = {};
-try { if (!only) salvo = JSON.parse(localStorage.gerador2 || '{}'); } catch {}
 
 const estado = {
-  atual: Math.min(LAYOUTS.length - 1, q.has('layout') ? q.get('layout') - 1 : salvo.atual ?? 0),
-  foto: q.get('foto') ?? salvo.foto ?? 'layout',
-  personagem: q.has('personagem') ? q.get('personagem') !== '0' : salvo.personagem ?? true,
-  ajuste: salvo.ajuste ?? {},
+  atual: Math.min(LAYOUTS.length - 1, Math.max(0, (+q.get('layout') || 1) - 1)),
+  foto: q.get('foto') ?? 'layout',
+  personagem: q.get('personagem') !== '0',
+  ajuste: {},
   passo: 1,
   foco: null,
 };
@@ -193,7 +277,7 @@ const EDITAVEL = /^(preco|ida|volta)_\d+$|^(parcelas|local|telefone|titulo\d+)$/
 const PASSOS = ['Escolha a arte', 'Valores e datas', 'Título e contato', 'Foto e personagem'];
 const DESCRICAO = { '1 pacote': 'Um preço e a lista do que está incluso', '2 pacotes': 'Dois preços, um embaixo do outro' };
 const passoDe = k => /^(preco|ida|volta)_|^parcelas$/.test(k) ? 2 : 3;
-const valor = k => q.get(k) ?? salvo[k] ?? VALORES[k];
+const chaves = i => LAYOUTS[i].textos.flatMap(t => t.tipo === 'titulo' ? t.linhas.map(l => l.key) : [t.key]);
 const $ = id => document.getElementById(id);
 const form = $('form'), cv = $('arte'), zoom = $('zoom'), pers = $('pers');
 
@@ -210,7 +294,12 @@ for (let n = 1; n <= nPacotes; n++) {
       <label>Volta<input class="campo" type="date" name="volta_${n}"></label></div>
     <p class="erro" hidden></p>`;
 }
-for (const el of form.querySelectorAll('input[name]')) if (el.name !== 'parcelas') el.value = valor(el.name) ?? '';
+
+function preencher(campos) {
+  for (const el of form.querySelectorAll('input[name]')) if (el.name !== 'parcelas') el.value = campos[el.name] ?? VALORES[el.name] ?? '';
+  parcelas = Math.min(12, Math.max(1, parseInt(campos.parcelas ?? VALORES.parcelas) || 1));
+  mostrarParcelas();
+}
 
 function formatarTelefone(s) {
   const d = s.replace(/\D/g, '').slice(0, 11);
@@ -223,7 +312,7 @@ function normalizarPreco(s) {
   return m ? `${m[1]},${(m[2] ?? '').padEnd(2, '0')}` : s;
 }
 
-let parcelas = Math.min(12, Math.max(1, parseInt(valor('parcelas')) || 1));
+let parcelas = 1;
 function mostrarParcelas() {
   $('parcelas').value = `${parcelas}x de`;
   $('n-parcelas').textContent = `${parcelas}x`;
@@ -232,7 +321,7 @@ function mostrarParcelas() {
 }
 $('menos').onclick = () => { parcelas--; mostrarParcelas(); render(); };
 $('mais').onclick = () => { parcelas++; mostrarParcelas(); render(); };
-mostrarParcelas();
+preencher(Object.fromEntries([...q].filter(([k]) => EDITAVEL.test(k))));
 
 form.addEventListener('input', e => {
   const el = e.target;
@@ -442,6 +531,7 @@ function desenhar(c, i, escala, marca) {
 }
 
 function render() {
+  if (!only && !aberta) return;
   const novas = {};
   if (!desenhar(cv.getContext('2d'), estado.atual, S, (k, ...r) => novas[k] = r)) return;
   caixas = novas;
@@ -452,8 +542,182 @@ function render() {
   }
   mostrarAlvo();
   if (estado.passo === 1) miniaturas();
-  const { foco, passo, ...guardar } = estado;
-  try { localStorage.gerador2 = JSON.stringify({ ...Object.fromEntries(new FormData(form)), ...guardar }); } catch {}
+  salvarAberta();
+}
+
+// ---------- excursões salvas neste aparelho (vira conta quando o login existir) ----------
+const CHAVE = 'village.excursoes';
+let aberta = null, salvarTimer;
+function excursoes() {
+  try { return JSON.parse(localStorage[CHAVE] || '[]'); } catch { return []; }
+}
+function gravar(lista) {
+  try {
+    localStorage[CHAVE] = JSON.stringify(lista);
+    return true;
+  } catch {
+    aviso('Não deu pra salvar neste aparelho. O armazenamento do navegador pode estar cheio.');
+    return false;
+  }
+}
+const novoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+function novaExcursao() {
+  const ultima = excursoes().sort((a, b) => b.atualizada - a.atualizada)[0];
+  const campos = Object.fromEntries(Object.keys(VALORES).filter(k => EDITAVEL.test(k)).map(k => [k, VALORES[k]]));
+  if (ultima) for (const k of ['telefone', 'local']) if (ultima.campos[k]) campos[k] = ultima.campos[k]; // o vendedor não redigita
+  const agora = Date.now();
+  const ex = { id: novoId(), criada: agora, atualizada: agora, atual: 0, foto: 'layout', personagem: true, ajuste: {}, campos, mini: '' };
+  gravar([ex, ...excursoes()]);
+  return ex;
+}
+
+function abrirExcursao(ex) {
+  aberta = ex;
+  Object.assign(estado, { atual: Math.min(LAYOUTS.length - 1, ex.atual ?? 0), foto: ex.foto, personagem: ex.personagem, ajuste: structuredClone(ex.ajuste ?? {}), foco: null });
+  preencher(ex.campos);
+  pers.checked = estado.personagem;
+  montarBanco();
+  $('salvo').textContent = '';
+  selecionarArte(estado.atual);
+  irPara(Math.min(PASSOS.length, Math.max(1, +q.get('passo') || 1)));
+}
+
+function salvarAberta() {
+  clearTimeout(salvarTimer);
+  salvarTimer = setTimeout(() => {
+    const lista = excursoes(), i = lista.findIndex(e => e.id === aberta?.id);
+    if (i < 0) return;
+    let mini = lista[i].mini;
+    try {
+      const m = Object.assign(document.createElement('canvas'), { width: 216, height: 270 });
+      m.getContext('2d').drawImage(cv, 0, 0, 216, 270);
+      mini = m.toDataURL('image/jpeg', .75);
+    } catch {} // aberto por arquivo local o navegador bloqueia a miniatura; o resto salva igual
+    lista[i] = { ...lista[i], atual: estado.atual, foto: estado.foto, personagem: estado.personagem, ajuste: estado.ajuste,
+      campos: Object.fromEntries(new FormData(form)), atualizada: Date.now(), mini };
+    aberta = lista[i];
+    if (gravar(lista)) $('salvo').textContent = 'Salvo neste aparelho';
+  }, 500);
+}
+
+const hoje = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+function periodo(ex) { // menor ida e maior volta entre os pacotes da arte escolhida
+  const ks = chaves(Math.min(LAYOUTS.length - 1, ex.atual ?? 0));
+  const idas = ks.filter(k => k.startsWith('ida_')).map(k => ex.campos[k]).filter(Boolean).sort();
+  const voltas = ks.filter(k => k.startsWith('volta_')).map(k => ex.campos[k]).filter(Boolean).sort();
+  return [idas[0], voltas.at(-1) ?? idas[0]];
+}
+function situacao(ex) {
+  const [ida, volta] = periodo(ex), h = hoje();
+  if (!ida || ida > h) return 'proximas';
+  return volta && volta < h ? 'encerradas' : 'acontecendo';
+}
+const nomeDe = ex => [ex.campos.titulo1, ex.campos.titulo2].filter(s => s?.trim()).join(' ') || 'Excursão sem título';
+function detalhesDe(ex) {
+  const [ida, volta] = periodo(ex), L = LAYOUTS[ex.atual] ?? LAYOUTS[0];
+  return [ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : 'Sem datas',
+    ex.campos.preco_1 ? `${L.nome}, a partir de R$ ${ex.campos.preco_1}` : L.nome];
+}
+function miniDe(ex) {
+  return ex.mini ? Object.assign(document.createElement('img'), { src: ex.mini, alt: '' })
+    : Object.assign(document.createElement('div'), { className: 'sem-mini' });
+}
+
+function montarInicio() {
+  const lista = excursoes().sort((a, b) => b.atualizada - a.atualizada);
+  $('inicio-qtd').textContent = lista.length
+    ? `${lista.length} ${lista.length > 1 ? 'salvas' : 'salva'} neste aparelho` : 'Nenhuma excursão salva ainda';
+  $('inicio-ultima').hidden = !lista.length;
+  if (!lista.length) return;
+  const ex = lista[0], link = $('continuar-link'), [datas, tipo] = detalhesDe(ex);
+  link.href = `#/arte/${ex.id}`;
+  const txt = document.createElement('span');
+  txt.append(Object.assign(document.createElement('strong'), { textContent: nomeDe(ex) }),
+    Object.assign(document.createElement('small'), { textContent: datas }),
+    Object.assign(document.createElement('small'), { textContent: tipo }));
+  link.replaceChildren(miniDe(ex), txt);
+}
+
+const ABAS = [['acontecendo', 'Acontecendo'], ['proximas', 'Próximas'], ['encerradas', 'Encerradas']];
+let aba = null;
+function montarExcursoes() {
+  const lista = excursoes().sort((a, b) => (periodo(a)[0] ?? '9').localeCompare(periodo(b)[0] ?? '9'));
+  const grupos = Object.fromEntries(ABAS.map(([k]) => [k, lista.filter(ex => situacao(ex) === k)]));
+  aba ??= ABAS.find(([k]) => grupos[k].length)?.[0] ?? 'proximas';
+  if (aba === 'encerradas') grupos.encerradas.reverse(); // mais recentes primeiro
+  $('abas').replaceChildren(...ABAS.map(([k, nome]) => {
+    const b = Object.assign(document.createElement('button'), { type: 'button', textContent: `${nome} (${grupos[k].length})` });
+    b.setAttribute('aria-pressed', k === aba);
+    b.onclick = () => { aba = k; montarExcursoes(); };
+    return b;
+  }));
+  if (!grupos[aba].length) {
+    const vazio = Object.assign(document.createElement('div'), { className: 'vazio' });
+    vazio.append(lista.length ? 'Nenhuma excursão aqui.' : 'Você ainda não tem excursões salvas.', document.createElement('br'),
+      Object.assign(document.createElement('a'), { href: '#/nova', textContent: 'Criar arte' }));
+    $('lista').replaceChildren(vazio);
+    return;
+  }
+  $('lista').replaceChildren(...grupos[aba].map(ex => {
+    const card = Object.assign(document.createElement('article'), { className: 'excursao' });
+    const info = document.createElement('div');
+    info.append(Object.assign(document.createElement('h2'), { textContent: nomeDe(ex) }),
+      ...detalhesDe(ex).map(t => Object.assign(document.createElement('p'), { textContent: t })));
+    const acoes = Object.assign(document.createElement('div'), { className: 'acoes-card' });
+    const duplicar = Object.assign(document.createElement('button'), { type: 'button', textContent: 'Duplicar' });
+    duplicar.onclick = () => {
+      const agora = Date.now();
+      if (gravar([{ ...structuredClone(ex), id: novoId(), criada: agora, atualizada: agora }, ...excursoes()])) {
+        aviso('Excursão duplicada');
+        montarExcursoes();
+      }
+    };
+    const excluir = Object.assign(document.createElement('button'), { type: 'button', className: 'perigo', textContent: 'Excluir' });
+    excluir.onclick = () => {
+      if (!confirm(`Excluir "${nomeDe(ex)}"? Não dá pra desfazer.`)) return;
+      if (gravar(excursoes().filter(e => e.id !== ex.id))) {
+        aviso('Excursão excluída');
+        montarExcursoes();
+      }
+    };
+    acoes.append(Object.assign(document.createElement('a'), { className: 'abrir', href: `#/arte/${ex.id}`, textContent: 'Abrir' }), duplicar, excluir);
+    info.append(acoes);
+    card.append(miniDe(ex), info);
+    return card;
+  }));
+}
+
+// ---------- telas ----------
+const TELAS = { inicio: 'Início', editor: 'Criar arte', excursoes: 'Minhas excursões' };
+function rota() {
+  const [pagina, id] = location.hash.replace(/^#\/?/, '').split('/');
+  if (pagina === 'nova') return location.replace(`#/arte/${novaExcursao().id}`);
+  let tela = 'inicio';
+  if (pagina === 'arte') {
+    const ex = excursoes().find(e => e.id === id);
+    if (!ex) return location.replace('#/excursoes');
+    tela = 'editor';
+    abrirExcursao(ex);
+  } else {
+    clearTimeout(salvarTimer);
+    if (aberta) salvarAgora();
+    aberta = null;
+    if (pagina === 'excursoes') { tela = 'excursoes'; montarExcursoes(); } else montarInicio();
+  }
+  for (const t of Object.keys(TELAS)) $(t).hidden = t !== tela;
+  document.querySelectorAll('.menu a').forEach(a => {
+    if (a.dataset.tela === tela) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  document.title = `${TELAS[tela]} – Village Resort`;
+  if (tela !== 'editor') window.scrollTo(0, 0);
+}
+function salvarAgora() { // saindo do editor antes do salvamento automático
+  const lista = excursoes(), i = lista.findIndex(e => e.id === aberta.id);
+  if (i < 0) return;
+  lista[i] = { ...lista[i], atual: estado.atual, foto: estado.foto, personagem: estado.personagem, ajuste: estado.ajuste,
+    campos: Object.fromEntries(new FormData(form)), atualizada: Date.now() };
+  gravar(lista);
 }
 
 // ---------- destaque na arte ----------
@@ -521,8 +785,7 @@ function miniaturas() { opcoes.forEach((mini, i) => desenhar(mini.getContext('2d
 
 function selecionarArte(i) {
   estado.atual = i;
-  const L = LAYOUTS[i];
-  const ks = L.textos.flatMap(t => t.tipo === 'titulo' ? t.linhas.map(l => l.key) : [t.key]);
+  const ks = chaves(i), L = LAYOUTS[i];
   document.querySelectorAll('.opcao').forEach((b, j) => b.setAttribute('aria-pressed', j === i));
   document.querySelectorAll('.pacote').forEach(p => p.hidden = !ks.includes(`preco_${p.dataset.pacote}`));
   document.querySelectorAll('.pacote h3').forEach(h => h.hidden = ks.filter(k => k.startsWith('preco_')).length < 2);
@@ -550,10 +813,8 @@ function montarBanco() {
     return bt;
   }));
 }
-montarBanco();
 zoom.oninput = () => { aj(estado.atual).zoom = +zoom.value; limitar(); render(); };
 $('padrao').onclick = () => { estado.ajuste[estado.atual] = { dx: 0, dy: 0, zoom: 1 }; zoom.value = 1; render(); };
-pers.checked = estado.personagem;
 pers.onchange = () => { estado.personagem = pers.checked; render(); };
 
 // ---------- mexer na arte: tocar edita, arrastar move a foto ----------
@@ -624,14 +885,19 @@ $('enviar').onclick = async () => {
   }
 };
 
-if (only) document.body.classList.add('only');
+if (only) {
+  document.body.classList.add('only');
+} else {
+  montarBanco();
+  addEventListener('hashchange', rota);
+  rota();
+}
 Promise.all([
   ...[500, 600, 700, 800, 900].map(w => document.fonts.load(F(w, 20))),
   ...[700, 800].map(w => document.fonts.load(F(w, 20, TAB))),
 ]).then(() => {
   fontesOk = true;
   selecionarArte(estado.atual);
-  if (!only) irPara(Math.min(PASSOS.length, Math.max(1, +q.get('passo') || 1)));
 });
 </script>
 </body>

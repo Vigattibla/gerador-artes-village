@@ -15,6 +15,10 @@ Vigattibla/gerador-artes-village).
 - `dados.js`, `camadas/`, `banco/` — gerados, não editar.
 - `fonts/` — Montserrat + `MontserratTab` (dígitos tabulares, gerada com fontTools).
 - `gerador.html` — só redireciona o link antigo para a raiz.
+- `docs/spec-contas.md` — especificação de contas, biblioteca e painel do chefe (próxima fase).
+- `supabase/esquema.sql` — tabelas + regras de acesso (RLS); rodar no SQL Editor do Supabase.
+- `supabase/functions/vendedores/` — Edge Function: chefe cria/desativa vendedor e define senha.
+  Chave de serviço só dentro da função; no site vão apenas URL e chave pública.
 
 ## Regras
 - O `.ai` é a fonte da verdade. Posições, fontes, tamanhos e cores saem do script de extração,
