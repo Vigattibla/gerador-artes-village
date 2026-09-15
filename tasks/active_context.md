@@ -14,10 +14,16 @@
 - Foto: cobre a área, ancora pela base, centraliza na parte visível; zoom + arrastar.
 - Preço e datas em `MontserratTab`.
 - Campos travados (15/09): vendedor edita só valor, parcelas, ida/volta, local, telefone, título,
-  foto e personagem. O site publicado ainda é a v1 (3 artes); a v2 espera confirmação de push.
+  foto e personagem. Título continua editável (confirmado pelo usuário em 15/09).
+- v2 publicada em 15/09/2026 (commit eef466c): https://vigattibla.github.io/gerador-artes-village/
+
+- 15/09: interface refeita em passo a passo (escolhido pelo usuário): 1 arte, 2 valores e datas,
+  3 título e contato, 4 foto e personagem + Baixar/Enviar. Arte sempre visível; tocar na arte leva ao
+  campo; o trecho editado fica aceso; telefone formatado; parcelas com −/+. Base: NN/g (wizards),
+  GOV.UK (uma coisa por vez), Canva (modelo travado), Baymard (campos no celular).
 
 ## Próximos passos
-1. Confirmar com o usuário e publicar (push) no GitHub Pages.
+1. Confirmar com o usuário e publicar a interface passo a passo.
 2. Decidir posição do "7x de".
 3. Site definitivo.
 
