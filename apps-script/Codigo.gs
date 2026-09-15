@@ -29,7 +29,7 @@ function configurar() {
   const vendedores = criarAba_(ss, ABA_VENDEDORES, COLUNAS_VENDEDORES);
   const excursoes = criarAba_(ss, ABA_EXCURSOES, COLUNAS_EXCURSOES);
   vendedores.getRange('C2:C').setDataValidation(
-    SpreadsheetApp.newDataValidation().requireValueInList(['vendedor', 'master']).build());
+    SpreadsheetApp.newDataValidation().requireValueInList(['vendedor', 'adsign', 'master']).build());
   vendedores.getRange('D2:D').setDataValidation(
     SpreadsheetApp.newDataValidation().requireValueInList(['SIM', 'NÃO']).build());
   vendedores.hideColumns(6);    // senha (hash)
@@ -222,7 +222,8 @@ const ACOES = {
       if (!v) {
         const nome = texto_(p.nome, 100);
         if (!nome) throw aviso_('Digite o nome da pessoa.');
-        aba.appendRow([email, nome, 'vendedor', p.ativo === false ? 'NÃO' : 'SIM', provisoria, '', new Date()]);
+        const papel = p.papel === 'adsign' ? 'adsign' : 'vendedor'; // master só nasce pelo código de instalação
+        aba.appendRow([email, nome, papel, p.ativo === false ? 'NÃO' : 'SIM', provisoria, '', new Date()]);
       } else {
         if (p.nome) aba.getRange(v.linha, 2).setValue(texto_(p.nome, 100));
         if (typeof p.ativo === 'boolean') aba.getRange(v.linha, 4).setValue(p.ativo ? 'SIM' : 'NÃO');

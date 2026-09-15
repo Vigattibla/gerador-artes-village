@@ -14,7 +14,13 @@ from urllib.parse import parse_qs, urlparse
 
 CONF = {'atraso': 0.3, 'falha': 0.0}
 INSTALACAO = '111222'
+PAPEIS = ('master', 'adsign', 'vendedor')
 CONTAS, EXCURSOES, TOKENS = {}, {}, {}
+CAMPANHAS, VENDAS, PARTICIPANTES = {}, {}, set()
+CAMPOS_CAMPANHA = ('nome', 'resumo', 'status', 'limite_venda', 'vagas_total', 'embarques', 'retorno', 'sinal', 'quitar_ate',
+                   'pagamento', 'comissao', 'criancas', 'roteiro', 'inclui', 'nao_inclui', 'documentos', 'cancelamento',
+                   'regras', 'contato_guia', 'textos', 'links', 'arte', 'mini')
+STATUS_CAMPANHA = ('rascunho', 'ativa', 'pausada', 'encerrada')
 
 
 class Aviso(Exception):
@@ -51,6 +57,42 @@ def master(p):
     return c
 
 
+def gestor(p):
+    c = usuario(p)
+    if c['papel'] not in ('master', 'adsign'):
+        raise Aviso('Só a conta master ou adsign pode fazer isso.')
+    return c
+
+
+def vendidas(cid, sem=''):
+    return sum(v['pessoas'] for v in VENDAS.values() if v['campanha'] == cid and v['status'] != 'cancelada' and v['id'] != sem)
+
+
+def campanha_para(c, u):
+    return dict(c, vendidas=vendidas(c['id']), participantes=len({e for i, e in PARTICIPANTES if i == c['id']}),
+                peguei=(c['id'], u['email']) in PARTICIPANTES)
+
+
+def semear():  # campanha de exemplo pra ver a tela cheia no teste
+    i = str(uuid.uuid4())
+    CAMPANHAS[i] = {
+        'id': i, 'criada_por': 'master@teste.local', 'atualizada': int(time.time() * 1000), 'status': 'ativa',
+        'nome': 'All Fun Inclusive – Feriado de Novembro', 'resumo': 'Pacote completo com tudo incluso para casais e famílias.',
+        'limite_venda': '2026-11-05', 'vagas_total': 40, 'embarques': 'Praça da Estação, Belo Horizonte – 6h\nBig Shopping, Contagem – 6h40',
+        'retorno': 'Domingo, saída do resort às 16h', 'sinal': 'R$ 200 no Pix', 'quitar_ate': '2026-11-10',
+        'pagamento': ['Pix', 'Cartão de crédito'], 'comissao': '10% por venda confirmada',
+        'criancas': 'Até 5 anos no colo não paga.\n6 a 10 anos paga meia.', 'roteiro': 'Sexta: chegada e jantar.\nSábado: parque aquático e festa.\nDomingo: café e retorno.',
+        'inclui': 'Transporte, hospedagem, todas as refeições e bebidas, lazer completo.', 'nao_inclui': 'Passeios fora do resort.',
+        'documentos': 'RG ou CNH com foto. Menores com certidão ou autorização.', 'cancelamento': 'Até 30 dias antes: devolve 90%.\nDe 29 a 15 dias: 50%.\nMenos de 15 dias: sem devolução.',
+        'regras': 'Uma mala e uma bolsa de mão por pessoa.', 'contato_guia': 'Marcos – (31) 98888-7777',
+        'textos': 'Feriado de Novembro no Village Resort! Tudo incluso, transporte saindo de BH. Garanta sua vaga comigo 👇\n\nÚltimas vagas pro feriado! Chama no WhatsApp.',
+        'links': 'Roteiro em PDF – https://example.com/roteiro.pdf',
+        'arte': {'atual': 0, 'foto': 'layout', 'personagem': True, 'ajuste': {},
+                 'campos': {'preco_1': '416,57', 'ida_1': '2026-11-13', 'volta_1': '2026-11-16', 'parcelas': '7'}},
+        'mini': '',
+    }
+
+
 def existe_master():
     return any(c['papel'] == 'master' and c['ativo'] and c['senha'] for c in CONTAS.values())
 
@@ -69,6 +111,102 @@ def acao(p):
 
     if a == 'status':
         return {'precisaMaster': not existe_master()}
+
+    if a == 'dev':  # só no servidor falso: entra sem senha com uma conta de teste de cada tipo
+        papel = p.get('papel') if p.get('papel') in PAPEIS else 'vendedor'
+        nome = {'master': 'Chefe (teste)', 'adsign': 'Adsign (teste)', 'vendedor': 'Vendedora (teste)'}[papel]
+        c = CONTAS.setdefault(f'{papel}@teste.local', {'email': f'{papel}@teste.local', 'nome': nome, 'papel': papel,
+                                                       'ativo': True, 'provisoria': '', 'senha': hash_('teste1234')})
+        if not CAMPANHAS:
+            semear()
+        return sessao(c)
+
+    if a == 'campanhas':
+        u = usuario(p)
+        tudo = u['papel'] in ('master', 'adsign')
+        return {'campanhas': [campanha_para(c, u) for c in sorted(CAMPANHAS.values(), key=lambda c: -c['atualizada'])
+                              if tudo or c['status'] != 'rascunho']}
+
+    if a == 'salvarCampanha':
+        u = gestor(p)
+        x = p.get('campanha') or {}
+        atual = CAMPANHAS.get(x.get('id') or '')
+        if x.get('id') and not atual:
+            raise Aviso('Essa campanha não existe mais.')
+        c = dict(atual) if atual else {'id': str(uuid.uuid4()), 'criada_por': u['email'], 'status': 'rascunho', 'nome': ''}
+        for k in CAMPOS_CAMPANHA:
+            if k in x:
+                c[k] = x[k]
+        if c['status'] not in STATUS_CAMPANHA:
+            c['status'] = 'rascunho'
+        if 'vagas_total' in x:
+            c['vagas_total'] = numero(x['vagas_total'])
+        if not str(c.get('nome') or '').strip():
+            raise Aviso('Dê um nome para a campanha.')
+        if c.get('vagas_total') is not None and c['vagas_total'] < vendidas(c['id']):
+            raise Aviso(f'Já foram vendidas {vendidas(c["id"])} vagas. O total não pode ser menor que isso.')
+        c['atualizada'] = int(time.time() * 1000)
+        CAMPANHAS[c['id']] = c
+        return {'campanha': campanha_para(c, u)}
+
+    if a == 'excluirCampanha':
+        gestor(p)
+        cid = p.get('id') or ''
+        if any(v['campanha'] == cid for v in VENDAS.values()):
+            raise Aviso('Essa campanha já tem vendas. Mude a situação para Encerrada em vez de excluir.')
+        CAMPANHAS.pop(cid, None)
+        return {}
+
+    if a == 'pegarCampanha':
+        u = usuario(p)
+        c = CAMPANHAS.get(p.get('id') or '')
+        if not c or c['status'] == 'rascunho':
+            raise Aviso('Essa campanha não está disponível.')
+        PARTICIPANTES.add((c['id'], u['email']))
+        return {}
+
+    if a == 'vendas':
+        u = usuario(p)
+        cid = p.get('campanha') or ''
+        return {'vendas': [dict(v, vendedorNome=CONTAS.get(v['vendedor'], {}).get('nome', v['vendedor'])) for v in VENDAS.values()
+                           if (not cid or v['campanha'] == cid) and (u['papel'] == 'master' or v['vendedor'] == u['email'])]}
+
+    if a == 'salvarVenda':
+        u = usuario(p)
+        x = p.get('venda') or {}
+        atual = VENDAS.get(x.get('id') or '')
+        if atual:  # só muda a situação: master confirma/cancela; vendedor cancela a própria enquanto pendente
+            status = x.get('status')
+            if status not in ('pendente', 'confirmada', 'cancelada'):
+                raise Aviso('Situação inválida.')
+            if u['papel'] != 'master' and (atual['vendedor'] != u['email'] or status != 'cancelada' or atual['status'] != 'pendente'):
+                raise Aviso('Só a conta master confirma ou muda uma venda.')
+            c = CAMPANHAS.get(atual['campanha'])
+            if atual['status'] == 'cancelada' and status != 'cancelada' and c and c.get('vagas_total') is not None \
+                    and atual['pessoas'] > c['vagas_total'] - vendidas(c['id'], atual['id']):
+                raise Aviso('Não há vagas para reativar essa venda.')
+            atual['status'] = status
+            return {'venda': atual}
+        c = CAMPANHAS.get(x.get('campanha') or '')
+        if not c or c['status'] != 'ativa':
+            raise Aviso('Essa campanha não está aceitando vendas.')
+        if c.get('limite_venda') and c['limite_venda'] < time.strftime('%Y-%m-%d'):
+            raise Aviso('O prazo de venda dessa campanha acabou.')
+        cliente = str(x.get('cliente') or '').strip()
+        pessoas = numero(x.get('pessoas')) or 0
+        if not cliente:
+            raise Aviso('Digite o nome do cliente.')
+        if pessoas < 1:
+            raise Aviso('Digite quantas pessoas.')
+        if c.get('vagas_total') is not None and pessoas > c['vagas_total'] - vendidas(c['id']):
+            raise Aviso(f'Só restam {max(0, c["vagas_total"] - vendidas(c["id"]))} vagas nessa campanha.')
+        i = str(uuid.uuid4())
+        VENDAS[i] = {'id': i, 'campanha': c['id'], 'vendedor': u['email'], 'cliente': cliente, 'telefone': str(x.get('telefone') or ''),
+                     'pessoas': pessoas, 'embarque': str(x.get('embarque') or ''), 'pagamento': str(x.get('pagamento') or ''),
+                     'sinal_pago': bool(x.get('sinal_pago')), 'obs': str(x.get('obs') or ''), 'status': 'pendente',
+                     'criada': int(time.time() * 1000)}
+        PARTICIPANTES.add((c['id'], u['email']))
+        return {'venda': VENDAS[i]}
 
     if a == 'criarMaster':
         if existe_master():
@@ -160,7 +298,8 @@ def acao(p):
             nome = str(p.get('nome') or '').strip()
             if not nome:
                 raise Aviso('Digite o nome da pessoa.')
-            CONTAS[email] = {'email': email, 'nome': nome, 'papel': 'vendedor', 'ativo': p.get('ativo') is not False,
+            papel = p.get('papel') if p.get('papel') in ('vendedor', 'adsign') else 'vendedor'
+            CONTAS[email] = {'email': email, 'nome': nome, 'papel': papel, 'ativo': p.get('ativo') is not False,
                              'provisoria': provisoria, 'senha': ''}
         else:
             if p.get('nome'):
@@ -189,7 +328,7 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == '/controle':
             params = parse_qs(url.query)
             if 'resetar' in params:
-                CONTAS.clear(); EXCURSOES.clear(); TOKENS.clear()
+                CONTAS.clear(); EXCURSOES.clear(); TOKENS.clear(); CAMPANHAS.clear(); VENDAS.clear(); PARTICIPANTES.clear()
             for k in ('atraso', 'falha'):
                 if k in params:
                     CONF[k] = float(params[k][0])

@@ -37,6 +37,14 @@ Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inc
 11. Situação calculada pelas datas: próxima (ida depois de hoje), acontecendo (entre ida e volta),
     encerrada (volta antes de hoje).
 
+## Campanhas (pedido de 15/09/2026)
+12. Aba Campanhas tipo painel (detalhes em `docs/spec-campanhas.md`). Master ou **adsign** (tipo de conta novo:
+    cria e edita campanhas, não mexe em contas nem vê as vendas dos outros) publica a campanha com arte, informações
+    da excursão, vagas totais e materiais; pesquisa em CRMs e portais de parceiros para completar os campos.
+13. Vendedor pega a campanha e faz a arte trocando **só o telefone** (datas, valor, título e foto travados).
+14. Vagas somadas: cada venda informada desconta do total da campanha; master confirma ou cancela vendas.
+15. Novas artes (layouts) vêm do `.ai` pelo `extrair.py`, rodado com o Claude (o site não lê Illustrator).
+
 ## Fora de escopo / decisões
 - Preço com 4 dígitos (não existe).
 - Posição do "7x de" sobre o preço: decidir depois.

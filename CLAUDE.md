@@ -18,6 +18,11 @@ Vigattibla/gerador-artes-village).
 - `tests/mock_planilha.py` — servidor falso da planilha (mesmas ações do Apps Script) pra testar o site sem
   mexer na planilha real: servidor `mock-planilha` (porta 8766) + `http://localhost:8765/?api=http://localhost:8766`.
   `?api=` só vale em localhost (em produção mandaria senhas pra outro servidor).
+- No localhost o site usa o servidor falso direto e a tela Entrar tem "Entrar como master/adsign/vendedor" sem senha.
+- `?demo` (também no GitHub Pages): demonstração pra mostrar a outras pessoas. `demoApi()` no `index.html` repete as
+  regras do servidor falso no localStorage de quem abre (`village.demo.*`), com campanha e vendas de exemplo
+  (`demo-mini.jpg` é a miniatura). Campanhas e adsign só aparecem no localhost e no `?demo` (`BETA`) até o Apps Script
+  ter as ações de campanha. Mudou uma ação no servidor falso → mudar igual no `demoApi()`.
 - O site é local-first: grava as excursões no aparelho na hora e sincroniza com a planilha em segundo plano
   (o Apps Script grátis leva 2–12 s e às vezes devolve página HTML; `api()` tenta de novo).
 - `docs/spec-contas.md` — especificação de contas, biblioteca e painel do chefe (próxima fase).

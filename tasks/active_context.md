@@ -41,6 +41,19 @@
   espera explícita com contador em toda chamada lenta (pedido do usuário); excursões no aparelho + envio em
   segundo plano com nova tentativa; passo "Dados da excursão"; Painel e Contas da master. Testado de ponta a
   ponta com `tests/mock_planilha.py` (master, vendedora, provisória, senha, sincronização, painel, desativar).
+- 15/09: versão com contas publicada (commit 28d0f05). Falta o usuário criar a master no site com o código.
+- 15/09 (só localhost, não publicado): logo Village Resort em vetor no topo (tirado de `01 Marca/00 - Logos.ai`, branco
+  e amarelo). No localhost o site usa o servidor falso (`tests/mock_planilha.py`) e a tela Entrar tem botões
+  "Entrar como master/adsign/vendedor" sem senha. Conta nova **adsign** (cria e edita campanhas, não mexe em contas).
+- 15/09 (só localhost): aba **Campanhas** (`docs/spec-campanhas.md`): vitrine com abas, ficha completa (datas e valor
+  vêm da arte, embarque, roteiro, inclui, pagamento, crianças, documentos, cancelamento, materiais com copiar),
+  formulário em seções, arte da campanha no mesmo editor (passos 2–5, rascunho no aparelho até "Salvar na campanha"),
+  vendedor "Fazer minha arte" (só passo de contato, só telefone editável), informar venda (valida vagas, prazo e
+  situação), master confirma/cancela e vê ranking. Testado no localhost com master, adsign e vendedor.
+  Falta: ações de campanha no `apps-script/Codigo.gs` (abas Campanhas, Vendas, Participantes) antes de publicar.
+- 15/09: usuário pediu subir "sem banco de dados" pra outras pessoas verem e opinarem → modo `?demo` no mesmo site
+  (servidor simulado no navegador, dados de exemplo, faixa "Demonstração" com Recomeçar). No link normal as campanhas
+  ficam escondidas.
 2. Decidir posição do "7x de".
 3. Site definitivo.
 
