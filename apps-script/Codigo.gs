@@ -19,6 +19,19 @@ const ABA_EXCURSOES = 'Excursoes';
 const COLUNAS_VENDEDORES = ['Email', 'Nome', 'Papel', 'Ativo', 'Senha provisória', 'Senha (não mexer)', 'Criado em'];
 const COLUNAS_EXCURSOES = ['ID', 'Vendedor', 'Nome', 'Observações', 'Ida', 'Volta', 'Vagas', 'Vendidas',
   'Responsável do grupo', 'Telefone do grupo', 'Atualizada em', 'Arte (não mexer)', 'Miniatura (não mexer)'];
+const ABA_CAMPANHAS = 'Campanhas';
+const ABA_VENDAS = 'Vendas';
+const ABA_PARTICIPANTES = 'Participantes';
+const COLUNAS_CAMPANHAS = ['ID', 'Nome', 'Situação', 'Vende até', 'Vagas', 'Criada por', 'Atualizada em',
+  'Dados (não mexer)', 'Miniatura (não mexer)'];
+const COLUNAS_VENDAS = ['ID', 'Campanha', 'Vendedor', 'Cliente', 'Telefone', 'Pessoas', 'Embarque', 'Pagamento',
+  'Sinal pago', 'Observação', 'Situação', 'Criada em'];
+const COLUNAS_PARTICIPANTES = ['Campanha', 'Vendedor', 'Desde'];
+const SITUACOES_CAMPANHA = ['rascunho', 'ativa', 'pausada', 'encerrada'];
+const SITUACOES_VENDA = ['pendente', 'confirmada', 'cancelada'];
+// o resto da campanha fica num JSON (coluna "Dados"); nome, situação, prazo e vagas têm coluna própria na planilha
+const CAMPOS_CAMPANHA = ['resumo', 'embarques', 'retorno', 'sinal', 'quitar_ate', 'pagamento', 'comissao', 'criancas',
+  'roteiro', 'inclui', 'nao_inclui', 'documentos', 'cancelamento', 'regras', 'contato_guia', 'textos', 'links', 'arte'];
 const DIAS_SESSAO = 30;
 const LIMITE_CELULA = 45000; // a planilha aceita até 50 mil caracteres por célula
 const TENTATIVAS = 5;        // erros seguidos antes de bloquear por 10 minutos
@@ -29,11 +42,18 @@ function configurar() {
   const vendedores = criarAba_(ss, ABA_VENDEDORES, COLUNAS_VENDEDORES);
   const excursoes = criarAba_(ss, ABA_EXCURSOES, COLUNAS_EXCURSOES);
   vendedores.getRange('C2:C').setDataValidation(
-    SpreadsheetApp.newDataValidation().requireValueInList(['vendedor', 'adsign', 'master']).build());
+    SpreadsheetApp.newDataValidation().requireValueInList(['vendedor', 'master']).build());
   vendedores.getRange('D2:D').setDataValidation(
     SpreadsheetApp.newDataValidation().requireValueInList(['SIM', 'NÃO']).build());
   vendedores.hideColumns(6);    // senha (hash)
   excursoes.hideColumns(12, 2); // arte e miniatura
+  const campanhas = criarAba_(ss, ABA_CAMPANHAS, COLUNAS_CAMPANHAS);
+  const vendas = criarAba_(ss, ABA_VENDAS, COLUNAS_VENDAS);
+  criarAba_(ss, ABA_PARTICIPANTES, COLUNAS_PARTICIPANTES);
+  campanhas.getRange('C2:C').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(SITUACOES_CAMPANHA).build());
+  campanhas.hideColumns(8, 2);  // dados e miniatura
+  vendas.getRange('I2:I').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(['SIM', 'NÃO']).build());
+  vendas.getRange('K2:K').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(SITUACOES_VENDA).build());
   const props = PropertiesService.getScriptProperties();
   if (!props.getProperty('SEGREDO')) props.setProperty('SEGREDO', Utilities.getUuid() + Utilities.getUuid());
   if (existeMaster_()) {
@@ -222,14 +242,141 @@ const ACOES = {
       if (!v) {
         const nome = texto_(p.nome, 100);
         if (!nome) throw aviso_('Digite o nome da pessoa.');
-        const papel = p.papel === 'adsign' ? 'adsign' : 'vendedor'; // master só nasce pelo código de instalação
-        aba.appendRow([email, nome, papel, p.ativo === false ? 'NÃO' : 'SIM', provisoria, '', new Date()]);
+        aba.appendRow([email, nome, 'vendedor', p.ativo === false ? 'NÃO' : 'SIM', provisoria, '', new Date()]);
       } else {
         if (p.nome) aba.getRange(v.linha, 2).setValue(texto_(p.nome, 100));
         if (typeof p.ativo === 'boolean') aba.getRange(v.linha, 4).setValue(p.ativo ? 'SIM' : 'NÃO');
         if (provisoria) aba.getRange(v.linha, 5).setValue(provisoria);
       }
       return { provisoria: provisoria }; // o site mostra para a master passar à pessoa
+    });
+  },
+
+  // ---------- campanhas: a master publica; vendedores pegam, fazem a arte e informam vendas
+  campanhas: function (p) {
+    const u = usuario_(p.token);
+    const vendas = vendas_(), part = participantes_();
+    const lista = campanhas_()
+      .filter(function (c) { return u.papel === 'master' || c.status !== 'rascunho'; })
+      .sort(function (a, b) { return b.atualizada - a.atualizada; })
+      .map(function (c) { return campanhaPublica_(c, u, vendas, part); });
+    return { campanhas: lista };
+  },
+
+  // manda só os campos que mudaram (o site salva o formulário e, separado, a arte + miniatura)
+  salvarCampanha: function (p) {
+    const u = master_(p.token);
+    const x = p.campanha || {};
+    return trava_(function () {
+      const atual = x.id ? campanhas_().filter(function (c) { return c.id === x.id; })[0] : null;
+      if (x.id && !atual) throw aviso_('Essa campanha não existe mais.');
+      const c = Object.assign({}, atual || { status: 'rascunho', criada_por: u.email, nome: '' });
+      CAMPOS_CAMPANHA.concat(['nome', 'status', 'limite_venda', 'vagas_total', 'mini']).forEach(function (k) {
+        if (Object.prototype.hasOwnProperty.call(x, k)) c[k] = x[k];
+      });
+      c.nome = texto_(c.nome, 200);
+      if (!c.nome) throw aviso_('Dê um nome para a campanha.');
+      if (SITUACOES_CAMPANHA.indexOf(c.status) < 0) c.status = 'rascunho';
+      const vendas = vendas_();
+      const vagas = numero_(c.vagas_total), vendidas = vendidas_(vendas, c.id || '');
+      if (vagas !== '' && vagas < vendidas) throw aviso_('Já foram vendidas ' + vendidas + ' vagas. O total não pode ser menor que isso.');
+      const dados = {};
+      CAMPOS_CAMPANHA.forEach(function (k) {
+        if (c[k] == null) return;
+        dados[k] = (k === 'arte' || k === 'pagamento') ? c[k] : String(c[k]).slice(0, 5000);
+      });
+      const json = JSON.stringify(dados);
+      if (json.length > LIMITE_CELULA) throw aviso_('A campanha ficou grande demais para salvar. Encurte os textos.');
+      const mini = String(c.mini || '').length <= LIMITE_CELULA ? String(c.mini || '') : '';
+      const id = atual ? atual.id : Utilities.getUuid();
+      const agora = new Date();
+      const linha = [id, c.nome, c.status, data_(c.limite_venda), vagas, c.criada_por || u.email, agora, json, mini];
+      const aba = aba_(ABA_CAMPANHAS);
+      if (atual) aba.getRange(atual.linha, 1, 1, linha.length).setValues([linha]);
+      else aba.appendRow(linha);
+      const salvo = Object.assign(dados, {
+        id: id, nome: c.nome, status: c.status, limite_venda: String(c.limite_venda || ''),
+        vagas_total: vagas === '' ? null : vagas, criada_por: c.criada_por || u.email, atualizada: agora.getTime(), mini: mini,
+      });
+      return { campanha: campanhaPublica_(salvo, u, vendas, participantes_()) };
+    });
+  },
+
+  excluirCampanha: function (p) {
+    master_(p.token);
+    return trava_(function () {
+      if (vendas_().some(function (v) { return v.campanha === p.id; })) {
+        throw aviso_('Essa campanha já tem vendas. Mude a situação para Encerrada em vez de excluir.');
+      }
+      const c = campanhas_().filter(function (c) { return c.id === p.id; })[0];
+      if (c) aba_(ABA_CAMPANHAS).deleteRow(c.linha);
+      return {};
+    });
+  },
+
+  pegarCampanha: function (p) {
+    const u = usuario_(p.token);
+    const c = campanhas_().filter(function (c) { return c.id === p.id; })[0];
+    if (!c || c.status === 'rascunho') throw aviso_('Essa campanha não está disponível.');
+    trava_(function () { participar_(c.id, u.email); });
+    return {};
+  },
+
+  // master vê as vendas de todos; os outros, só as próprias
+  vendas: function (p) {
+    const u = usuario_(p.token);
+    const nomes = {};
+    vendedores_().forEach(function (v) { nomes[v.email] = v.nome; });
+    const lista = vendas_()
+      .filter(function (v) { return (!p.campanha || v.campanha === p.campanha) && (u.papel === 'master' || v.vendedor === u.email); })
+      .map(function (v) { delete v.linha; v.vendedorNome = nomes[v.vendedor] || v.vendedor; return v; });
+    return { vendas: lista };
+  },
+
+  // venda nova (campanha, cliente, pessoas...) ou só troca de situação ({ id, status })
+  salvarVenda: function (p) {
+    const u = usuario_(p.token);
+    const x = p.venda || {};
+    return trava_(function () {
+      const vendas = vendas_();
+      const aba = aba_(ABA_VENDAS);
+      const atual = x.id ? vendas.filter(function (v) { return v.id === x.id; })[0] : null;
+      if (atual) {
+        const status = String(x.status || '');
+        if (SITUACOES_VENDA.indexOf(status) < 0) throw aviso_('Situação inválida.');
+        if (u.papel !== 'master' && (atual.vendedor !== u.email || status !== 'cancelada' || atual.status !== 'pendente')) {
+          throw aviso_('Só a conta master confirma ou muda uma venda.');
+        }
+        const ca = campanhas_().filter(function (c) { return c.id === atual.campanha; })[0];
+        if (atual.status === 'cancelada' && status !== 'cancelada' && ca && ca.vagas_total != null
+            && atual.pessoas > ca.vagas_total - vendidas_(vendas, ca.id, atual.id)) {
+          throw aviso_('Não há vagas para reativar essa venda.');
+        }
+        aba.getRange(atual.linha, 11).setValue(status);
+        atual.status = status;
+        delete atual.linha;
+        return { venda: atual };
+      }
+      const c = campanhas_().filter(function (c) { return c.id === x.campanha; })[0];
+      if (!c || c.status !== 'ativa') throw aviso_('Essa campanha não está aceitando vendas.');
+      const hoje = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+      if (c.limite_venda && c.limite_venda < hoje) throw aviso_('O prazo de venda dessa campanha acabou.');
+      const cliente = texto_(x.cliente, 200);
+      const pessoas = numero_(x.pessoas) || 0;
+      if (!cliente) throw aviso_('Digite o nome do cliente.');
+      if (pessoas < 1) throw aviso_('Digite quantas pessoas.');
+      const resta = c.vagas_total == null ? Infinity : c.vagas_total - vendidas_(vendas, c.id);
+      if (pessoas > resta) throw aviso_('Só restam ' + Math.max(0, resta) + ' vagas nessa campanha.');
+      const id = Utilities.getUuid();
+      const agora = new Date();
+      const linha = [id, c.id, u.email, cliente, texto_(x.telefone, 40), pessoas, texto_(x.embarque, 200),
+        texto_(x.pagamento, 60), x.sinal_pago ? 'SIM' : 'NÃO', texto_(x.obs, 1000), 'pendente', agora];
+      aba.appendRow(linha);
+      participar_(c.id, u.email);
+      return { venda: {
+        id: id, campanha: c.id, vendedor: u.email, cliente: cliente, telefone: linha[4], pessoas: pessoas,
+        embarque: linha[6], pagamento: linha[7], sinal_pago: !!x.sinal_pago, obs: linha[9], status: 'pendente', criada: agora.getTime(),
+      } };
     });
   },
 };
@@ -346,6 +493,68 @@ function excursoes_() {
       mini: String(l[12] || ''),
     };
   }).filter(function (x) { return x.id; });
+}
+
+function campanhas_() {
+  const fuso = Session.getScriptTimeZone();
+  return aba_(ABA_CAMPANHAS).getDataRange().getValues().slice(1).map(function (l, i) {
+    let dados = {};
+    try { dados = JSON.parse(l[7] || '{}'); } catch (e) {}
+    const status = String(l[2]).trim().toLowerCase();
+    return Object.assign(dados, {
+      linha: i + 2,
+      id: String(l[0]),
+      nome: String(l[1]),
+      status: SITUACOES_CAMPANHA.indexOf(status) >= 0 ? status : 'rascunho',
+      limite_venda: l[3] instanceof Date ? Utilities.formatDate(l[3], fuso, 'yyyy-MM-dd') : String(l[3] || ''),
+      vagas_total: l[4] === '' ? null : Number(l[4]),
+      criada_por: email_(l[5]),
+      atualizada: l[6] instanceof Date ? l[6].getTime() : 0,
+      mini: String(l[8] || ''),
+    });
+  }).filter(function (c) { return c.id; });
+}
+
+function vendas_() {
+  return aba_(ABA_VENDAS).getDataRange().getValues().slice(1).map(function (l, i) {
+    const status = String(l[10]).trim().toLowerCase();
+    return {
+      linha: i + 2,
+      id: String(l[0]),
+      campanha: String(l[1]),
+      vendedor: email_(l[2]),
+      cliente: String(l[3]),
+      telefone: String(l[4]),
+      pessoas: Number(l[5] || 0),
+      embarque: String(l[6]),
+      pagamento: String(l[7]),
+      sinal_pago: String(l[8]).trim().toUpperCase() === 'SIM',
+      obs: String(l[9]),
+      status: SITUACOES_VENDA.indexOf(status) >= 0 ? status : 'pendente',
+      criada: l[11] instanceof Date ? l[11].getTime() : 0,
+    };
+  }).filter(function (v) { return v.id; });
+}
+
+function participantes_() {  // "idCampanha email" de quem pegou cada campanha
+  return aba_(ABA_PARTICIPANTES).getDataRange().getValues().slice(1).map(function (l) { return String(l[0]) + ' ' + email_(l[1]); });
+}
+
+function participar_(id, email) {
+  if (participantes_().indexOf(id + ' ' + email) < 0) aba_(ABA_PARTICIPANTES).appendRow([id, email, new Date()]);
+}
+
+function vendidas_(vendas, id, sem) {  // pessoas das vendas não canceladas
+  return vendas.filter(function (v) { return v.campanha === id && v.status !== 'cancelada' && v.id !== sem; })
+    .reduce(function (s, v) { return s + v.pessoas; }, 0);
+}
+
+function campanhaPublica_(c, u, vendas, part) {
+  const x = Object.assign({}, c);
+  delete x.linha;
+  x.vendidas = vendidas_(vendas, c.id);
+  x.peguei = part.indexOf(c.id + ' ' + u.email) >= 0;
+  return x;
 }
 
 // ---------------------------------------------------------------- limpeza do que chega do site

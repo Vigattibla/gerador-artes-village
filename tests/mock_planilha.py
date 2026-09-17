@@ -14,7 +14,7 @@ from urllib.parse import parse_qs, urlparse
 
 CONF = {'atraso': 0.3, 'falha': 0.0}
 INSTALACAO = '111222'
-PAPEIS = ('master', 'adsign', 'vendedor')
+PAPEIS = ('master', 'vendedor')
 CONTAS, EXCURSOES, TOKENS = {}, {}, {}
 CAMPANHAS, VENDAS, PARTICIPANTES = {}, {}, set()
 CAMPOS_CAMPANHA = ('nome', 'resumo', 'status', 'limite_venda', 'vagas_total', 'embarques', 'retorno', 'sinal', 'quitar_ate',
@@ -59,8 +59,8 @@ def master(p):
 
 def gestor(p):
     c = usuario(p)
-    if c['papel'] not in ('master', 'adsign'):
-        raise Aviso('Só a conta master ou adsign pode fazer isso.')
+    if c['papel'] != 'master':
+        raise Aviso('Só a conta master pode fazer isso.')
     return c
 
 
@@ -114,7 +114,7 @@ def acao(p):
 
     if a == 'dev':  # só no servidor falso: entra sem senha com uma conta de teste de cada tipo
         papel = p.get('papel') if p.get('papel') in PAPEIS else 'vendedor'
-        nome = {'master': 'Chefe (teste)', 'adsign': 'Adsign (teste)', 'vendedor': 'Vendedora (teste)'}[papel]
+        nome = {'master': 'Chefe (teste)', 'vendedor': 'Vendedora (teste)'}[papel]
         c = CONTAS.setdefault(f'{papel}@teste.local', {'email': f'{papel}@teste.local', 'nome': nome, 'papel': papel,
                                                        'ativo': True, 'provisoria': '', 'senha': hash_('teste1234')})
         if not CAMPANHAS:
@@ -123,7 +123,7 @@ def acao(p):
 
     if a == 'campanhas':
         u = usuario(p)
-        tudo = u['papel'] in ('master', 'adsign')
+        tudo = u['papel'] == 'master'
         return {'campanhas': [campanha_para(c, u) for c in sorted(CAMPANHAS.values(), key=lambda c: -c['atualizada'])
                               if tudo or c['status'] != 'rascunho']}
 
@@ -298,7 +298,7 @@ def acao(p):
             nome = str(p.get('nome') or '').strip()
             if not nome:
                 raise Aviso('Digite o nome da pessoa.')
-            papel = p.get('papel') if p.get('papel') in ('vendedor', 'adsign') else 'vendedor'
+            papel = 'vendedor'
             CONTAS[email] = {'email': email, 'nome': nome, 'papel': papel, 'ativo': p.get('ativo') is not False,
                              'provisoria': provisoria, 'senha': ''}
         else:

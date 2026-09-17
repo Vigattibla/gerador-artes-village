@@ -54,6 +54,16 @@
 - 15/09: usuário pediu subir "sem banco de dados" pra outras pessoas verem e opinarem → modo `?demo` no mesmo site
   (servidor simulado no navegador, dados de exemplo, faixa "Demonstração" com Recomeçar). No link normal as campanhas
   ficam escondidas.
+- 15/09 (19h): usuário mudou o `.ai`: card de preço com "7x de" + preço antigo riscado (vermelho), etiquetas
+  Crédito/Débito/Pix embaixo das datas, local saiu do card e virou caixa "Excursão: Village Resort, MG", site saiu.
+  `extrair.py` agora separa "7x de 750" em `parcelas_N` + `preco_de_N` (acompanha o fim das parcelas, risco
+  redesenhado), lê a fileira de etiquetas como `pag_N` (tipo `pagamentos`, liga/desliga, centraliza as ligadas),
+  ignora textos duplicados e acha `local` depois de rótulo com ":". Editor: por pacote valor, valor antigo, parcelas
+  (−/+) e formas de pagamento. Excursões antigas com `parcelas` único viram `parcelas_1/2`. Não publicado.
+- 17/09: propostas de layout (pasta `Agentes de viagem/Propostas de layout`, `fonte/gerar.py` monta PDF e .ai nativo)
+  aprovadas e coladas pelo usuário no `.ai` (pranchetas 4–7). Gerador agora tem 6 artes: 1 pacote, 2 pacotes, Story,
+  Feed, Últimas vagas, Carrossel (tela da oferta). Editor aceita 1080×1920, campo "Vagas restantes". Arte 1 sem o menino
+  (usuário tirou). Testado: diferença ≤1% contra o .ai nas artes novas, editor no desktop e celular. Não publicado.
 2. Decidir posição do "7x de".
 3. Site definitivo.
 
@@ -61,3 +71,10 @@
 - Título da arte 1 aproxima a distorção do Illustrator (a letra em si não deforma).
 - Contorno do título fecha vãos entre letras com "pontes" na altura das maiúsculas.
 - Banco ocupa ~51 MB no repositório.
+- 17/09 (tarde): usuário salvou o .ai com Story/Últimas trocados, cachorro no carrossel e ícones na lista da arte 1;
+  extração rodada. Adsign removido (site, servidor falso, demonstração, Codigo.gs). Campanhas implementadas no
+  `Codigo.gs` (abas Campanhas, Vendas, Participantes; `configurar` cria) e liberadas no site de produção.
+  `tests/teste_apps_script.js` roda o Codigo.gs com planilha falsa (passou). `docs/api.md` para o TI que vai migrar o banco.
+  Falta: usuário colar o Codigo.gs novo no Apps Script, rodar `configurar`, nova versão da implantação; publicar o site.
+- 17/09: usuário decidiu que o site publicado fica só local (demonstração, sem planilha) até o TI migrar o banco;
+  `DEMO` é o padrão fora do localhost e `?planilha` liga o Apps Script.

@@ -11,6 +11,10 @@ Vigattibla/gerador-artes-village).
 
 ## Arquivos
 - `extrair.py` — lê o `.ai` e o banco de fotos; gera `dados.js`, `camadas/` e `banco/`. Rodar: `python extrair.py`
+  `PRANCHETAS` diz qual prancheta do `.ai` vira qual arte (a 3ª, story antigo do designer, fica de fora). Artes novas
+  (Story, Feed, Últimas vagas, Carrossel) têm tamanho próprio (`w`/`h`), foto própria (`foto.padrao`) e textos calculados
+  (`formato`: período e duração das datas, "10X" das parcelas, "% OFF" de preço antigo × preço, "Restam só N vagas").
+  Título reto delas fica na base (`TITULO_FIXO`).
 - `index.html` — o sistema (formulário + canvas). Tudo que é da arte vem do `dados.js`.
 - `dados.js`, `camadas/`, `banco/` — gerados, não editar.
 - `fonts/` — Montserrat + `MontserratTab` (dígitos tabulares, gerada com fontTools).
@@ -18,11 +22,14 @@ Vigattibla/gerador-artes-village).
 - `tests/mock_planilha.py` — servidor falso da planilha (mesmas ações do Apps Script) pra testar o site sem
   mexer na planilha real: servidor `mock-planilha` (porta 8766) + `http://localhost:8765/?api=http://localhost:8766`.
   `?api=` só vale em localhost (em produção mandaria senhas pra outro servidor).
-- No localhost o site usa o servidor falso direto e a tela Entrar tem "Entrar como master/adsign/vendedor" sem senha.
+- No localhost o site usa o servidor falso direto e a tela Entrar tem "Entrar como master/vendedor" sem senha.
 - `?demo` (também no GitHub Pages): demonstração pra mostrar a outras pessoas. `demoApi()` no `index.html` repete as
   regras do servidor falso no localStorage de quem abre (`village.demo.*`), com campanha e vendas de exemplo
-  (`demo-mini.jpg` é a miniatura). Campanhas e adsign só aparecem no localhost e no `?demo` (`BETA`) até o Apps Script
-  ter as ações de campanha. Mudou uma ação no servidor falso → mudar igual no `demoApi()`.
+  (`demo-mini.jpg` é a miniatura). Mudou uma ação do servidor → mudar igual no `Codigo.gs`, no servidor falso e no
+  `demoApi()`, e rodar `node tests/teste_apps_script.js`.
+- Site publicado roda **só no navegador** (modo demonstração) por decisão do usuário (17/09): nada vai para a
+  planilha. `?planilha` no link usa o Apps Script (para o TI testar a migração).
+- `docs/api.md` — contrato do servidor (para o TI migrar o banco). Papéis: só master e vendedor (adsign saiu em 17/09).
 - O site é local-first: grava as excursões no aparelho na hora e sincroniza com a planilha em segundo plano
   (o Apps Script grátis leva 2–12 s e às vezes devolve página HTML; `api()` tenta de novo).
 - `docs/spec-contas.md` — especificação de contas, biblioteca e painel do chefe (próxima fase).

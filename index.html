@@ -158,7 +158,7 @@
   /* ---------- editor ---------- */
   .app { display: grid; grid-template-columns: minmax(0, 1fr) 460px; height: calc(100% - 56px); }
   .palco { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; min-height: 0; }
-  .arte-wrap { position: relative; width: min(100%, calc((100vh - 150px) * .8)); aspect-ratio: 4 / 5; overflow: hidden; border-radius: 4px; box-shadow: 0 12px 32px rgba(38, 50, 79, .22); }
+  .arte-wrap { --r: .8; position: relative; width: min(100%, calc((100vh - 150px) * var(--r))); aspect-ratio: var(--r); overflow: hidden; border-radius: 4px; box-shadow: 0 12px 32px rgba(38, 50, 79, .22); }
   #arte { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
   /* o pedaço da arte que está sendo editado fica aceso, o resto escurece */
   .alvo { position: absolute; border: 3px solid var(--sol); border-radius: 8px; box-shadow: 0 0 0 9999px rgba(29, 36, 54, .35); pointer-events: none; transition: left .2s, top .2s, width .2s, height .2s; }
@@ -198,7 +198,7 @@
   .artes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .opcao { padding: 8px 8px 12px; border: 3px solid var(--linha); border-radius: 12px; background: #fff; text-align: left; cursor: pointer; }
   .opcao[aria-pressed=true] { border-color: var(--sol-forte); background: #fff8df; }
-  .opcao canvas { display: block; width: 100%; aspect-ratio: 4 / 5; margin-bottom: 8px; border-radius: 6px; background: var(--fundo); }
+  .opcao canvas { display: block; width: 100%; height: auto; margin-bottom: 8px; border-radius: 6px; background: var(--fundo); }
   .opcao strong { display: block; font-size: 16px; font-weight: 800; color: var(--navy); }
   .opcao small { display: block; font-size: 13px; color: var(--suave); }
 
@@ -224,7 +224,7 @@
   @media (max-width: 860px) {
     .app { display: block; height: auto; }
     .palco { position: sticky; top: 0; z-index: 2; gap: 6px; padding: 10px 10px 8px; background: var(--fundo); }
-    .arte-wrap { width: min(100%, calc(42vh * .8)); }
+    .arte-wrap { width: min(100%, calc(42vh * var(--r))); }
     .dica { font-size: 12px; }
     .painel { border-left: 0; padding-bottom: 90px; }
     #form { overflow: visible; }
@@ -260,7 +260,7 @@
     <a href="#/excursoes" data-tela="excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <span class="longo">Minhas excursões</span><span class="curto">Excursões</span></a>
-    <a href="#/campanhas" data-tela="campanhas" data-beta hidden>
+    <a href="#/campanhas" data-tela="campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       Campanhas</a>
     <a href="#/painel" data-tela="painel" data-master hidden>
@@ -290,7 +290,6 @@
     <p class="ajuda">Só aparece no localhost. Entra sem senha no servidor falso da planilha.</p>
     <div class="acoes-card">
       <button type="button" data-papel="master">Entrar como master</button>
-      <button type="button" data-papel="adsign">Entrar como adsign</button>
       <button type="button" data-papel="vendedor">Entrar como vendedor</button>
     </div>
     <p class="erro" hidden></p>
@@ -335,7 +334,7 @@
     <a class="atalho" href="#/excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <strong>Minhas excursões</strong><span id="inicio-qtd"></span></a>
-    <a class="atalho" href="#/campanhas" data-beta hidden>
+    <a class="atalho" href="#/campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       <strong>Campanhas</strong>Excursões do resort para vender</a>
     <a class="atalho" href="#/painel" data-master hidden>
@@ -405,7 +404,7 @@
         <label>Vende até<input class="campo" name="limite_venda" type="date"></label>
       </div>
       <label>Total de vagas<input class="campo" name="vagas_total" type="number" inputmode="numeric" min="0">
-        <span class="ajuda">As vendas de todos os vendedores descontam daqui. Rascunho só a master e o adsign veem.</span></label>
+        <span class="ajuda">As vendas de todos os vendedores descontam daqui. Rascunho só a master vê.</span></label>
     </div>
     <div class="caixa">
       <h2>Arte, datas e valor</h2>
@@ -473,10 +472,6 @@
     <p class="ajuda">A conta é gravada na planilha do Google, então criar leva alguns segundos.</p>
     <label>Nome<input class="campo" name="nome" autocomplete="off"></label>
     <label>E-mail<input class="campo" name="email" type="email" autocomplete="off" inputmode="email"></label>
-    <label>Tipo de conta<select class="campo" name="papel">
-      <option value="vendedor">Vendedor: vende e pega campanhas</option>
-      <option value="adsign" data-beta hidden>Adsign: cria e edita campanhas</option>
-    </select></label>
     <p class="erro" hidden></p>
     <button class="botao-grande" type="submit">Criar conta</button>
   </form>
@@ -523,14 +518,8 @@
       <section class="passo" data-passo="3" hidden>
         <h2 tabindex="-1">Valores e datas</h2>
         <div id="pacotes"></div>
-        <div class="rotulo">Parcelas
-          <div class="contador">
-            <button type="button" id="menos" aria-label="Menos parcelas">−</button>
-            <output id="n-parcelas" aria-live="polite"></output>
-            <button type="button" id="mais" aria-label="Mais parcelas">+</button>
-          </div>
-        </div>
-        <input type="hidden" name="parcelas" id="parcelas">
+        <label id="linha-restam" hidden>Vagas restantes<input class="campo" name="restam" type="number" inputmode="numeric" min="0">
+          <span class="ajuda">Aparece na etiqueta "Restam só … vagas".</span></label>
       </section>
 
       <section class="passo" data-passo="4" hidden>
@@ -575,8 +564,8 @@ const only = q.has('only'); // modo headless: ?only&layout=1&preco_1=... -> só 
 // só lá dá pra trocar com ?api= (em produção um link com ?api= mandaria as senhas pra outro lugar).
 const LOCAL = location.hostname === 'localhost';
 // ?demo: demonstração pra mostrar a outras pessoas; o servidor é simulado no navegador e os dados ficam só nele
-const DEMO = q.has('demo');
-const BETA = LOCAL || DEMO; // campanhas só aparecem aqui até o Apps Script ter as ações delas
+// o site publicado roda só no navegador (demonstração) até o TI ligar o banco novo; ?planilha usa o Apps Script
+const DEMO = q.has('demo') || (!LOCAL && !q.has('planilha'));
 const API = LOCAL ? q.get('api') || 'http://localhost:8766'
   : 'https://script.google.com/macros/s/AKfycbyq6BPUme8ez58eYseXBpRAk1xLaAlwHith0EH952rB9Apm-bS2Bb2jMz8hFcHbqawD/exec';
 
@@ -589,13 +578,15 @@ const estado = {
   foco: null,
 };
 // o vendedor só mexe nisto na arte (marcação do usuário, 15/09); o resto vem travado do .ai
-const EDITAVEL = /^(preco|ida|volta)_\d+$|^(parcelas|local|telefone|titulo\d+)$/;
+const EDITAVEL = /^(preco|preco_de|ida|volta|parcelas|pag)_\d+$|^(local|telefone|restam|titulo\d+)$/;
 const editavel = k => aberta?.campanha ? k === 'telefone' : EDITAVEL.test(k); // arte de campanha: vendedor só troca o telefone
 const PASSOS = ['Dados da excursão', 'Escolha a arte', 'Valores e datas', 'Título e contato', 'Foto e personagem'];
 const P_ARTE = 2, P_VALORES = 3, P_FOTO = 5;
-const DESCRICAO = { '1 pacote': 'Um preço e a lista do que está incluso', '2 pacotes': 'Dois preços, um embaixo do outro' };
-const passoDe = k => /^(preco|ida|volta)_|^parcelas$/.test(k) ? P_VALORES : 4;
-const chaves = i => LAYOUTS[i].textos.flatMap(t => t.tipo === 'titulo' ? t.linhas.map(l => l.key) : [t.key]);
+const DESCRICAO = { '1 pacote': 'Um preço e a lista do que está incluso', '2 pacotes': 'Dois preços, um embaixo do outro',
+  Story: 'Vertical, para Stories e Status', Feed: 'Post do feed com a foto grande', 'Últimas vagas': 'Story com as vagas que restam',
+  Carrossel: 'Tela da oferta para carrossel' };
+const passoDe = k => /^(preco|preco_de|ida|volta|parcelas|pag)_|^restam$/.test(k) ? P_VALORES : 4;
+const chaves = i => LAYOUTS[i].textos.flatMap(t => t.tipo === 'titulo' ? t.linhas.map(l => l.key) : t.campos || [t.de || t.key]);
 const $ = id => document.getElementById(id);
 const form = $('form'), cv = $('arte'), zoom = $('zoom'), pers = $('pers');
 
@@ -675,7 +666,7 @@ function demoApi(acao, p) {
   const agora = Date.now(), conta = email => db.contas.find(c => c.email === email), nome = e => conta(e)?.nome || e;
   const publico = c => ({ email: c.email, nome: c.nome, papel: c.papel });
   const usuario = () => { const c = conta(String(p.token || '').slice(5)); return c?.ativo ? c : falha('Entre de novo para continuar.'); };
-  const gestor = () => { const u = usuario(); return u.papel === 'vendedor' ? falha('Só a conta master ou adsign pode fazer isso.') : u; };
+  const gestor = () => { const u = usuario(); return u.papel !== 'master' ? falha('Só a conta master pode fazer isso.') : u; };
   const master = () => { const u = usuario(); return u.papel !== 'master' ? falha('Só a conta master pode fazer isso.') : u; };
   const numero = v => v === '' || v == null || isNaN(+v) ? null : Math.max(0, Math.floor(+v));
   const vendidas = (id, sem) => db.vendas.filter(v => v.campanha === id && v.status !== 'cancelada' && v.id !== sem).reduce((s, v) => s + v.pessoas, 0);
@@ -706,7 +697,7 @@ function demoApi(acao, p) {
         const provisoria = !c || p.novaProvisoria ? String(100000 + Math.floor(Math.random() * 900000)) : '';
         if (!c) {
           if (!String(p.nome || '').trim()) falha('Digite o nome da pessoa.');
-          db.contas.push({ email, nome: p.nome.trim(), papel: p.papel === 'adsign' ? 'adsign' : 'vendedor', ativo: p.ativo !== false, provisoria });
+          db.contas.push({ email, nome: p.nome.trim(), papel: 'vendedor', ativo: p.ativo !== false, provisoria });
         } else {
           if (typeof p.ativo === 'boolean') c.ativo = p.ativo;
           if (provisoria) c.provisoria = provisoria;
@@ -768,7 +759,7 @@ function demoSemente() {
     ida_1: '2026-11-13', volta_1: '2026-11-16' }; // igual à miniatura demo-mini.jpg
   const agora = Date.now(), dia = 86400000;
   return {
-    contas: [['master', 'master', 'Chefe (demonstração)'], ['adsign', 'adsign', 'Adsign (demonstração)'],
+    contas: [['master', 'master', 'Chefe (demonstração)'],
       ['vendedor', 'vendedor', 'Vendedora (demonstração)'], ['carlos', 'vendedor', 'Carlos (exemplo)']]
       .map(([id, papel, nome]) => ({ email: `${id}@demo`, nome, papel, ativo: true, provisoria: '' })),
     excursoes: [],
@@ -788,7 +779,7 @@ function demoSemente() {
       links: 'Roteiro em PDF – https://example.com/roteiro.pdf',
       arte: { atual: 0, foto: 'layout', personagem: true, ajuste: {}, campos }, mini: 'demo-mini.jpg',
     }, {
-      id: 'reveillon', criada_por: 'adsign@demo', atualizada: agora - dia, status: 'rascunho',
+      id: 'reveillon', criada_por: 'master@demo', atualizada: agora - dia, status: 'rascunho',
       nome: 'Réveillon All Fun Inclusive', resumo: 'Virada do ano no resort. Em preparação.', vagas_total: 60,
     }],
     vendas: [
@@ -809,7 +800,7 @@ function guardarSessao(s) {
   try { if (s) localStorage[CHAVE_SESSAO] = JSON.stringify(s); else localStorage.removeItem(CHAVE_SESSAO); } catch {}
 }
 const eMaster = () => sessao?.usuario.papel === 'master';
-const eGestor = () => ['master', 'adsign'].includes(sessao?.usuario.papel); // cria e edita campanhas
+const eGestor = () => eMaster(); // só a master cria e edita campanhas
 
 function entrou(r) {
   guardarSessao({ token: r.token, usuario: r.usuario });
@@ -1076,7 +1067,7 @@ function novaExcursao() {
 
 function abrirExcursao(ex) {
   const c = ex.campanha && campanhaPorId(ex.campanha);
-  if (c?.arte?.campos) { // arte de campanha: vale o que a master/adsign definiu; do vendedor fica só o telefone e os dados dele
+  if (c?.arte?.campos) { // arte de campanha: vale o que a master definiu; do vendedor fica só o telefone e os dados dele
     const a = arteDe(c), dele = Object.entries(ex.campos).filter(([k]) => k === 'telefone' || k.startsWith('dx_'));
     ex = { ...ex, ...a, campos: { ...a.campos, ...Object.fromEntries(dele) } };
   }
@@ -1100,8 +1091,9 @@ function estadoAtual(base) {
 }
 function miniatura() { // aberto por arquivo local o navegador bloqueia a miniatura; o resto salva igual
   try {
-    const m = Object.assign(document.createElement('canvas'), { width: 216, height: 270 });
-    m.getContext('2d').drawImage(cv, 0, 0, 216, 270);
+    const h = Math.round(216 * cv.height / cv.width);
+    const m = Object.assign(document.createElement('canvas'), { width: 216, height: h });
+    m.getContext('2d').drawImage(cv, 0, 0, 216, h);
     return m.toDataURL('image/jpeg', .75);
   } catch { return ''; }
 }
@@ -1277,7 +1269,7 @@ async function montarContas() {
 function linhaConta(c) {
   const linha = el('div', 'pessoa'), info = el('div');
   info.append(el('strong', '', c.nome), el('small', '', c.email),
-    el('span', 'selo', { master: 'Master', adsign: 'Adsign' }[c.papel] || 'Vendedor'),
+    el('span', 'selo', c.papel === 'master' ? 'Master' : 'Vendedor'),
     el('span', !c.ativo ? 'selo off' : c.aguardandoSenha ? 'selo alerta' : 'selo',
       !c.ativo ? 'Desativada' : c.aguardandoSenha ? 'Ainda não criou a senha' : 'Ativa'));
   linha.append(info);
@@ -1321,7 +1313,7 @@ $('form-conta').onsubmit = async e => {
   ocupado(bt, 'Criando…');
   const parar = esperar(f, 'Criando a conta');
   try {
-    const r = await api('salvarConta', { token: sessao.token, nome, email, papel: f.elements.papel.value });
+    const r = await api('salvarConta', { token: sessao.token, nome, email });
     f.reset();
     mostrarProvisoria(nome, r.provisoria);
     montarContas();
@@ -1344,7 +1336,7 @@ function botaoPlanilha(texto, fn, classe = '') { // grava na planilha: o botão 
   return b;
 }
 
-// ---------- campanhas: master e adsign publicam; vendedores fazem a arte com o telefone deles e informam vendas ----------
+// ---------- campanhas: a master publica; vendedores fazem a arte com o telefone deles e informam vendas ----------
 const chaveCampanhas = () => `village.campanhas.${sessao.usuario.email}`;
 const chaveArteCampanha = () => `village.arte-campanha.${sessao.usuario.email}`;
 const campanhasCache = () => sessao ? ler(chaveCampanhas()) : [];
@@ -1376,7 +1368,7 @@ function datasCampanha(c) {
   return ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : '';
 }
 function valorCampanha(c) {
-  const k = c.arte?.campos || {}, n = parseInt(k.parcelas, 10); // parcelas vem do campo da arte ("7x de")
+  const k = c.arte?.campos || {}, n = parseInt(k.parcelas_1 ?? k.parcelas, 10); // parcelas vem do campo da arte ("7x de")
   return k.preco_1 ? `A partir de R$ ${k.preco_1} por dia para o casal${n > 1 ? `, em até ${n}x` : ''}` : '';
 }
 const resumoCampanha = c => [datasCampanha(c) || 'Datas a definir na arte', valorCampanha(c), c.limite_venda && `Vende até ${dataBR(c.limite_venda)}`].filter(Boolean);
@@ -1610,7 +1602,7 @@ function linhaVenda(v) {
   return linha;
 }
 
-// formulário da campanha (master e adsign)
+// formulário da campanha (master)
 const CAMPOS_CAMPANHA = ['nome', 'resumo', 'limite_venda', 'vagas_total', 'embarques', 'retorno', 'sinal', 'quitar_ate', 'comissao',
   'criancas', 'roteiro', 'inclui', 'nao_inclui', 'documentos', 'cancelamento', 'regras', 'contato_guia', 'textos', 'links'];
 let editandoId = null;
@@ -1740,7 +1732,7 @@ function rota() {
     if (!ex) return location.replace('#/excursoes');
     tela = 'editor';
     abrirExcursao(ex);
-  } else if (pagina === 'campanha-arte' && BETA && eGestor()) {
+  } else if (pagina === 'campanha-arte' && eGestor()) {
     const r = rascunhoArteCampanha(id);
     if (!r) return location.replace(id ? `#/campanha/${id}` : '#/campanhas');
     tela = 'editor';
@@ -1753,9 +1745,9 @@ function rota() {
     if (pagina === 'excursoes') { tela = 'excursoes'; montarExcursoes(); if (velho) puxar(); }
     else if (pagina === 'painel' && eMaster()) { tela = 'painel'; montarPainel(); }
     else if (pagina === 'contas' && eMaster()) { tela = 'contas'; $('resultado-conta').hidden = true; montarContas(); }
-    else if (pagina === 'campanhas' && BETA) { tela = 'campanhas'; montarCampanhas(); }
-    else if (pagina === 'campanha' && id && BETA) { tela = 'campanha'; montarFicha(id); }
-    else if (pagina === 'campanha-editar' && BETA && eGestor()) { tela = 'campanha-editar'; montarFormCampanha(id); }
+    else if (pagina === 'campanhas') { tela = 'campanhas'; montarCampanhas(); }
+    else if (pagina === 'campanha' && id) { tela = 'campanha'; montarFicha(id); }
+    else if (pagina === 'campanha-editar' && eGestor()) { tela = 'campanha-editar'; montarFormCampanha(id); }
     else { tela = 'inicio'; montarInicio(); if (velho) puxar(); }
   }
   for (const t of Object.keys(TELAS)) $(t).hidden = t !== tela;
@@ -1763,7 +1755,6 @@ function rota() {
   if (sessao) $('nome-usuario').textContent = sessao.usuario.nome;
   document.querySelectorAll('[data-master]').forEach(e => e.hidden = !eMaster());
   document.querySelectorAll('[data-gestor]').forEach(e => e.hidden = !eGestor());
-  document.querySelectorAll('[data-beta]').forEach(e => e.hidden = !BETA);
   const noMenu = tela.startsWith('campanha') || aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas' : tela;
   document.querySelectorAll('.menu a').forEach(a => {
     if (a.dataset.tela === noMenu) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
@@ -1779,18 +1770,36 @@ const nPacotes = Math.max(...Object.keys(VALORES).map(k => +(k.match(/^preco_(\d
 for (let n = 1; n <= nPacotes; n++) {
   const p = $('pacotes').appendChild(el('div', 'pacote'));
   p.dataset.pacote = n;
+  const formas = String(VALORES[`pag_${n}`] ?? '').split(',').filter(Boolean);
   p.innerHTML = `<h3>${nPacotes === 2 ? (n === 1 ? 'Pacote de cima' : 'Pacote de baixo') : 'Pacote ' + n}</h3>
     <label>Valor por dia para o casal<span class="dinheiro"><span>R$</span>
       <input class="campo" name="preco_${n}" inputmode="decimal" autocomplete="off" placeholder="416,57"></span></label>
+    <label>Valor antigo (sai riscado)<span class="dinheiro"><span>R$</span>
+      <input class="campo" name="preco_de_${n}" inputmode="numeric" autocomplete="off" placeholder="750"></span>
+      <span class="ajuda">Deixe em branco para não mostrar.</span></label>
+    <div class="rotulo">Parcelas
+      <div class="contador" data-key="parcelas_${n}">
+        <button type="button" data-delta="-1" aria-label="Menos parcelas">−</button>
+        <output aria-live="polite"></output>
+        <button type="button" data-delta="1" aria-label="Mais parcelas">+</button>
+      </div></div>
+    <input type="hidden" name="parcelas_${n}">
     <div class="dupla"><label>Ida<input class="campo" type="date" name="ida_${n}"></label>
       <label>Volta<input class="campo" type="date" name="volta_${n}"></label></div>
+    ${formas.length ? `<div class="rotulo">Formas de pagamento na arte<div class="checks" data-key="pag_${n}">
+      ${formas.map(f => `<label><input type="checkbox" value="${f}">${f}</label>`).join('')}</div></div>
+    <input type="hidden" name="pag_${n}">` : ''}
     <p class="erro" hidden></p>`;
 }
 
 function preencher(campos) {
-  for (const c of form.querySelectorAll('input[name], textarea[name]')) if (c.name !== 'parcelas') c.value = campos[c.name] ?? VALORES[c.name] ?? '';
-  parcelas = Math.min(12, Math.max(1, parseInt(campos.parcelas ?? VALORES.parcelas) || 1));
+  for (const c of form.querySelectorAll('input[name], textarea[name]')) c.value = campos[c.name] ?? VALORES[c.name] ?? '';
+  for (let n = 1; n <= nPacotes; n++) { // excursões antigas tinham um "parcelas" só para todos os pacotes
+    const k = `parcelas_${n}`;
+    if (!(k in campos) && campos.parcelas) form.elements[k].value = campos.parcelas;
+  }
   mostrarParcelas();
+  mostrarPagamentos();
 }
 
 function formatarTelefone(s) {
@@ -1804,15 +1813,37 @@ function normalizarPreco(s) {
   return m ? `${m[1]},${(m[2] ?? '').padEnd(2, '0')}` : s;
 }
 
-let parcelas = 1;
+// parcelas e formas de pagamento são por pacote; o campo escondido guarda o texto que vai na arte
+const nParcelas = k => Math.min(12, Math.max(1, parseInt(form.elements[k].value, 10) || 1));
 function mostrarParcelas() {
-  $('parcelas').value = `${parcelas}x de`;
-  $('n-parcelas').textContent = `${parcelas}x`;
-  $('menos').disabled = parcelas <= 1;
-  $('mais').disabled = parcelas >= 12;
+  for (const box of document.querySelectorAll('.contador[data-key]')) {
+    const k = box.dataset.key, n = nParcelas(k);
+    form.elements[k].value = `${n}x de`;
+    box.querySelector('output').textContent = `${n}x`;
+    box.querySelector('[data-delta="-1"]').disabled = n <= 1;
+    box.querySelector('[data-delta="1"]').disabled = n >= 12;
+  }
 }
-$('menos').onclick = () => { parcelas--; mostrarParcelas(); render(); };
-$('mais').onclick = () => { parcelas++; mostrarParcelas(); render(); };
+function mostrarPagamentos() {
+  for (const box of document.querySelectorAll('.checks[data-key]')) {
+    const ligadas = form.elements[box.dataset.key].value.split(',');
+    box.querySelectorAll('input').forEach(i => i.checked = ligadas.includes(i.value));
+  }
+}
+$('pacotes').addEventListener('click', e => {
+  const bt = e.target.closest('[data-delta]');
+  if (!bt) return;
+  const k = bt.closest('[data-key]').dataset.key;
+  form.elements[k].value = `${nParcelas(k) + +bt.dataset.delta}x de`;
+  mostrarParcelas();
+  render();
+});
+$('pacotes').addEventListener('change', e => {
+  const box = e.target.closest('.checks[data-key]');
+  if (!box) return;
+  form.elements[box.dataset.key].value = [...box.querySelectorAll('input:checked')].map(i => i.value).join(',');
+  render();
+});
 preencher(Object.fromEntries([...q].filter(([k]) => EDITAVEL.test(k))));
 
 form.addEventListener('input', e => {
@@ -1844,6 +1875,11 @@ function validarValores() {
     preco.value = normalizarPreco(preco.value);
     const msgs = [];
     if (!/^\d{1,3},\d{2}$/.test(preco.value)) msgs.push('Digite o valor por dia, por exemplo 416,57.');
+    const antigo = form.elements[`preco_de_${n}`];
+    if (antigo) {
+      antigo.value = antigo.value.trim();
+      if (antigo.value && !/^\d{1,3}([.,]\d{1,3})?$/.test(antigo.value)) msgs.push('No valor antigo use só números, por exemplo 750.');
+    }
     const ida = form.elements[`ida_${n}`].value, volta = form.elements[`volta_${n}`].value;
     if (!ida || !volta) msgs.push('Preencha a data de ida e a de volta.');
     const erro = p.querySelector('.erro');
@@ -1867,6 +1903,7 @@ function img(src) {
 }
 const pronta = im => im.complete && im.naturalWidth > 0;
 const fotoItem = () => BANCO.find(b => b.id === estado.foto) ?? BANCO[0];
+const tamanho = i => [LAYOUTS[i].w || 1080, LAYOUTS[i].h || 1350];
 const aj = i => estado.ajuste[i] ??= { dx: 0, dy: 0, zoom: 1 };
 
 // ---------- desenho ----------
@@ -1890,7 +1927,7 @@ function fotoRet(L, item, im, a) {
   const f = L.foto;
   const [bx0, by0, bx1, by1] = f.box, [vx0, vy0, vx1, vy1] = f.visivel;
   let x, y, w, h;
-  if (item.id === 'layout') { // foto da arte: exatamente onde o designer pôs
+  if (item.id === (f.padrao || 'layout')) { // foto da arte: exatamente onde o designer pôs
     [x, y] = f.original; w = f.original[2] - x; h = f.original[3] - y;
   } else { // cobre a área, centraliza na parte visível e ancora pela base
     const e = Math.max((bx1 - bx0) / im.naturalWidth, (by1 - by0) / im.naturalHeight);
@@ -1903,12 +1940,37 @@ function fotoRet(L, item, im, a) {
   return { r: [lx, ly, w, h], corr: [lx - x, ly - y] };
 }
 
-function texto(c, t, v, marca) {
+const numero = s => parseFloat(String(s ?? '').replace(/\./g, '').replace(',', '.')) || 0;
+function valorDe(t, v) {  // textos da arte nova que saem de outros campos
+  const n = t.key.split('_')[1], ida = v[`ida_${n}`], volta = v[`volta_${n}`];
+  switch (t.formato) {
+    case 'periodo': return ida ? `${dataBR(ida).slice(0, 5)} a ${dataBR(volta || ida)}` : '';
+    case 'duracao': {
+      const d = ida && volta ? Math.round((new Date(volta) - new Date(ida)) / 864e5) : 0;
+      return d > 0 ? `${d + 1} dias e ${d} ${d === 1 ? 'noite' : 'noites'}` : '1 dia';
+    }
+    case 'parcelasX': return `${parseInt(v[`parcelas_${n}`], 10) || 1}X`;
+    case 'desconto': {
+      const de = numero(v[`preco_de_${n}`]), por = numero(v[`preco_${n}`]);
+      return de > por && por > 0 ? `${Math.round((1 - por / de) * 100)}% OFF` : 'OFERTA';
+    }
+    case 'restam': {
+      const r = parseInt(v.restam, 10) || 0;
+      return `Restam só ${String(r).padStart(2, '0')} ${r === 1 ? 'vaga' : 'vagas'}`;
+    }
+  }
+  const val = v[t.key] ?? '';
+  return t.prefixo && String(val).trim() ? t.prefixo + val : val;
+}
+
+function texto(c, t, v, marca, fim = {}) {
   const fam = t.tab ? TAB : 'Montserrat';
-  const val = t.tab ? dataBR(v[t.key]) : v[t.key] ?? '';
+  const val = t.tab ? dataBR(v[t.key]) : valorDe(t, v);
+  if (t.riscado && !String(val).trim()) return; // sem preço antigo: nada de risco
+  const x = t.apos && fim[t.apos] != null ? fim[t.apos] + t.gap : t.x; // preço riscado anda junto com o fim das parcelas
   let tam = t.tam, ls = t.ls || 0;
   c.save();
-  c.translate(t.x, t.y);
+  c.translate(x, t.y);
   if (t.vscale) c.scale(1, t.vscale);
   c.font = F(t.peso, tam, fam); c.letterSpacing = ls + 'px';
   if (t.maxW) {
@@ -1924,7 +1986,33 @@ function texto(c, t, v, marca) {
   linhas.forEach((l, i) => c.fillText(l, 0, i * (t.lh || 0)));
   const w = Math.max(...linhas.map(l => c.measureText(l).width));
   c.restore();
-  marca?.(t.key, t.x, t.y - tam * .78 * (t.vscale || 1), t.x + w, t.y + (linhas.length - 1) * (t.lh || 0) + tam * .22);
+  if (t.riscado) {
+    const r = t.riscado;
+    c.save();
+    c.strokeStyle = r.cor; c.lineWidth = r.larg;
+    c.beginPath(); c.moveTo(x - r.antes, t.y + r.dy); c.lineTo(x + w + r.depois, t.y + r.dy); c.stroke();
+    c.restore();
+  }
+  fim[t.key] = x + w;
+  marca?.(t.de || t.key, x, t.y - tam * .78 * (t.vscale || 1), x + w, t.y + (linhas.length - 1) * (t.lh || 0) + tam * .22);
+}
+
+// etiquetas de pagamento: só as ligadas, do mesmo tamanho do .ai, centralizadas no lugar da fileira original
+function pagamentos(c, t, v, marca) {
+  const ligadas = String(v[t.key] ?? '').split(','), itens = t.itens.filter(i => ligadas.includes(i));
+  if (!itens.length) return;
+  const larg = itens.length * t.w + (itens.length - 1) * t.gap, x0 = t.cx - larg / 2;
+  c.save();
+  c.font = F(t.peso, t.tam); c.letterSpacing = (t.ls || 0) + 'px'; c.textAlign = 'center';
+  itens.forEach((txt, i) => {
+    const x = x0 + i * (t.w + t.gap);
+    c.fillStyle = t.fundo;
+    c.beginPath(); c.roundRect(x, t.y0, t.w, t.h, t.raio); c.fill();
+    c.fillStyle = t.cor;
+    c.fillText(txt, x + t.w / 2 + (t.ls || 0) / 2, t.base);
+  });
+  c.restore();
+  marca?.(t.key, x0, t.y0, x0 + larg, t.y0 + t.h);
 }
 
 function preco(c, t, v, marca) {
@@ -1940,7 +2028,7 @@ function preco(c, t, v, marca) {
   c.font = F(t.peso, t.tam * k, TAB); c.letterSpacing = LS * k + 'px';
   c.fillText(int, t.x + 0.5, t.y);
   c.font = F(t.peso, t.tamCents * k, TAB); c.letterSpacing = '0px';
-  c.fillText(',' + cents, t.x + (wi + 1.7) * k, t.y);
+  c.fillText(',' + cents, t.x + (wi + 1.7) * k, t.y + (t.dyCents || 0));
   marca?.(t.key, t.x, t.y - t.tam * k * .74, t.x + t.larg, t.y + 4);
 }
 
@@ -1994,7 +2082,7 @@ function titulo(c, t, v, marca) {
   glifos.forEach(g => passo(g, 0, 'fill'));
 }
 
-const DESENHA = { texto, preco, titulo };
+const DESENHA = { texto, preco, titulo, pagamentos };
 let fontesOk = false, entregue = false, caixas = {};
 
 function valores() {
@@ -2012,19 +2100,21 @@ function desenhar(c, i, escala, marca) {
   const v = valores();
   c.setTransform(escala, 0, 0, escala, 0, 0);
   c.fillStyle = '#fff';
-  c.fillRect(0, 0, 1080, 1350);
-  const o = offs[escala] ??= Object.assign(document.createElement('canvas'),
-    { width: 1080 * escala, height: 1350 * escala }).getContext('2d');
+  const [W, H] = tamanho(i);
+  c.fillRect(0, 0, W, H);
+  const o = offs[`${escala}x${W}x${H}`] ??= Object.assign(document.createElement('canvas'),
+    { width: W * escala, height: H * escala }).getContext('2d');
   o.setTransform(escala, 0, 0, escala, 0, 0);
   o.globalCompositeOperation = 'source-over';
-  o.clearRect(0, 0, 1080, 1350);
+  o.clearRect(0, 0, W, H);
   o.drawImage(im, ...fotoRet(L, item, im, aj(i)).r);
   o.globalCompositeOperation = 'destination-in'; // a foto só aparece onde o .ai tinha foto
-  o.drawImage(img(L.foto.mascara), 0, 0, 1080, 1350);
-  c.drawImage(o.canvas, 0, 0, 1080, 1350);
-  c.drawImage(img(L.foto.base), 0, 0, 1080, 1350);
+  o.drawImage(img(L.foto.mascara), 0, 0, W, H);
+  c.drawImage(o.canvas, 0, 0, W, H);
+  c.drawImage(img(L.foto.base), 0, 0, W, H);
   if (p) { const [x0, y0, x1, y1] = p.rect; c.drawImage(img(p.src), x0, y0, x1 - x0, y1 - y0); }
-  for (const t of L.textos) DESENHA[t.tipo](c, t, v, marca);
+  const fim = {}; // onde cada texto terminou (o preço riscado vem logo depois das parcelas)
+  for (const t of L.textos) DESENHA[t.tipo](c, t, v, marca, fim);
   return true;
 }
 
@@ -2048,14 +2138,14 @@ function mostrarAlvo() {
   const r = estado.foco && caixas[estado.foco], alvo = $('alvo');
   alvo.hidden = !r;
   if (!r) return;
-  const m = 10;
+  const m = 10, [W, H] = tamanho(estado.atual);
   Object.assign(alvo.style, {
-    left: (r[0] - m) / 10.8 + '%', top: (r[1] - m) / 13.5 + '%',
-    width: (r[2] - r[0] + 2 * m) / 10.8 + '%', height: (r[3] - r[1] + 2 * m) / 13.5 + '%',
+    left: (r[0] - m) / W * 100 + '%', top: (r[1] - m) / H * 100 + '%',
+    width: (r[2] - r[0] + 2 * m) / W * 100 + '%', height: (r[3] - r[1] + 2 * m) / H * 100 + '%',
   });
 }
 form.addEventListener('focusin', e => {
-  const k = e.target.closest('.contador') ? 'parcelas' : e.target.name;
+  const k = e.target.closest('[data-key]')?.dataset.key ?? e.target.name;
   estado.foco = editavel(k) ? k : null;
   mostrarAlvo();
 });
@@ -2070,7 +2160,7 @@ PASSOS.forEach((nome, i) => {
   bt.onclick = () => irPara(i + 1);
 });
 
-// arte de campanha usa só alguns passos (master/adsign: sem dados; vendedor: só o contato)
+// arte de campanha usa só alguns passos (master: sem dados; vendedor: só o contato)
 let ativos = PASSOS.map((_, i) => i + 1);
 function usarPassos(lista) {
   ativos = lista;
@@ -2100,7 +2190,8 @@ function irPara(n, campo) {
   $('salvar-campanha').hidden = !ultimo || !deCampanha;
   form.scrollTop = 0;
   const sec = document.querySelector(`.passo[data-passo="${n}"]`);
-  const alvo = campo === 'parcelas' ? $('mais') : campo && form.elements[campo];
+  const grupo = campo && document.querySelector(`[data-key="${campo}"]`); // parcelas e pagamentos: foca o primeiro controle
+  const alvo = grupo ? grupo.querySelector('button:not(:disabled), input') : campo && form.elements[campo];
   (alvo || sec.querySelector('h2')).focus({ preventScroll: !alvo });
   estado.foco = campo || null; // o focusin não dispara quando a janela está sem foco
   mostrarAlvo();
@@ -2112,7 +2203,7 @@ $('continuar').onclick = () => irPara(ativos[ativos.indexOf(estado.passo) + 1]);
 // passo: artes
 const opcoes = LAYOUTS.map((L, i) => {
   const bt = $('artes').appendChild(Object.assign(el('button', 'opcao'), { type: 'button' }));
-  const mini = bt.appendChild(Object.assign(el('canvas'), { width: 432, height: 540 }));
+  const mini = bt.appendChild(Object.assign(el('canvas'), { width: 432, height: Math.round(432 * tamanho(i)[1] / tamanho(i)[0]) }));
   bt.append(el('strong', '', L.nome), el('small', '', DESCRICAO[L.nome] ?? ''));
   bt.onclick = () => selecionarArte(i);
   return mini;
@@ -2121,10 +2212,18 @@ function miniaturas() { opcoes.forEach((mini, i) => desenhar(mini.getContext('2d
 
 function selecionarArte(i) {
   estado.atual = i;
-  const ks = chaves(i), L = LAYOUTS[i];
+  const ks = chaves(i), L = LAYOUTS[i], [W, H] = tamanho(i);
+  if (cv.width !== W * S || cv.height !== H * S) { cv.width = W * S; cv.height = H * S; }
+  document.querySelector('.arte-wrap').style.setProperty('--r', W / H);
+  $('linha-restam').hidden = !ks.includes('restam');
+  // ainda na foto padrão de alguma arte: troca pela foto que o designer pôs nesta
+  if (LAYOUTS.some(l => (l.foto.padrao || 'layout') === estado.foto) && estado.foto !== (L.foto.padrao || 'layout')) {
+    estado.foto = L.foto.padrao || 'layout';
+    montarBanco();
+  }
   document.querySelectorAll('.opcao').forEach((b, j) => b.setAttribute('aria-pressed', j === i));
   document.querySelectorAll('.pacote').forEach(p => p.hidden = !ks.includes(`preco_${p.dataset.pacote}`));
-  document.querySelectorAll('.pacote h3').forEach(h => h.hidden = ks.filter(k => k.startsWith('preco_')).length < 2);
+  document.querySelectorAll('.pacote h3').forEach(h => h.hidden = ks.filter(k => /^preco_\d+$/.test(k)).length < 2);
   $('linha-pers').hidden = !L.foto.personagem;
   zoom.value = aj(i).zoom;
   render();
@@ -2163,9 +2262,10 @@ const transparencia = {};
 function fotoNoPonto(x, y) { // a camada base é transparente onde a foto aparece
   const base = img(LAYOUTS[estado.atual].foto.base);
   if (!pronta(base)) return false;
-  const c = transparencia[base.src] ??= Object.assign(document.createElement('canvas'), { width: 270, height: 338 })
+  const [W, H] = tamanho(estado.atual);
+  const c = transparencia[base.src] ??= Object.assign(document.createElement('canvas'), { width: W / 4, height: H / 4 })
     .getContext('2d', { willReadFrequently: true });
-  if (!c.pronto) { c.drawImage(base, 0, 0, 270, 338); c.pronto = true; }
+  if (!c.pronto) { c.drawImage(base, 0, 0, W / 4, H / 4); c.pronto = true; }
   return c.getImageData(Math.floor(x / 4), Math.floor(y / 4), 1, 1).data[3] < 128;
 }
 let toque = null;
@@ -2176,14 +2276,15 @@ cv.addEventListener('pointerdown', e => {
 cv.addEventListener('pointermove', e => {
   if (!toque || aberta?.campanha || (!toque.moveu && Math.hypot(e.clientX - toque.x0, e.clientY - toque.y0) < 6)) return;
   toque.moveu = true;
-  const k = 1080 / cv.clientWidth, a = aj(estado.atual);
+  const k = tamanho(estado.atual)[0] / cv.clientWidth, a = aj(estado.atual);
   a.dx += (e.clientX - toque.x) * k; a.dy += (e.clientY - toque.y) * k;
   toque.x = e.clientX; toque.y = e.clientY;
   limitar(); render();
 });
 cv.addEventListener('pointerup', e => {
   if (toque && !toque.moveu) {
-    const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * 1080, y = (e.clientY - r.top) / r.height * 1350;
+    const r = cv.getBoundingClientRect(), [W, H] = tamanho(estado.atual);
+    const x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
     const area = k => (caixas[k][2] - caixas[k][0]) * (caixas[k][3] - caixas[k][1]);
     const achado = Object.keys(caixas).filter(k => {
       const [x0, y0, x1, y1] = caixas[k];

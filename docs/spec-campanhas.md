@@ -1,19 +1,20 @@
 # Campanhas (pedido de 15/09/2026)
 
-Aba nova tipo painel. Master ou **adsign** publica campanhas (excursões que o resort quer vender);
+Aba nova tipo painel. A conta master publica campanhas (excursões que o resort quer vender);
 vendedores pegam a campanha, fazem a arte com o próprio telefone e informam as vendas.
 Base: pesquisa em CRMs (HubSpot/Salesforce campaigns), portais de parceiros (Allbound, Impartner),
 Rezdy e sistemas de excursão brasileiros (Viagilize, Excapy).
 
 ## Papéis
-| | master | adsign | vendedor |
-|---|---|---|---|
-| Criar/editar/pausar/encerrar campanha, montar a arte | sim | sim | não |
-| Ver campanhas | todas | todas | ativas, pausadas e encerradas (não vê rascunho) |
-| Pegar campanha, fazer arte, informar venda | sim | sim | sim |
-| Ver vendas | de todos, confirma/cancela | só o total de vagas | só as dele |
-| Ranking de vendedores | sim | não | não |
-| Contas | sim | não | não |
+| | master | vendedor |
+|---|---|---|
+| Criar/editar/pausar/encerrar campanha, montar a arte | sim | não |
+| Ver campanhas | todas | ativas, pausadas e encerradas (não vê rascunho) |
+| Pegar campanha, fazer arte, informar venda | sim | sim |
+| Ver vendas | de todos, confirma/cancela | só as dele |
+| Ranking de vendedores | sim | não |
+
+(O papel adsign existiu de 15 a 17/09/2026 e foi removido.)
 
 ## Campanha
 - **Básico:** nome, resumo, status (rascunho / ativa / pausada / encerrada; "esgotada" é calculado), data limite de venda.
@@ -31,16 +32,15 @@ status (pendente → confirmada / cancelada pela master). Não aceita se passar 
 campanha não está ativa ou se passou a data limite.
 
 ## Telas
-- `#/campanhas` — vitrine. Master/adsign: "Nova campanha" + abas Ativas / Rascunhos / Pausadas / Encerradas.
+- `#/campanhas` — vitrine. Master: "Nova campanha" + abas Ativas / Rascunhos / Pausadas / Encerradas.
   Vendedor: abas Disponíveis / Minhas / Encerradas. Card: miniatura, datas, valor, barra de vagas, prazo.
 - `#/campanha/<id>` — ficha completa + materiais + ações (Fazer minha arte, Informar venda, Minhas vendas;
-  master: vendas de todos com confirmar/cancelar e ranking; master/adsign: editar, mudar status).
+  master: vendas de todos com confirmar/cancelar e ranking; editar, mudar status).
 - `#/campanha-editar/<id|nova>` — formulário em seções.
 
 ## Servidor (ações)
 `campanhas`, `salvarCampanha`, `excluirCampanha` (só sem vendas), `pegarCampanha`, `vendas`, `salvarVenda`.
-Planilha: abas **Campanhas**, **Vendas** e **Participantes**. Primeiro no servidor falso (`tests/mock_planilha.py`),
-Apps Script depois de aprovado no localhost.
+Planilha: abas **Campanhas**, **Vendas** e **Participantes**. Implementado no `Codigo.gs` (17/09/2026), no servidor falso e no `demoApi()`; contrato em `docs/api.md`.
 
 ## Fora desta fase
 Lista de passageiros com documento, lista de espera, mapa de poltronas/rooming list, reserva que expira sem sinal,

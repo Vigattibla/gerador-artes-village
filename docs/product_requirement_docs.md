@@ -38,12 +38,15 @@ Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inc
     encerrada (volta antes de hoje).
 
 ## Campanhas (pedido de 15/09/2026)
-12. Aba Campanhas tipo painel (detalhes em `docs/spec-campanhas.md`). Master ou **adsign** (tipo de conta novo:
-    cria e edita campanhas, não mexe em contas nem vê as vendas dos outros) publica a campanha com arte, informações
+12. Aba Campanhas tipo painel (detalhes em `docs/spec-campanhas.md`). A master publica (o tipo de conta adsign foi removido
+    em 17/09/2026) a campanha com arte, informações
     da excursão, vagas totais e materiais; pesquisa em CRMs e portais de parceiros para completar os campos.
 13. Vendedor pega a campanha e faz a arte trocando **só o telefone** (datas, valor, título e foto travados).
 14. Vagas somadas: cada venda informada desconta do total da campanha; master confirma ou cancela vendas.
 15. Novas artes (layouts) vêm do `.ai` pelo `extrair.py`, rodado com o Claude (o site não lê Illustrator).
+
+16. Futuro (16/09/2026): vendedor escolher o personagem. O `.ai` já tem, fora das pranchetas, o bebê e a menina
+    além do menino e do cachorro; a extração hoje só pega o personagem de cada prancheta.
 
 ## Fora de escopo / decisões
 - Preço com 4 dígitos (não existe).

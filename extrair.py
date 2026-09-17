@@ -12,7 +12,9 @@ from PIL import Image, ImageOps
 AQUI = pathlib.Path(__file__).parent
 SRC = AQUI.parent / 'Layout - Agentes de viagem.ai'
 BANCO_SRC = pathlib.Path(r'D:\Design\Village Resort\08 Fotos\Fotos Boas')
-NOMES = ['1 pacote', '2 pacotes']
+# prancheta do .ai -> arte do gerador; a 3ª prancheta (story antigo do designer) fica de fora
+PRANCHETAS = [(0, '1 pacote'), (1, '2 pacotes'), (3, 'Story'), (4, 'Feed'), (6, 'Últimas vagas'), (5, 'Carrossel')]
+TITULO_FIXO = {3, 4, 5, 6}  # título reto em desenho: fica na camada de base, sem edição
 DPI = 144                          # canvas trabalha em 2x (1 pt = 2 px)
 FOTO_LADO, MINI_LADO = 2400, 400
 PESOS = {'Medium': 500, 'SemiBold': 600, 'Bold': 700, 'ExtraBold': 800, 'Black': 900}
@@ -141,11 +143,12 @@ def sem_texto(p, vetores=fitz.PDF_REDACT_LINE_ART_NONE):
 
 # ---------------------------------------------------------------- textos
 def ler_linhas(p):
-    tam_real = {}  # texttrace dá o tamanho horizontal; rawdict o vertical (escala vertical)
+    tam_real, ordem = {}, {}  # texttrace dá o tamanho horizontal (rawdict o vertical) e a ordem de desenho
     for t in p.get_texttrace():
         for c in t['chars']:
             tam_real[(round(c[2][0], 1), round(c[2][1], 1))] = t['size']
-    linhas = []
+            ordem[(round(c[2][0], 1), round(c[2][1], 1))] = t['seqno']
+    linhas, vistos = [], set()
     for bi, b in enumerate(p.get_text('rawdict')['blocks']):
         if b['type']:
             continue
@@ -153,19 +156,29 @@ def ler_linhas(p):
             chars = list(s['chars'])
             while chars and chars[-1]['c'].isspace():
                 chars.pop()
-            if not chars:
+            while chars and chars[0]['c'].isspace():  # " Village Resort, MG" logo depois do rótulo
+                chars.pop(0)
+            txt = ''.join(c['c'] for c in chars)
+            chave = (txt, round(chars[0]['origin'][0]) if chars else 0, round(s['origin'][1]))
+            if not chars or chave in vistos:  # o .ai tem cópias do mesmo texto no mesmo lugar
                 continue
-            nome = s['font']
-            tam = tam_real.get((round(s['origin'][0], 1), round(s['origin'][1], 1)), s['size'])
-            F = fonte(nome)
-            difs = [chars[i + 1]['origin'][0] - chars[i]['origin'][0] - F.adv(chars[i]['c']) * tam
-                    for i in range(len(chars) - 1)]
-            ls = round(statistics.median(difs), 2) if difs else 0
-            linhas.append(dict(
-                txt=''.join(c['c'] for c in chars), bloco=bi, fonte=nome, peso=PESOS[nome.split('-')[1]],
-                x=s['origin'][0], y=s['origin'][1], x1=chars[-1]['bbox'][2], tam=tam,
-                vscale=round(s['size'] / tam, 3) if s['size'] / tam > 1.01 else 1,
-                cor='#%06x' % s['color'], ls=ls if abs(ls) >= 0.3 else 0, bbox=fitz.Rect(s['bbox'])))
+            vistos.add(chave)
+            # "7x de 750": parcelas e preço riscado vêm no mesmo texto; cada um vira um campo
+            m = re.fullmatch(r'(\d+x de)\s+(\S+)', txt)
+            for cs in ([chars[:len(m.group(1))], chars[m.start(2):]] if m else [chars]):
+                nome = s['font']
+                tam = tam_real.get((round(cs[0]['origin'][0], 1), round(cs[0]['origin'][1], 1)), s['size'])
+                F = fonte(nome)
+                difs = [cs[i + 1]['origin'][0] - cs[i]['origin'][0] - F.adv(cs[i]['c']) * tam
+                        for i in range(len(cs) - 1)]
+                ls = round(statistics.median(difs), 2) if difs else 0
+                linhas.append(dict(
+                    txt=''.join(c['c'] for c in cs), bloco=bi, fonte=nome, peso=PESOS[nome.split('-')[1]],
+                    x=cs[0]['origin'][0], y=s['origin'][1], x1=cs[-1]['bbox'][2], tam=tam,
+                    vscale=round(s['size'] / tam, 3) if s['size'] / tam > 1.01 else 1,
+                    cor='#%06x' % s['color'], ls=ls if abs(ls) >= 0.3 else 0,
+                    seqno=ordem.get((round(cs[0]['origin'][0], 1), round(cs[0]['origin'][1], 1)), 0),
+                    bbox=fitz.Rect(cs[0]['bbox'][0], s['bbox'][1], cs[-1]['bbox'][2], s['bbox'][3])))
     return linhas
 
 
@@ -204,8 +217,11 @@ def estilo_traco(tracos, glifos):
                 dys=[round(y - y0[-1], 1) for y in y0])
 
 
-def ler_arte(p):
-    elems = agrupar(ler_linhas(p))
+def ler_arte(p, titulo_fixo=False):
+    desenhos = p.get_drawings()
+    # texto coberto por um fundo desenhado depois dele não aparece no .ai (ex.: caixa antiga atrás da nova)
+    elems = [e for e in agrupar(ler_linhas(p))
+             if not any('f' in d['type'] and d['seqno'] > e['seqno'] and d['rect'].contains(e['bbox']) for d in desenhos)]
     # contornos de texto (ex.: "7x de", título): traços pequenos em volta do texto
     tracos = [d for d in p.get_drawings() if d['type'] == 's' and (d.get('width') or 0) >= 5
               and d['rect'].width < 200 and d['rect'].height < 200]
@@ -224,14 +240,32 @@ def ler_arte(p):
     precos = []
     for e in elems:
         if len(e['linhas']) == 1 and e['txt'].isdigit() and e['tam'] > 80:
-            c = next(c for c in elems if re.fullmatch(r',\d{2}', c['txt']) and abs(c['y'] - e['y']) < 1)
+            c = min((c for c in elems if re.fullmatch(r',\d{2}', c['txt']) and abs(c['y'] - e['y']) < 25 and c['x'] > e['x']),
+                    key=lambda c: abs(c['x'] - e['x']) + abs(c['y'] - e['y']))  # centavos podem descer um pouco (arte nova)
             precos.append((e, c))
             usados |= {id(e), id(c)}
     precos.sort(key=lambda pc: pc[0]['y'])
     for n, (e, c) in enumerate(precos, 1):
         arte['textos'].append(dict(tipo='preco', key=f'preco_{n}', x=e['x'], y=e['y'], peso=e['peso'], tam=e['tam'],
-                                   tamCents=c['tam'], cor=e['cor'], larg=round(c['x1'] - e['x'], 2)))
+                                   tamCents=c['tam'], cor=e['cor'], larg=round(c['x1'] - e['x'], 2),
+                                   dyCents=round(c['y'] - e['y'], 2)))
         arte['valores'][f'preco_{n}'] = e['txt'] + c['txt']
+
+    perto = lambda y: min(range(len(precos)), key=lambda i: abs(precos[i][0]['y'] - y)) + 1  # pacote mais próximo
+    # arte nova: "13/11 a 16/11/2026" e "4 dias e 3 noites" saem das datas de ida e volta do pacote
+    for e in elems:
+        m = re.fullmatch(r'(\d{2})/(\d{2}) a (\d{2})/(\d{2})/(\d{4})', e['txt'])
+        d = re.fullmatch(r'\d+ dias? e \d+ noites?', e['txt'])
+        if not (m or d) or id(e) in usados:
+            continue
+        n = perto(e['y'])
+        arte['textos'].append(dict(tipo='texto', key=f"{'periodo' if m else 'duracao'}_{n}", formato='periodo' if m else 'duracao',
+                                   de=f'ida_{n}', campos=[f'ida_{n}', f'volta_{n}'], x=e['x'], y=e['y'], peso=e['peso'],
+                                   tam=e['tam'], cor=e['cor'], ls=e['ls'], maxW=round((e['x1'] - e['x']) * 1.3, 1)))
+        if m:
+            arte['valores'][f'ida_{n}'] = f'{m[5]}-{m[2]}-{m[1]}'
+            arte['valores'][f'volta_{n}'] = f'{m[5]}-{m[4]}-{m[3]}'
+        usados.add(id(e))
 
     # datas: pertencem ao preço logo acima; esquerda = ida, direita = volta
     datas = [e for e in elems if re.fullmatch(r'\d{2}/\d{2}/\d{4}', e['txt'])]
@@ -258,7 +292,7 @@ def ler_arte(p):
             usados.add(id(e))
 
     # título em desenho (efeito de distorção vira curva no PDF): ajustado depois, com o texto da outra arte
-    grossos = [d for d in soltos if d['width'] >= 20]
+    grossos = [] if titulo_fixo else [d for d in soltos if d['width'] >= 20]
     if grossos:
         area = fitz.Rect()
         for d in grossos:
@@ -279,14 +313,89 @@ def ler_arte(p):
                                       traco=grossos)
         arte['remover'] += grossos + glifos
 
+    acima_do_preco = lambda y: min((pe['y'] - y, n) for n, (pe, _) in enumerate(precos, 1) if pe['y'] > y)[1]
+    abaixo_do_preco = lambda y: max(n for n, (pe, _) in enumerate(precos, 1) if pe['y'] < y)
+
+    # formas de pagamento: fileira de etiquetas iguais (fundo arredondado + texto); o vendedor liga e desliga cada uma
+    etiquetas = collections.defaultdict(list)
+    for e in elems:
+        if id(e) in usados or len(e['linhas']) > 1:
+            continue
+        centro = fitz.Point((e['bbox'].x0 + e['bbox'].x1) / 2, e['y'] - e['tam'] * .35)
+        caixa = min((d for d in desenhos if d['type'] == 'f' and d['rect'].height < 45 and d['rect'].width < 150
+                     and d['rect'].contains(centro) and d['rect'].width > e['bbox'].width), key=lambda d: d['rect'].get_area(), default=None)
+        if caixa:
+            r = caixa['rect']
+            etiquetas[(round(r.y0), round(r.width), round(r.height))].append((e, caixa))
+    for (y0, *_), fila in etiquetas.items():
+        if len(fila) < 2:
+            continue
+        fila.sort(key=lambda ed: ed[1]['rect'].x0)
+        r0, e0 = fila[0][1]['rect'], fila[0][0]
+        canto = next(it for it in fila[0][1]['items'] if it[0] == 'c')
+        key = f'pag_{abaixo_do_preco(y0)}'
+        arte['textos'].append(dict(tipo='pagamentos', key=key, itens=[e['txt'] for e, _ in fila],
+                                   cx=round((r0.x0 + fila[-1][1]['rect'].x1) / 2, 2), y0=round(r0.y0, 2), w=round(r0.width, 2),
+                                   h=round(r0.height, 2), gap=round(fila[1][1]['rect'].x0 - r0.x1, 2),
+                                   raio=round(max(abs(canto[4].x - canto[1].x), abs(canto[4].y - canto[1].y)), 2),
+                                   fundo=cor(fila[0][1]['fill']), base=round(e0['y'], 2), peso=e0['peso'], tam=e0['tam'],
+                                   cor=e0['cor'], ls=e0['ls']))
+        arte['valores'][key] = ','.join(e['txt'] for e, _ in fila)
+        arte['remover'] += [d for _, d in fila]
+        usados |= {id(e) for e, _ in fila}
+
+    riscos = [d for d in desenhos if d['type'] == 's' and d['rect'].height < 1 and d['rect'].width > 10]
+    # fundo chapado da página inteira (vem das propostas montadas por script): sai da base, senão tapa a foto
+    arte['remover'] += [d for d in desenhos if 'f' in d['type'] and d['rect'].contains(p.rect + (1, 1, -1, -1))]
     for e in elems:
         if id(e) in usados:
             continue
         t = e['txt']
+        esq = max((o for o in elems if o is not e and abs(o['y'] - e['y']) < 1 and o['x1'] <= e['x'] + 1),
+                  key=lambda o: o['x1'], default=None)  # texto logo à esquerda, na mesma linha
         abaixo_das_datas = any(0 < e['y'] - d['y'] < 80 and abs(e['x'] - d['x']) < 40 for d in datas)  # local, com alfinete
-        key = ('parcelas' if re.fullmatch(r'\d+x de', t) else 'telefone' if re.search(r'\(\d{2}\)\s*\d', t)
-               else 'site' if re.search(r'\.com|www\.', t, re.I) else 'local' if abaixo_das_datas else slug(t))
+        risco = next((d for d in riscos if d['rect'].x0 < e['x1'] and d['rect'].x1 > e['x']
+                      and e['bbox'].y0 < d['rect'].y0 < e['bbox'].y1), None)
+        apos_parcelas = bool(esq and re.fullmatch(r'\d+x de', esq['txt']))
+        formato = None
+        if re.fullmatch(r'\d+X', t):  # "10X" da arte nova
+            key, formato = f'parcelasx_{perto(e["y"])}', 'parcelasX'
+            arte['valores'].setdefault(f'parcelas_{perto(e["y"])}', f'{t[:-1]}x de')
+        elif re.fullmatch(r'\d+% OFF', t):
+            key, formato = f'desconto_{perto(e["y"])}', 'desconto'
+        elif re.fullmatch(r'Restam só \d+ vagas?', t):
+            key, formato = 'restam', 'restam'
+            arte['valores']['restam'] = re.search(r'\d+', t)[0]
+        elif risco and not apos_parcelas and re.fullmatch(r'(R\$\s*)?[\d.,]+', t):
+            key = f'preco_de_{perto(e["y"])}'  # "R$ 750" riscado da arte nova
+        elif re.fullmatch(r'\d+x de', t):
+            key = f'parcelas_{acima_do_preco(e["y"])}'
+        elif esq and re.fullmatch(r'\d+x de', esq['txt']) and re.fullmatch(r'[\d.,]+', t):
+            key = f'preco_de_{acima_do_preco(e["y"])}'
+        elif esq and esq['txt'].endswith(':') or abaixo_das_datas:  # "Excursão: Village Resort, MG"
+            key = 'local'
+        else:
+            key = ('telefone' if re.search(r'\(\d{2}\)\s*\d', t) else 'site' if re.search(r'\.com|www\.', t, re.I) else slug(t))
         el = dict(tipo='texto', key=key, x=e['x'], y=e['y'], peso=e['peso'], tam=e['tam'], cor=e['cor'], ls=e['ls'])
+        if formato:
+            n = key.split('_')[1] if '_' in key else ''
+            el.update(formato=formato, de={'parcelasX': f'parcelas_{n}', 'desconto': f'preco_de_{n}', 'restam': 'restam'}[formato])
+        if key.startswith('preco_de_') and not apos_parcelas:
+            if t.startswith('R$'):
+                el['prefixo'] = 'R$ '
+                t = t[2:].strip()
+            if risco:
+                el['riscado'] = dict(cor=cor(risco['color']), larg=risco['width'], dy=round(risco['rect'].y0 - e['y'], 2),
+                                     antes=round(e['x'] - risco['rect'].x0, 2), depois=round(risco['rect'].x1 - e['x1'], 2))
+                arte['remover'].append(risco)
+        elif key.startswith('preco_de_'):  # vem logo depois das parcelas: acompanha a largura delas; risco redesenhado
+            el.update(apos=f'parcelas_{key.rsplit("_", 1)[1]}', gap=round(e['x'] - esq['x1'], 2))
+            r = next((d for d in riscos if d['rect'].x0 < e['x1'] and d['rect'].x1 > e['x']
+                      and e['bbox'].y0 < d['rect'].y0 < e['bbox'].y1), None)
+            if r:
+                el['riscado'] = dict(cor=cor(r['color']), larg=r['width'], dy=round(r['rect'].y0 - e['y'], 2),
+                                     antes=round(e['x'] - r['rect'].x0, 2), depois=round(r['rect'].x1 - e['x1'], 2))
+                arte['remover'].append(r)
         if e['vscale'] != 1:
             el['vscale'] = e['vscale']
         if len(e['linhas']) > 1:
@@ -294,10 +403,17 @@ def ler_arte(p):
             el['quebra'] = largura_quebra(e)
         else:
             el['maxW'] = round((e['x1'] - e['x']) * 1.3, 1)
+            if key == 'local':  # usa a largura toda da caixa em volta (a de cima, se houver outra atrás)
+                centro = fitz.Point((e['bbox'].x0 + e['bbox'].x1) / 2, e['y'] - e['tam'] * .35)
+                caixa = max((d for d in desenhos if 'f' in d['type'] and d['rect'].contains(centro)
+                             and d['rect'].width > e['bbox'].width + 10 and d['rect'].height < 120), key=lambda d: d['seqno'], default=None)
+                if caixa:
+                    el['maxW'] = round(caixa['rect'].x1 - 14 - e['x'], 1)
         if e['tracos']:
             el['traco'] = estilo_traco(e['tracos'], sum(1 for ch in t if not ch.isspace()))
         arte['textos'].append(el)
-        arte['valores'][key] = t
+        if not formato:
+            arte['valores'].setdefault(key, t)
     return arte
 
 
@@ -339,8 +455,7 @@ def ajustar_titulo_desenho(td, ref, valores):
 
 
 # ---------------------------------------------------------------- camadas
-def camadas(pno, remover):
-    n = pno + 1
+def camadas(pno, remover, n):
     info = fitz.open(SRC)[pno].get_image_info(xrefs=True)
     foto = max(info, key=lambda im: im['width'] * im['height'])
     outras = sorted({im['xref'] for im in info if im['xref'] != foto['xref']})
@@ -371,7 +486,7 @@ def camadas(pno, remover):
     ys, xs = np.nonzero(alfa)
     vy, vx = np.nonzero((alfa > 0) & (base_a < 128))
     k = 72 / DPI
-    spec = dict(mascara=f'camadas/arte{n}-mascara.png', base=f'camadas/arte{n}-base.png',
+    spec = dict(mascara=f'camadas/arte{n}-mascara.png', base=f'camadas/arte{n}-base.png', padrao=None,
                 box=[xs.min() * k, ys.min() * k, (xs.max() + 1) * k, (ys.max() + 1) * k],
                 visivel=[vx.min() * k, vy.min() * k, (vx.max() + 1) * k, (vy.max() + 1) * k],
                 original=ret(foto['bbox']), personagem=None)
@@ -408,12 +523,13 @@ def salvar_foto(img, nome, cat, itens):
     itens.append(dict(id=nome, cat=cat, src=f'banco/fotos/{nome}.jpg', mini=f'banco/mini/{nome}.jpg'))
 
 
-def banco(doc, xref_layout):
+def banco(doc, fotos_artes):
     itens = []
-    pix = fitz.Pixmap(doc, xref_layout)
-    if pix.n - pix.alpha != 3:
-        pix = fitz.Pixmap(fitz.csRGB, pix)
-    salvar_foto(Image.open(io.BytesIO(pix.tobytes('png'))), 'layout', 'Foto da arte', itens)
+    for nome, xref in fotos_artes:  # foto que o designer pôs em cada arte ("layout" é a da primeira)
+        pix = fitz.Pixmap(doc, xref)
+        if pix.n - pix.alpha != 3:
+            pix = fitz.Pixmap(fitz.csRGB, pix)
+        salvar_foto(Image.open(io.BytesIO(pix.tobytes('png'))), nome, 'Foto da arte', itens)
     arquivos = sorted(f for f in BANCO_SRC.rglob('*') if f.suffix.lower() in ('.jpg', '.jpeg', '.png'))
     for f in sorted(arquivos, key=lambda f: (f.parent == BANCO_SRC, f.parent.name, f.name)):
         cat = 'Gerais' if f.parent == BANCO_SRC else f.parent.name
@@ -426,23 +542,26 @@ def main():
     for d in ('camadas', 'banco/fotos', 'banco/mini'):
         (AQUI / d).mkdir(parents=True, exist_ok=True)
     doc = fitz.open(SRC)
-    assert doc.page_count == len(NOMES), f'o .ai tem {doc.page_count} artes; ajuste NOMES em extrair.py'
-    artes = [ler_arte(p) for p in doc]
+    assert doc.page_count > max(p for p, _ in PRANCHETAS), f'o .ai tem {doc.page_count} pranchetas; ajuste PRANCHETAS em extrair.py'
+    artes = [ler_arte(doc[pno], pno in TITULO_FIXO) for pno, _ in PRANCHETAS]
     valores = {}
     for a in artes:
         for k, v in a['valores'].items():
             valores.setdefault(k, v)
     ref = next(a['titulo'] for a in artes if a['titulo'])
-    layouts, xref = [], None
-    for pno, a in enumerate(artes):
-        print(f'arte {pno + 1}: {NOMES[pno]}')
+    layouts, fotos = [], {}
+    for n, ((pno, nome), a) in enumerate(zip(PRANCHETAS, artes), 1):
+        print(f'arte {n}: {nome} (prancheta {pno + 1})')
         if a.get('titulo_desenho'):
             a['titulo'] = ajustar_titulo_desenho(a['titulo_desenho'], ref, valores)
-        foto, xref = camadas(pno, a['remover'])
+        foto, xref = camadas(pno, a['remover'], n)
+        foto['padrao'] = fotos.setdefault(xref, 'layout' if not fotos else f'layout-{n}')
         textos = sorted(a['textos'], key=lambda t: t['tipo'] != 'preco')  # preço embaixo do "7x de"
-        layouts.append(dict(nome=NOMES[pno], foto=foto, textos=textos + ([a['titulo']] if a['titulo'] else [])))
-        print(f'  {len(textos)} textos, personagem: {"sim" if foto["personagem"] else "não"}')
-    itens = banco(doc, xref)
+        r = doc[pno].rect
+        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto,
+                            textos=textos + ([a['titulo']] if a['titulo'] else [])))
+        print(f'  {len(textos)} textos, personagem: {"sim" if foto["personagem"] else "não"}, foto: {foto["padrao"]}')
+    itens = banco(doc, [(nome, xref) for xref, nome in fotos.items()])
     print(f'banco: {len(itens)} fotos')
     js = ('// gerado por extrair.py – não editar à mão\n'
           f'const LAYOUTS = {json.dumps(layouts, ensure_ascii=False)};\n'
