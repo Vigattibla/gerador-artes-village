@@ -2207,15 +2207,10 @@ function roteiro(L, estilo = ANIMS[0].id) {
     const ordem = vistos[n ?? 'x'] = (vistos[n ?? 'x'] ?? -1) + 1;
     donos.set(t, { n, ini: n != null ? pecas[n].ini + .25 + ordem * .07 : .4 + 1.6 * y / H });
   }
-  // só o que importa se mexe: título, preço, desconto e a etiqueta de vagas. O resto já nasce na tela
+  // entra tudo o que está na frente (cards, etiquetas, selos, títulos); cenário de fundo fica parado
   const principal = t => t.tipo === 'titulo' || t.tipo === 'preco' || ['desconto', 'restam', 'parcelasX'].includes(t.formato);
-  const donas = new Set([...donos].filter(([t]) => principal(t)).map(([, d]) => d.n).filter(n => n != null));
-  if (![...donos.keys()].some(t => t.tipo === 'titulo')) { // título desenhado no .ai: entra a peça dele
-    const topo = pecas.map((p, n) => [p, n]).filter(([p]) => (p.rect[1] + p.rect[3]) / 2 < .4 * H)
-      .sort((a, b) => area(b[0].rect) - area(a[0].rect))[0];
-    if (topo) { donas.add(topo[1]); topo[0].ini = Math.min(topo[0].ini, .3); }
-  }
-  pecas.forEach((p, n) => { if (!donas.has(n)) { p.modo = 'nada'; p.ini = 0; } });
+  const cenario = p => p.modo === 'baixo' || area(p.rect) > .45 * W * H;
+  pecas.forEach(p => { if (cenario(p)) { p.modo = 'nada'; p.ini = 0; } });
   let ordem = 0;
   for (const [t, d] of donos) {
     d.anima = principal(t); // o resto do texto entra junto com o card, sem entrada própria

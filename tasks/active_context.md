@@ -153,3 +153,7 @@ Falta do pedido: escolher o layout e depois a dimensão (a arte se adaptar a out
 o próprio preço. As peças de apoio (rodapé, etiquetas, lista, contato) e a logo nascem prontas na tela;
 o texto dentro do card entra junto com ele, sem entrada própria. A foto continua se movendo o vídeo
 inteiro: afasta nos estilos Cascata/Deslizar e aproxima no Zoom.
+
+17/09 (12): corrigindo o (11) — o que não anima é só o cenário de fundo (a faixa do rodapé e qualquer
+peça que cubra mais de 45% da arte) e a foto. Todo o resto que está na frente (tags, título, selo,
+card, pílulas, barra de contato) entra. O texto de dentro do card continua entrando junto com ele.
