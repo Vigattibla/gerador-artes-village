@@ -168,8 +168,16 @@
   .opcao strong { display: block; font-size: 16px; font-weight: 800; color: var(--navy); }
   .opcao small { display: block; font-size: 13px; color: var(--suave); }
 
-  #pasta-anims { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); max-width: 860px; }
-  #pasta-anims .opcao canvas { aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
+  .anims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .anims .opcao { padding: 6px 6px 10px; border-width: 2px; }
+  .anims .opcao canvas { aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
+  .anims .opcao strong { font-size: 14px; }
+  .anims .opcao small { font-size: 12px; }
+  .foto-box { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+  .foto-box img, .foto-box .sem-foto { width: 72px; height: 72px; border: 2px solid var(--linha); border-radius: 50%;
+    object-fit: cover; background: var(--fundo); color: var(--suave); font-size: 22px; line-height: 68px; text-align: center; }
+  .salvo-perfil { min-height: 20px; margin: 4px 0 0; font-size: 14px; color: var(--suave); }
+  .conta a#nome-usuario { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
   .cats { display: flex; gap: 8px; margin: 0 0 10px; padding-bottom: 6px; overflow-x: auto; }
   .cats button { flex: none; height: 40px; padding: 0 16px; border: 2px solid var(--linha); border-radius: 20px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
   .cats button[aria-pressed=true] { border-color: var(--navy); background: var(--navy); color: #fff; }
@@ -255,7 +263,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       Campanhas</a>
   </nav>
-  <div class="conta" id="conta" hidden><span id="nome-usuario"></span><button type="button" class="sair">Sair</button></div>
+  <div class="conta" id="conta" hidden><a href="#/perfil" id="nome-usuario"></a><button type="button" class="sair">Sair</button></div>
 </header>
 <div class="faixa-demo" id="faixa-demo" hidden>Demonstração: os dados ficam só neste navegador <button type="button" id="recomecar-demo">Recomeçar</button></div>
 
@@ -322,6 +330,9 @@
     <a class="atalho" href="#/campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       <strong>Campanhas</strong>Artes prontas do resort para divulgar</a>
+    <a class="atalho" href="#/perfil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
+      <strong>Meu perfil</strong>Sua foto, seu contato e a logo da sua empresa</a>
   </div>
   <div id="inicio-ultima" hidden>
     <h2 class="rotulo-secao">Continuar de onde parou</h2>
@@ -343,13 +354,35 @@
   <div class="grade" id="lista-campanhas"></div>
 </section>
 
+<section class="tela" id="perfil" hidden>
+  <h1>Meu perfil</h1>
+  <p class="intro">Fica guardado neste aparelho e entra sozinho nas artes que você criar.</p>
+  <div class="caixa">
+    <div class="rotulo">Sua foto
+      <div class="foto-box"><img id="perfil-img" alt="Sua foto" hidden><span class="sem-foto" id="perfil-sem">—</span>
+        <button type="button" class="leve" id="perfil-escolher">Escolher foto</button>
+        <button type="button" class="leve" id="perfil-tirar" hidden>Apagar foto</button></div></div>
+    <input type="file" id="perfil-arquivo" accept="image/png,image/jpeg,image/webp" hidden>
+    <label>Seu nome<input class="campo" id="perfil-nome" autocomplete="name"></label>
+    <label>E-mail<input class="campo" id="perfil-email" readonly>
+      <span class="ajuda">É o e-mail da sua conta. Para trocar, fale com quem cuida do sistema.</span></label>
+    <label>Telefone<input class="campo" id="perfil-telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(31) 99999-9999">
+      <span class="ajuda">Entra sozinho nas artes novas.</span></label>
+    <div class="rotulo">Logo da sua empresa
+      <div class="logo-box"><img id="perfil-logo-img" alt="Sua logo" hidden>
+        <button type="button" class="leve" id="perfil-logo-escolher">Escolher logo</button>
+        <button type="button" class="leve" id="perfil-logo-tirar" hidden>Apagar logo</button></div>
+      <span class="ajuda">PNG com fundo transparente fica melhor. É a mesma logo que aparece nas artes.</span></div>
+    <input type="file" id="perfil-logo-arquivo" accept="image/png,image/jpeg,image/webp" hidden>
+    <p class="salvo-perfil" id="perfil-salvo" aria-live="polite"></p>
+  </div>
+  <div class="rodape-conta"><button type="button" class="sair">Sair da conta</button></div>
+</section>
+
 <section class="tela larga" id="pasta" hidden>
   <div class="cabeca"><h1 id="pasta-nome">Excursão</h1><a class="botao-acao" id="pasta-add">+ Adicionar criativo</a></div>
   <label id="pasta-linha-nome">Nome da excursão<input class="campo" id="pasta-nome-in" autocomplete="off" maxlength="60" placeholder="Ex.: Feriado de Novembro"></label>
   <p class="sinc" id="pasta-info"></p>
-  <h2 class="rotulo-secao">Movimento dos vídeos</h2>
-  <p class="ajuda">Toque para ver como fica. Vale para os vídeos desta pasta.</p>
-  <div class="artes" id="pasta-anims"></div>
   <h2 class="rotulo-secao">Criativos</h2>
   <div class="grade" id="pasta-itens"></div>
   <div id="pasta-arquivos"></div>
@@ -486,6 +519,8 @@ const estado = {
   foto: q.get('foto') ?? 'layout',
   personagem: q.get('personagem') === '0' ? '' : q.get('personagem') || 'arte', // 'arte' = o do .ai; '' = nenhum
   ajuste: {},
+  fotos: {},
+  anims: {},
   passo: 1,
   foco: null,
 };
@@ -796,7 +831,7 @@ function gravar(lista, chave = chaveLocal()) {
   }
 }
 const novoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-const assinatura = ex => JSON.stringify([ex.atual, ex.layouts, ex.anim, ex.foto, ex.personagem, ex.ajuste, ex.campos]);
+const assinatura = ex => JSON.stringify([ex.atual, ex.layouts, ex.anim, ex.anims, ex.foto, ex.fotos, ex.personagem, ex.ajuste, ex.campos]);
 
 function importarDoAparelho() { // excursões salvas antes de existir conta
   const antigas = ler('village.excursoes');
@@ -810,7 +845,8 @@ function paraServidor(ex) {
   const c = ex.campos, [ida, volta] = periodo(ex);
   return {
     id: ex.idRemoto || '', nome: nomeDe(ex), ida: ida || '', volta: volta || '', mini: ex.mini || '',
-    arte: { atual: ex.atual, layouts: ex.layouts || [], anim: ex.anim || '', foto: ex.foto, personagem: ex.personagem,
+    arte: { atual: ex.atual, layouts: ex.layouts || [], anim: ex.anim || '', anims: ex.anims || {},
+      foto: ex.foto, fotos: ex.fotos || {}, personagem: ex.personagem,
       ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '' },
   };
 }
@@ -820,7 +856,8 @@ function deServidor(x, id = novoId()) {
   const a = x.arte || {};
   return { id, idRemoto: x.id, criada: x.atualizada, atualizada: x.atualizada, versao: 0, pendente: false, nova: false,
     atual: a.atual ?? 0, layouts: a.layouts?.length ? a.layouts : [a.atual ?? 0], anim: a.anim || ANIMS[0].id,
-    foto: a.foto ?? 'layout', personagem: qualPersonagem(a.personagem), ajuste: a.ajuste ?? {}, campos: a.campos || {},
+    anims: a.anims ?? {}, foto: a.foto ?? 'layout', fotos: a.fotos ?? {},
+    personagem: qualPersonagem(a.personagem), ajuste: a.ajuste ?? {}, campos: a.campos || {},
     mini: x.mini || '', campanha: a.campanha || '' };
 }
 
@@ -909,10 +946,11 @@ function novaExcursao() {
   const ultima = excursoes().sort((a, b) => b.atualizada - a.atualizada)[0];
   const campos = Object.fromEntries(Object.keys(VALORES).filter(k => EDITAVEL.test(k)).map(k => [k, VALORES[k]]));
   if (ultima) for (const k of ['telefone', 'local']) if (ultima.campos[k]) campos[k] = ultima.campos[k]; // o agente não redigita
+  if (perfil().telefone) campos.telefone = perfil().telefone; // o do perfil manda
   campos.logo = '1'; // aparece se o agente tiver logo
   const agora = Date.now();
   const ex = { id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 0, pendente: false, nova: true,
-    atual: 0, layouts: [], anim: ANIMS[0].id, foto: 'layout', personagem: 'arte', ajuste: {}, campos, mini: '' };
+    atual: 0, layouts: [], anim: ANIMS[0].id, anims: {}, foto: 'layout', fotos: {}, personagem: 'arte', ajuste: {}, campos, mini: '' };
   gravar([ex, ...excursoes()]);
   return ex;
 }
@@ -927,6 +965,7 @@ function abrirExcursao(ex) {
   aberta = ex;
   if (!ex.campanha && ex.tipo !== 'campanha') ex.layouts = ex.layouts ? pastaLayouts(ex) : [ex.atual ?? 0]; // excursão antiga: a arte que ela já tinha
   estado.anim = ANIMS.some(a => a.id === ex.anim) ? ex.anim : ANIMS[0].id;
+  Object.assign(estado, { fotos: { ...(ex.fotos || {}) }, anims: { ...(ex.anims || {}) } });
   Object.assign(estado, { atual: Math.min(LAYOUTS.length - 1, ex.atual ?? 0), foto: ex.foto, personagem: qualPersonagem(ex.personagem), ajuste: structuredClone(ex.ajuste ?? {}), foco: null });
   preencher(ex.campos);
   form.elements.local.readOnly = !!ex.campanha;
@@ -962,8 +1001,9 @@ function abrirExcursao(ex) {
 }
 
 function estadoAtual(base) {
-  return { ...base, atual: estado.atual, layouts: aberta?.layouts ?? base.layouts, anim: estado.anim,
-    foto: estado.foto, personagem: estado.personagem, ajuste: estado.ajuste,
+  return { ...base, atual: estado.atual, layouts: aberta?.layouts ?? base.layouts,
+    anim: estado.anim, anims: { ...estado.anims }, foto: estado.foto, fotos: { ...estado.fotos },
+    personagem: estado.personagem, ajuste: estado.ajuste,
     campos: Object.fromEntries(new FormData(form)) };
 }
 function miniatura() { // aberto por arquivo local o navegador bloqueia a miniatura; o resto salva igual
@@ -1095,6 +1135,75 @@ function montarExcursoes() {
   }));
 }
 
+// ---------- perfil: foto, contato e logo do agente, guardados neste aparelho ----------
+const chavePerfil = () => `village.perfil.${sessao?.usuario.email}`;
+function perfil() {
+  try { return JSON.parse(localStorage[chavePerfil()] || '{}'); } catch { return {}; }
+}
+function gravarPerfil(p) {
+  try { localStorage[chavePerfil()] = JSON.stringify(p); } catch { return aviso('Não deu pra guardar neste navegador.'); }
+  $('perfil-salvo').textContent = 'Salvo neste aparelho';
+  if (p.nome) $('nome-usuario').textContent = p.nome;
+}
+function montarPerfil() {
+  const p = perfil(), u = sessao.usuario;
+  $('perfil-nome').value = p.nome || u.nome || '';
+  $('perfil-email').value = u.email;
+  $('perfil-telefone').value = p.telefone || '';
+  $('perfil-img').hidden = $('perfil-tirar').hidden = !p.foto;
+  $('perfil-sem').hidden = !!p.foto;
+  if (p.foto) $('perfil-img').src = p.foto;
+  $('perfil-escolher').textContent = p.foto ? 'Trocar foto' : 'Escolher foto';
+  const lg = minhaLogo();
+  $('perfil-logo-img').hidden = $('perfil-logo-tirar').hidden = !lg;
+  if (lg) $('perfil-logo-img').src = lg;
+  $('perfil-logo-escolher').textContent = lg ? 'Trocar logo' : 'Escolher logo';
+  $('perfil-salvo').textContent = '';
+}
+async function imagemGuardada(arq, lado) { // encolhe antes de guardar: localStorage é pequeno
+  const bmp = await createImageBitmap(arq), k = Math.min(1, lado / Math.max(bmp.width, bmp.height));
+  const m = Object.assign(document.createElement('canvas'), { width: Math.round(bmp.width * k), height: Math.round(bmp.height * k) });
+  m.getContext('2d').drawImage(bmp, 0, 0, m.width, m.height);
+  return m.toDataURL('image/png');
+}
+$('perfil-nome').oninput = () => gravarPerfil({ ...perfil(), nome: $('perfil-nome').value.trim() });
+$('perfil-telefone').oninput = e => {
+  e.target.value = formatarTelefone(e.target.value);
+  gravarPerfil({ ...perfil(), telefone: e.target.value });
+};
+$('perfil-escolher').onclick = () => $('perfil-arquivo').click();
+$('perfil-arquivo').onchange = async e => {
+  const arq = e.target.files[0];
+  e.target.value = '';
+  if (!arq) return;
+  try { gravarPerfil({ ...perfil(), foto: await imagemGuardada(arq, 400) }); }
+  catch { return aviso('Não deu pra usar essa imagem. Tente um PNG ou JPG menor.'); }
+  montarPerfil();
+};
+$('perfil-tirar').onclick = () => {
+  if (!confirm('Apagar a sua foto deste aparelho?')) return;
+  const p = perfil();
+  delete p.foto;
+  gravarPerfil(p);
+  montarPerfil();
+};
+$('perfil-logo-escolher').onclick = () => $('perfil-logo-arquivo').click();
+$('perfil-logo-arquivo').onchange = async e => {
+  const arq = e.target.files[0];
+  e.target.value = '';
+  if (!arq) return;
+  try { localStorage[chaveLogo()] = await imagemGuardada(arq, 600); }
+  catch { return aviso('Não deu pra usar essa imagem. Tente um PNG ou JPG menor.'); }
+  montarPerfil();
+  mostrarLogo();
+};
+$('perfil-logo-tirar').onclick = () => {
+  if (!confirm('Apagar a sua logo deste aparelho? Ela sai de todas as artes.')) return;
+  try { localStorage.removeItem(chaveLogo()); } catch {}
+  montarPerfil();
+  mostrarLogo();
+};
+
 // ---------- pasta: a excursão com todos os criativos dela (imagem, vídeo e arquivos) ----------
 const ANIMS = [
   { id: 'cascata', nome: 'Cascata', desc: 'As peças entram uma a uma, de cima para baixo.' },
@@ -1118,7 +1227,6 @@ function montarPasta(ex) {
   $('pasta-linha-nome').hidden = !!ex.campanha;
   $('pasta-nome-in').value = ex.campos.dx_nome || '';
   const lays = pastaLayouts(ex);
-  $('pasta-anims').replaceChildren(...(lays.some(i => temVideo(ex, i)) ? ANIMS.map(a => opcaoAnim(a, lays)) : []));
   $('pasta-itens').replaceChildren(...(lays.length ? lays.map(i => cartaoCriativo(ex, i))
     : [el('div', 'vazio', 'Nenhum criativo ainda. Toque em "+ Adicionar criativo".')]));
   const arqs = (ex.campanha && campanhaPorId(ex.campanha)?.arquivos) || [];
@@ -1139,24 +1247,28 @@ $('pasta-nome-in').oninput = () => {
   salvarAberta();
 };
 
-function opcaoAnim(a, lays) { // cada estilo se mostra rodando na primeira arte da pasta
-  const i = lays.find(j => LAYOUTS[j].foto.pecas?.length) ?? lays[0], [W, H] = tamanho(i);
-  const wrap = el('div', 'opcao-wrap'), bt = Object.assign(el('button', 'opcao'), { type: 'button' });
-  const mini = Object.assign(el('canvas'), { width: 288, height: Math.round(288 * H / W) });
-  bt.setAttribute('aria-pressed', estado.anim === a.id);
-  bt.append(mini, el('strong', '', a.nome), el('small', '', a.desc));
-  esperarDesenho(() => desenhar(mini.getContext('2d'), i, 288 / W)).then(() => {});
-  bt.onclick = () => {
-    cancelAnimationFrame(tocando?.raf);
-    tocando = null;
-    estado.anim = a.id;
-    if (aberta) { aberta.anim = a.id; salvarAberta(); }
-    document.querySelectorAll('#pasta-anims .opcao').forEach(b => b.setAttribute('aria-pressed', false));
-    bt.setAttribute('aria-pressed', true);
-    tocar(mini, i);
-  };
-  wrap.append(bt);
-  return wrap;
+// o movimento é de cada criativo: abre debaixo dele e toca ali mesmo
+function blocoAnim(ex, i) {
+  const caixa = el('div', 'anims'), [W, H] = tamanho(i);
+  caixa.replaceChildren(...ANIMS.map(a => {
+    const wrap = el('div', 'opcao-wrap'), bt = Object.assign(el('button', 'opcao'), { type: 'button' });
+    const mini = Object.assign(el('canvas'), { width: 216, height: Math.round(216 * H / W) });
+    bt.setAttribute('aria-pressed', animDe(i) === a.id);
+    bt.append(mini, el('strong', '', a.nome), el('small', '', a.desc));
+    esperarDesenho(() => desenhar(mini.getContext('2d'), i, 216 / W)).then(() => {});
+    bt.onclick = () => {
+      cancelAnimationFrame(tocando?.raf);
+      tocando = null;
+      estado.anims[i] = a.id;
+      if (aberta?.id === ex.id) { aberta.anims = { ...estado.anims }; salvarAberta(); }
+      caixa.querySelectorAll('.opcao').forEach(b => b.setAttribute('aria-pressed', false));
+      bt.setAttribute('aria-pressed', true);
+      tocar(mini, i);
+    };
+    wrap.append(bt);
+    return wrap;
+  }));
+  return caixa;
 }
 
 async function imagemDe(i) { // a arte inteira, fora do editor
@@ -1191,9 +1303,9 @@ function cartaoCriativo(ex, i) {
       livre(vid);
     }
   };
-  const tirar = Object.assign(el('button', 'leve', 'Tirar'), { type: 'button' });
+  const tirar = Object.assign(el('button', 'perigo', 'Excluir'), { type: 'button' });
   tirar.onclick = () => {
-    if (!confirm(`Tirar "${LAYOUTS[i].nome}" desta excursão?`)) return;
+    if (!confirm(`Excluir o criativo "${LAYOUTS[i].nome}" desta excursão?`)) return;
     const lista = excursoes(), n = lista.findIndex(e => e.id === ex.id);
     if (n < 0) return;
     ex.layouts = lista[n].layouts = (lista[n].layouts || []).filter(x => x !== i);
@@ -1203,11 +1315,19 @@ function cartaoCriativo(ex, i) {
     agendarSinc(300);
     montarPasta(ex);
   };
+  const nomeAnim = () => ANIMS.find(a => a.id === animDe(i))?.nome ?? ANIMS[0].nome;
+  const caixaAnim = blocoAnim(ex, i);
+  caixaAnim.hidden = true;
+  const mov = Object.assign(el('button', 'leve', `Movimento: ${nomeAnim()}`), { type: 'button' });
+  mov.onclick = () => {
+    caixaAnim.hidden = !caixaAnim.hidden;
+    if (caixaAnim.hidden) { cancelAnimationFrame(tocando?.raf); tocando = null; mov.textContent = `Movimento: ${nomeAnim()}`; }
+  };
   info.append(el('h2', '', LAYOUTS[i].nome), el('p', '', DESCRICAO[LAYOUTS[i].nome] ?? ''));
-  acoes.append(img, ...(temVideo(ex, i) ? [vid] : []),
+  acoes.append(img, ...(temVideo(ex, i) ? [vid, mov] : []),
     Object.assign(el('a', 'leve', 'Editar'), { href: `#/arte/${ex.id}?layout=${i + 1}` }),
     ...(ex.campanha ? [] : [tirar]));
-  info.append(acoes);
+  info.append(acoes, ...(temVideo(ex, i) ? [caixaAnim] : []));
   box.append(mini, info);
   return box;
 }
@@ -1521,7 +1641,7 @@ $('datas-agente').onchange = e => mudarCampanha(r => r.datas = e.target.checked 
 
 // ---------- telas ----------
 const TELAS = { entrar: 'Entrar', 'criar-senha': 'Crie sua senha', 'criar-master': 'Criar conta master', inicio: 'Início',
-  editor: 'Criativo', excursoes: 'Minhas excursões', campanhas: 'Campanhas', pasta: 'Excursão' };
+  editor: 'Criativo', excursoes: 'Minhas excursões', campanhas: 'Campanhas', pasta: 'Excursão', perfil: 'Meu perfil' };
 function rota() {
   const [pagina, cru] = location.hash.replace(/^#\/?/, '').split('/');
   const [id, busca] = (cru || '').split('?'); // #/arte/<id>?layout=3&passo=1 vem da pasta
@@ -1557,13 +1677,14 @@ function rota() {
     if (aberta) salvarAgora();
     aberta = null;
     const velho = Date.now() - ultimoPuxar > 60000;
-    if (pagina === 'excursoes') { tela = 'excursoes'; montarExcursoes(); if (velho) puxar(); }
+    if (pagina === 'perfil') { tela = 'perfil'; montarPerfil(); }
+    else if (pagina === 'excursoes') { tela = 'excursoes'; montarExcursoes(); if (velho) puxar(); }
     else if (pagina === 'campanhas') { tela = 'campanhas'; montarCampanhas(); }
     else { tela = 'inicio'; montarInicio(); if (velho) puxar(); }
   }
   for (const t of Object.keys(TELAS)) $(t).hidden = t !== tela;
   $('menu').hidden = $('conta').hidden = !sessao;
-  if (sessao) $('nome-usuario').textContent = sessao.usuario.nome;
+  if (sessao) $('nome-usuario').textContent = perfil().nome || sessao.usuario.nome;
   const noMenu = aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas' : tela === 'pasta' ? 'excursoes' : tela;
   document.querySelectorAll('.menu a').forEach(a => {
     if (a.dataset.tela === noMenu) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
@@ -1595,7 +1716,8 @@ for (let n = 1; n <= nPacotes; n++) {
       <input class="campo" name="preco_${n}" inputmode="decimal" autocomplete="off" placeholder="416,57"></span></label>
     <label>Valor antigo (sai riscado)<span class="dinheiro"><span>R$</span>
       <input class="campo" name="preco_de_${n}" inputmode="numeric" autocomplete="off" placeholder="750"></span>
-      <span class="ajuda">Deixe em branco para não mostrar.</span></label>
+      <span class="ajuda">Sem valor antigo, a arte sai sem o risco e sem o selo de % OFF.</span></label>
+    <button type="button" class="leve" data-tirar="preco_de_${n}">Tirar o valor antigo</button>
     <div class="rotulo">Parcelas
       <div class="contador" data-key="parcelas_${n}">
         <button type="button" data-delta="-1" aria-label="Menos parcelas">−</button>
@@ -1669,15 +1791,33 @@ function mostrarPagamentos() {
   }
 }
 $('pacotes').addEventListener('click', e => {
+  const limpar = e.target.closest('[data-tirar]');
+  if (limpar) { // valor antigo fora: sem risco e sem selo
+    form.elements[limpar.dataset.tirar].value = '';
+    const p = limpar.closest('.pacote');
+    p.querySelector('[name^=total_]').value = '';
+    return render();
+  }
   const bt = e.target.closest('[data-delta]');
   if (!bt) return;
-  const k = bt.closest('[data-key]').dataset.key;
-  form.elements[k].value = `${nParcelas(k) + +bt.dataset.delta}x de`;
+  const k = bt.closest('[data-key]').dataset.key, n = k.split('_')[1];
+  const antes = nParcelas(k), depois = Math.min(12, Math.max(1, antes + +bt.dataset.delta));
+  form.elements[k].value = `${depois}x de`;
   mostrarParcelas();
-  calcular(k.split('_')[1]);
+  // sem a conta pelo total, o pacote inteiro é que manda: o valor por dia se divide nas novas parcelas
+  if (!form.elements[`total_desc_${n}`]?.value && antes !== depois) {
+    const p = form.elements[`preco_${n}`], d = form.elements[`preco_de_${n}`];
+    if (p?.value) p.value = reais(numero(p.value) * antes / depois);
+    if (d?.value) { const v = numero(d.value) * antes / depois; d.value = Number.isInteger(v) ? String(v) : reais(v); }
+  }
+  calcular(n);
   render();
 });
 $('pacotes').addEventListener('change', e => {
+  if (/^preco_de_/.test(e.target.name) && e.target.value.trim() && !numero(e.target.value)) {
+    e.target.value = ''; // zerou: some o risco e o selo
+    render();
+  }
   const box = e.target.closest('.checks[data-key]');
   if (!box) return;
   form.elements[box.dataset.key].value = [...box.querySelectorAll('input:checked')].map(i => i.value).join(',');
@@ -1741,7 +1881,11 @@ function img(src) {
   return IMGS[src];
 }
 const pronta = im => im.complete && im.naturalWidth > 0;
-const fotoItem = () => BANCO.find(b => b.id === estado.foto) ?? BANCO[0];
+// cada criativo tem a sua foto e o seu movimento; o campo antigo (foto/anim) vale como padrão
+const ehPadrao = f => LAYOUTS.some(l => (l.foto.padrao || 'layout') === f);
+const fotoDe = i => estado.fotos[i] ?? (ehPadrao(estado.foto) ? LAYOUTS[i].foto.padrao || 'layout' : estado.foto);
+const animDe = i => estado.anims[i] ?? estado.anim ?? ANIMS[0].id;
+const fotoItem = (i = estado.atual) => BANCO.find(b => b.id === fotoDe(i)) ?? BANCO[0];
 const tamanho = i => [LAYOUTS[i].w || 1080, LAYOUTS[i].h || 1350];
 const aj = i => estado.ajuste[i] ??= { dx: 0, dy: 0, zoom: 1 };
 
@@ -2016,11 +2160,11 @@ function mover(c, L, p, s) { // transforma o canvas para a peça no instante s; 
 }
 
 function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem anim, a arte parada
-  const L = LAYOUTS[i], item = fotoItem(), im = img(item.src), v = valores();
+  const L = LAYOUTS[i], item = fotoItem(i), im = img(item.src), v = valores();
   const lugar = L.foto.personagem, escolhido = PERSONAGENS.find(x => x.id === estado.personagem);
   const p = lugar && (escolhido ? img(escolhido.src) : estado.personagem === 'arte' && img(lugar.src));
   const lg = L.logo && v.logo === '1' && minhaLogo() && img(minhaLogo());
-  const R = anim != null && L.foto.pecas?.length ? roteiro(L, estado.anim) : null, s = anim ?? 99;
+  const R = anim != null && L.foto.pecas?.length ? roteiro(L, animDe(i)) : null, s = anim ?? 99;
   const camadas = R ? [img(L.foto.fundo), ...R.pecas.map(x => img(x.src))] : [img(L.foto.base), ...(L.foto.frente ? [img(L.foto.frente)] : [])];
   const precisa = [im, img(L.foto.mascara), ...camadas, ...(p ? [p] : []), ...(lg ? [lg] : [])];
   if (!fontesOk || !precisa.every(pronta)) return false; // onload das imagens chama de novo
@@ -2205,11 +2349,7 @@ function selecionarArte(i) {
   const ks = chaves(i), L = LAYOUTS[i], [W, H] = tamanho(i);
   if (cv.width !== W * S || cv.height !== H * S) { cv.width = W * S; cv.height = H * S; }
   document.querySelector('.arte-wrap').style.setProperty('--r', W / H);
-  // ainda na foto padrão de alguma arte: troca pela foto que o designer pôs nesta
-  if (LAYOUTS.some(l => (l.foto.padrao || 'layout') === estado.foto) && estado.foto !== (L.foto.padrao || 'layout')) {
-    estado.foto = L.foto.padrao || 'layout';
-    montarBanco();
-  }
+  montarBanco();
   document.querySelectorAll('.opcao').forEach((b, j) => b.setAttribute('aria-pressed', j === i));
   mostrarPacotes();
   $('linha-pers').hidden = !L.foto.personagem;
@@ -2246,9 +2386,15 @@ function montarBanco() {
   }));
   $('fotos').replaceChildren(...BANCO.filter(b => cat === 'Todas' || b.cat === cat).map(b => {
     const bt = Object.assign(el('button'), { type: 'button' });
-    bt.setAttribute('aria-pressed', b.id === estado.foto);
+    bt.setAttribute('aria-pressed', b.id === fotoDe(estado.atual));
     bt.append(Object.assign(el('img'), { src: b.mini, loading: 'lazy', alt: `Foto: ${b.cat}` }));
-    bt.onclick = () => { estado.foto = b.id; estado.ajuste = {}; zoom.value = 1; montarBanco(); render(); };
+    bt.onclick = () => { // a foto é só deste criativo
+      estado.fotos[estado.atual] = b.id;
+      delete estado.ajuste[estado.atual];
+      zoom.value = 1;
+      montarBanco();
+      render();
+    };
     return bt;
   }));
 }

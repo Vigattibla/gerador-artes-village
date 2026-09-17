@@ -132,3 +132,11 @@ e os três movimentos com preview rodando (cascata, zoom, deslizar). `paraServid
 `#/nova` cria com `layouts: []` e abre a pasta; tocar na arte no passo 1 já a põe na excursão (as caixinhas
 "marcar" voltaram a ser só da campanha); "Finalizar" volta para a pasta; card tem "Tirar". Menu e telas
 falam "excursão" em vez de "arte".
+
+17/09 (9): foto e movimento passaram a ser de cada criativo (`fotos{}` e `anims{}` na excursão; o campo
+antigo vale como padrão). O movimento saiu do topo da pasta: cada criativo tem "Movimento: …" que abre as
+três opções dele. Parcelas mudadas redividem o valor por dia (o pacote é que é fixo). Valor antigo tem
+"Tirar" e some sozinho se zerar. "Tirar" do criativo virou "Excluir". Nova tela `#/perfil` (foto, nome,
+e-mail, telefone e logo, tudo no aparelho); o telefone do perfil entra nas excursões novas.
+Pendente do pedido do usuário: janela de datas na campanha, pílula de desconto nas duas artes que não
+têm (e opcional para o agente) e escolher o layout e depois a dimensão.
