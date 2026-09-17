@@ -140,3 +140,11 @@ três opções dele. Parcelas mudadas redividem o valor por dia (o pacote é que
 e-mail, telefone e logo, tudo no aparelho); o telefone do perfil entra nas excursões novas.
 Pendente do pedido do usuário: janela de datas na campanha, pílula de desconto nas duas artes que não
 têm (e opcional para o agente) e escolher o layout e depois a dimensão.
+
+17/09 (10): escolher o movimento virou uma janela com a arte grande rodando (a fileira de miniaturas
+era ilegível). Campanha ganhou `janela: {de, ate}`: o criador define o período e as datas do agente
+ficam presas nele (min/max nos campos + aviso no passo). Selo de % OFF agora é desenho do gerador em
+todas as artes: `extrair.py` tira as três formas do .ai e guarda `LAYOUTS[].selo`; quem não tinha ganha
+o selo espelhado na borda direita (`SELO_EXTRA`). Campo `selo` (1/0) com interruptor "Mostrar o selo
+de % OFF", editável também na arte de campanha.
+Falta do pedido: escolher o layout e depois a dimensão (a arte se adaptar a outros formatos).

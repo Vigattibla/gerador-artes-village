@@ -168,11 +168,15 @@
   .opcao strong { display: block; font-size: 16px; font-weight: 800; color: var(--navy); }
   .opcao small { display: block; font-size: 13px; color: var(--suave); }
 
-  .anims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
-  .anims .opcao { padding: 6px 6px 10px; border-width: 2px; }
-  .anims .opcao canvas { aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
-  .anims .opcao strong { font-size: 14px; }
-  .anims .opcao small { font-size: 12px; }
+  .mov { width: min(420px, 92vw); padding: 20px; border: 0; border-radius: 16px; background: #fff; color: var(--suave); }
+  .mov::backdrop { background: rgba(14, 26, 54, .6); }
+  .mov h2 { margin: 0 0 2px; font-size: 20px; font-weight: 800; color: var(--navy); }
+  .mov canvas { display: block; width: 100%; max-height: 52vh; margin: 12px auto; border-radius: 10px;
+    object-fit: contain; background: var(--fundo); }
+  .mov-opcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .mov-opcoes button { padding: 10px 6px; border: 3px solid var(--linha); border-radius: 12px; background: #fff;
+    font-size: 14px; font-weight: 800; color: var(--navy); cursor: pointer; }
+  .mov-opcoes button[aria-pressed=true] { border-color: var(--sol-forte); background: #fff8df; }
   .foto-box { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
   .foto-box img, .foto-box .sem-foto { width: 72px; height: 72px; border: 2px solid var(--linha); border-radius: 50%;
     object-fit: cover; background: var(--fundo); color: var(--suave); font-size: 22px; line-height: 68px; text-align: center; }
@@ -417,10 +421,18 @@
         <div id="pacotes"></div>
         <label id="linha-restam" hidden>Vagas restantes<input class="campo" name="restam" type="number" inputmode="numeric" min="0">
           <span class="ajuda">Aparece na etiqueta "Restam só … vagas".</span></label>
+        <label class="interruptor" id="linha-selo">Mostrar o selo de % OFF na arte
+          <input type="checkbox" id="usar-selo"></label>
+        <input type="hidden" name="selo" value="1">
         <label class="interruptor" id="linha-datas-agente" hidden>O agente põe a data da saída e as vagas
           <input type="checkbox" id="datas-agente"></label>
         <p class="ajuda" id="ajuda-datas" hidden>Marque quando o ônibus é do agente. Desmarcado, a data e as vagas
           são as suas e o agente não muda.</p>
+        <div id="linha-janela" hidden>
+          <div class="dupla"><label>A campanha começa<input class="campo" type="date" id="janela-de"></label>
+            <label>e termina<input class="campo" type="date" id="janela-ate"></label></div>
+          <span class="ajuda">O agente só escolhe datas de saída dentro desta janela. Em branco, ele escolhe qualquer data.</span>
+        </div>
       </section>
 
       <section class="passo" data-passo="3" hidden>
@@ -498,6 +510,18 @@
     </div>
   </section>
 </main>
+<dialog class="mov" id="mov">
+  <h2 id="mov-nome">Movimento</h2>
+  <p class="ajuda" id="mov-desc"></p>
+  <canvas id="mov-cv" aria-label="Prévia do vídeo"></canvas>
+  <div class="mov-opcoes" id="mov-opcoes"></div>
+  <div class="acoes-card">
+    <button type="button" class="abrir" id="mov-video">Baixar vídeo</button>
+    <button type="button" class="leve" id="mov-fechar">Fechar</button>
+  </div>
+  <div id="espera-mov"></div>
+</dialog>
+
 <div class="aviso" id="aviso" role="status" hidden></div>
 
 <script>
@@ -525,13 +549,13 @@ const estado = {
   foco: null,
 };
 // o agente só mexe nisto na arte (marcação do usuário, 15/09); o resto vem travado do .ai
-const EDITAVEL = /^(preco|preco_de|ida|volta|parcelas|pag)_\d+$|^(local|telefone|restam|logo|comissao)$/;
+const EDITAVEL = /^(preco|preco_de|ida|volta|parcelas|pag)_\d+$|^(local|telefone|restam|logo|comissao|selo)$/;
 const TITULO = /^titulo\d+$/;
 // título só quem cria a campanha muda (TI, 17/09); arte de campanha: o agente só põe telefone e logo
 // campanha: o preço é do Village; a saída (ônibus, datas, vagas) é do agente quando o criador marcou assim
 const datasDoAgente = () => campanhaPorId(aberta?.campanha)?.datas !== 'master';
 const editavel = k => aberta?.campanha
-  ? k === 'telefone' || k === 'logo' || /^preco_\d+$/.test(k) || (datasDoAgente() && (/^(ida|volta)_\d+$/.test(k) || k === 'restam'))
+  ? k === 'telefone' || k === 'logo' || k === 'selo' || /^preco_\d+$/.test(k) || (datasDoAgente() && (/^(ida|volta)_\d+$/.test(k) || k === 'restam'))
   : TITULO.test(k) ? eGestor() : k === 'logo' ? aberta?.tipo !== 'campanha' : EDITAVEL.test(k);
 const PASSOS = ['Escolha a arte', 'Valores e datas', 'Contato e logo', 'Foto e personagem', 'Materiais']; // arte primeiro: a pessoa vê o que vai preencher
 const P_ARTE = 1, P_VALORES = 2, P_CONTATO = 3, P_FOTO = 4, P_MAT = 5;
@@ -653,7 +677,8 @@ function demoApi(acao, p) {
         if (!String(x.nome || '').trim()) falha('Dê um nome para a campanha.');
         let c = db.campanhas.find(y => y.id === x.id);
         if (!c) db.campanhas.push(c = { id: x.id || crypto.randomUUID(), criada_por: u.email });
-        Object.assign(c, { nome: x.nome.trim(), status: x.status, layouts: x.layouts, motions: x.motions, arquivos: x.arquivos, datas: x.datas,
+        Object.assign(c, { nome: x.nome.trim(), status: x.status, layouts: x.layouts, motions: x.motions, arquivos: x.arquivos,
+          datas: x.datas, janela: x.janela,
           arte: x.arte, mini: x.mini, atualizada: agora });
         return { campanha: c };
       }
@@ -1247,29 +1272,64 @@ $('pasta-nome-in').oninput = () => {
   salvarAberta();
 };
 
-// o movimento é de cada criativo: abre debaixo dele e toca ali mesmo
-function blocoAnim(ex, i) {
-  const caixa = el('div', 'anims'), [W, H] = tamanho(i);
-  caixa.replaceChildren(...ANIMS.map(a => {
-    const wrap = el('div', 'opcao-wrap'), bt = Object.assign(el('button', 'opcao'), { type: 'button' });
-    const mini = Object.assign(el('canvas'), { width: 216, height: Math.round(216 * H / W) });
+// o movimento se escolhe numa janela, com a arte grande rodando: assim dá para ver de verdade
+let movAberto = null;
+function abrirMovimento(ex, i) {
+  movAberto = { ex, i };
+  const [W, H] = tamanho(i), cv2 = $('mov-cv');
+  cv2.width = 540;
+  cv2.height = Math.round(540 * H / W);
+  $('mov-nome').textContent = `Movimento do ${LAYOUTS[i].nome}`;
+  $('mov-opcoes').replaceChildren(...ANIMS.map(a => {
+    const bt = Object.assign(el('button', '', a.nome), { type: 'button' });
     bt.setAttribute('aria-pressed', animDe(i) === a.id);
-    bt.append(mini, el('strong', '', a.nome), el('small', '', a.desc));
-    esperarDesenho(() => desenhar(mini.getContext('2d'), i, 216 / W)).then(() => {});
     bt.onclick = () => {
-      cancelAnimationFrame(tocando?.raf);
-      tocando = null;
       estado.anims[i] = a.id;
       if (aberta?.id === ex.id) { aberta.anims = { ...estado.anims }; salvarAberta(); }
-      caixa.querySelectorAll('.opcao').forEach(b => b.setAttribute('aria-pressed', false));
-      bt.setAttribute('aria-pressed', true);
-      tocar(mini, i);
+      $('mov-opcoes').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === bt));
+      tocarMovimento();
     };
-    wrap.append(bt);
-    return wrap;
+    return bt;
   }));
-  return caixa;
+  $('mov').showModal();
+  tocarMovimento();
 }
+function tocarMovimento() {
+  if (!movAberto) return;
+  const { i } = movAberto;
+  $('mov-desc').textContent = ANIMS.find(a => a.id === animDe(i))?.desc ?? '';
+  cancelAnimationFrame(tocando?.raf);
+  tocando = null;
+  esperarDesenho(() => desenhar($('mov-cv').getContext('2d'), i, 540 / tamanho(i)[0], null, 0))
+    .then(() => movAberto && tocar($('mov-cv'), i));
+}
+$('mov-fechar').onclick = () => $('mov').close();
+$('mov').onclose = () => {
+  cancelAnimationFrame(tocando?.raf);
+  tocando = null;
+  movAberto = null;
+  if (!$('pasta').hidden && aberta) montarPasta(aberta); // o rótulo do card acompanha
+};
+$('mov-video').onclick = async () => {
+  if (!movAberto) return;
+  const bt = $('mov-video'), { i } = movAberto;
+  cancelAnimationFrame(tocando?.raf);
+  tocando = null;
+  ocupado(bt, 'Gravando…');
+  const caixa = $('espera-mov').appendChild(el('p', 'espera'));
+  caixa.textContent = 'Gravando o vídeo. Leva uns 8 segundos, não feche esta janela.';
+  try {
+    const blob = await gravarVideo(i);
+    baixar(blob, `village-${LAYOUTS[i].nome.replace(/\s+/g, '-')}.${blob.type.includes('mp4') ? 'mp4' : 'webm'}`);
+    aviso('Vídeo baixado');
+  } catch (e) {
+    aviso(e.message);
+  } finally {
+    caixa.remove();
+    livre(bt);
+    tocarMovimento();
+  }
+};
 
 async function imagemDe(i) { // a arte inteira, fora do editor
   const [W, H] = tamanho(i), c = Object.assign(document.createElement('canvas'), { width: W * S, height: H * S });
@@ -1316,18 +1376,14 @@ function cartaoCriativo(ex, i) {
     montarPasta(ex);
   };
   const nomeAnim = () => ANIMS.find(a => a.id === animDe(i))?.nome ?? ANIMS[0].nome;
-  const caixaAnim = blocoAnim(ex, i);
-  caixaAnim.hidden = true;
-  const mov = Object.assign(el('button', 'leve', `Movimento: ${nomeAnim()}`), { type: 'button' });
-  mov.onclick = () => {
-    caixaAnim.hidden = !caixaAnim.hidden;
-    if (caixaAnim.hidden) { cancelAnimationFrame(tocando?.raf); tocando = null; mov.textContent = `Movimento: ${nomeAnim()}`; }
-  };
+  const mov = Object.assign(el('button', 'leve', `Ver movimento: ${nomeAnim()}`), { type: 'button' });
+  mov.onclick = () => abrirMovimento(ex, i);
+  if (temVideo(ex, i)) { mini.style.cursor = 'pointer'; mini.onclick = () => abrirMovimento(ex, i); }
   info.append(el('h2', '', LAYOUTS[i].nome), el('p', '', DESCRICAO[LAYOUTS[i].nome] ?? ''));
   acoes.append(img, ...(temVideo(ex, i) ? [vid, mov] : []),
     Object.assign(el('a', 'leve', 'Editar'), { href: `#/arte/${ex.id}?layout=${i + 1}` }),
     ...(ex.campanha ? [] : [tirar]));
-  info.append(acoes, ...(temVideo(ex, i) ? [caixaAnim] : []));
+  info.append(acoes);
   box.append(mini, info);
   return box;
 }
@@ -1442,7 +1498,8 @@ function rascunhoArteCampanha(id) {
   const a = c.arte?.campos ? arteDe(c)
     : { atual: 0, foto: 'layout', personagem: 'arte', ajuste: {}, campos: Object.fromEntries(Object.keys(VALORES).filter(k => EDITAVEL.test(k) || TITULO.test(k)).map(k => [k, VALORES[k]])) };
   r = { id: c.id, tipo: 'campanha', versao: 0, nova: false, pendente: false, ...a, campos: { ...a.campos, dx_nome: c.nome },
-    layouts: layoutsDe(c), motions: c.motions || [], arquivos: c.arquivos || [], datas: c.datas === 'master' ? 'master' : 'agente', status: c.status === 'ativa' ? 'ativa' : 'rascunho', mini: c.mini || '' };
+    layouts: layoutsDe(c), motions: c.motions || [], arquivos: c.arquivos || [], datas: c.datas === 'master' ? 'master' : 'agente',
+    janela: c.janela || { de: '', ate: '' }, status: c.status === 'ativa' ? 'ativa' : 'rascunho', mini: c.mini || '' };
   gravar([r, ...lista], chaveArteCampanha());
   return r;
 }
@@ -1464,7 +1521,7 @@ $('salvar-campanha').onclick = async () => {
   const parar = esperar($('espera-editor'), 'Salvando a arte na campanha');
   try {
     const res = await api('salvarCampanha', { token: sessao.token, campanha: { id: r.id, nome, status: r.status, layouts: r.layouts,
-      motions: r.motions, arquivos: r.arquivos, datas: r.datas, mini: miniatura(),
+      motions: r.motions, arquivos: r.arquivos, datas: r.datas, janela: r.janela, mini: miniatura(),
       arte: { atual: d.atual, foto: d.foto, personagem: d.personagem, ajuste: d.ajuste, campos: d.campos } } });
     guardarCampanha(res.campanha);
     gravar(ler(chaveArteCampanha()).filter(x => x.id !== r.id), chaveArteCampanha());
@@ -1637,7 +1694,13 @@ $('arquivo-input').onchange = async e => {
   montarMateriais();
 };
 $('publicar').onchange = e => mudarCampanha(r => r.status = e.target.checked ? 'ativa' : 'rascunho');
-$('datas-agente').onchange = e => mudarCampanha(r => r.datas = e.target.checked ? 'agente' : 'master');
+$('datas-agente').onchange = e => {
+  mudarCampanha(r => r.datas = e.target.checked ? 'agente' : 'master');
+  $('linha-janela').hidden = !e.target.checked;
+};
+const mudarJanela = () => mudarCampanha(r => r.janela = { de: $('janela-de').value, ate: $('janela-ate').value });
+$('janela-de').onchange = () => { $('janela-ate').min = $('janela-de').value; mudarJanela(); };
+$('janela-ate').onchange = mudarJanela;
 
 // ---------- telas ----------
 const TELAS = { entrar: 'Entrar', 'criar-senha': 'Crie sua senha', 'criar-master': 'Criar conta master', inicio: 'Início',
@@ -1861,6 +1924,10 @@ function validarValores() {
     }
     const ida = form.elements[`ida_${n}`].value, volta = form.elements[`volta_${n}`].value;
     if (!ida || !volta) msgs.push('Preencha a data de ida e a de volta.');
+    const j = aberta?.campanha ? campanhaPorId(aberta.campanha)?.janela : null;
+    if (j?.de && j?.ate && ida && volta && (ida < j.de || volta > j.ate)) {
+      msgs.push(`Esta campanha vale de ${dataBR(j.de)} a ${dataBR(j.ate)}: escolha a saída dentro desse período.`);
+    }
     const erro = p.querySelector('.erro');
     mostrarErro(erro, msgs.join(' '));
     if (msgs.length && ok) (msgs[0].startsWith('Digite') ? preco : form.elements[`ida_${n}`]).focus();
@@ -2201,10 +2268,27 @@ function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem 
       c.restore();
     }
   }
+  if (L.selo && v.selo !== '0') { // etiqueta vermelha do desconto: desenho, não imagem, para poder sair
+    const q = R ? entre(s, 1.15, .5) : 1, [sx0, sy0, sx1, sy1] = L.selo.rect;
+    if (q) {
+      c.save();
+      c.globalAlpha = Math.min(1, q * 3);
+      const k = .5 + .5 * volta(q), cx = (sx0 + sx1) / 2, cy = (sy0 + sy1) / 2;
+      c.translate(cx, cy); c.scale(k, k); c.translate(-cx, -cy);
+      for (const [x0, y0, x1, y1] of L.selo.sombras) {
+        c.fillStyle = '#070c16';
+        c.beginPath(); c.roundRect(x0, y0, x1 - x0, y1 - y0, L.selo.raio); c.fill();
+      }
+      c.fillStyle = L.selo.cor;
+      c.beginPath(); c.roundRect(sx0, sy0, sx1 - sx0, sy1 - sy0, L.selo.raio); c.fill();
+      c.restore();
+    }
+  }
   if (R) R.pecas.filter(x => x.frente).forEach(peca);
   else if (L.foto.frente) c.drawImage(img(L.foto.frente), 0, 0, W, H); // o que o .ai tem na frente do personagem (rodapé...)
   const fim = {}; // onde cada texto terminou (o preço riscado vem logo depois das parcelas)
   for (const t of L.textos) {
+    if (t.formato === 'desconto' && v.selo === '0') continue; // sem selo, sem "% OFF"
     if (!R) { DESENHA[t.tipo](c, t, v, marca, fim); continue; }
     const d = R.donos.get(t), q = entre(s, d.ini, .45);
     c.save();
@@ -2365,9 +2449,24 @@ function mostrarPacotes() {
   document.querySelectorAll('.pacote').forEach(p => p.hidden = !ks.includes(`preco_${p.dataset.pacote}`));
   document.querySelectorAll('.pacote h3').forEach(h => h.hidden = new Set(ks.filter(k => /^preco_\d+$/.test(k))).size < 2);
   $('linha-restam').hidden = !ks.includes('restam');
+  $('usar-selo').checked = form.elements.selo.value !== '0';
   const criadorCamp = aberta?.tipo === 'campanha';
   $('linha-datas-agente').hidden = $('ajuda-datas').hidden = !criadorCamp;
-  if (criadorCamp) $('datas-agente').checked = aberta.datas !== 'master';
+  if (criadorCamp) {
+    $('datas-agente').checked = aberta.datas !== 'master';
+    $('linha-janela').hidden = aberta.datas === 'master';
+    $('janela-de').value = aberta.janela?.de || '';
+    $('janela-ate').value = aberta.janela?.ate || '';
+  } else {
+    $('linha-janela').hidden = true;
+    const j = aberta?.campanha ? campanhaPorId(aberta.campanha)?.janela : null; // agente: só dentro da janela
+    for (const c of form.querySelectorAll('input[type=date]')) {
+      c.min = j?.de || '';
+      c.max = j?.ate || '';
+    }
+    $('nota-datas').textContent = 'O valor vem da campanha. Aqui você põe a data da sua saída e as vagas do seu ônibus.'
+      + (j?.de && j?.ate ? ` Esta campanha vale de ${dataBR(j.de)} a ${dataBR(j.ate)}.` : '');
+  }
   const soDatas = !!aberta?.campanha;
   $('pacotes').classList.toggle('so-datas', soDatas);
   $('titulo-valores').textContent = soDatas ? 'Datas e vagas' : 'Valores e datas';
@@ -2447,6 +2546,7 @@ $('logo-tirar').onclick = () => {
   render();
 };
 $('usar-logo').onchange = e => { form.elements.logo.value = e.target.checked ? '1' : ''; render(); };
+$('usar-selo').onchange = e => { form.elements.selo.value = e.target.checked ? '1' : '0'; render(); };
 
 // ---------- mexer na arte: tocar edita, arrastar move a foto ----------
 function limitar() {

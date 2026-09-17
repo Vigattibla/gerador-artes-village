@@ -396,6 +396,14 @@ def ler_arte(p, titulo_fixo=False):
             arte['valores'].setdefault(f'parcelas_{perto(e["y"])}', f'{t[:-1]}x de')
         elif re.fullmatch(r'\d+% OFF', t):
             key, formato = f'desconto_{perto(e["y"])}', 'desconto'
+            alvo = fitz.Point((e['bbox'].x0 + e['bbox'].x1) / 2, e['y'] - e['tam'] * .35)
+            formas = sorted((d for d in desenhos if 'f' in d['type'] and d['rect'].contains(alvo)
+                             and d['rect'].width < p.rect.width * .6), key=lambda d: d['seqno'])
+            if formas:
+                arte['remover'] += formas
+                arte['selo'] = dict(rect=[round(v, 2) for v in formas[-1]['rect']],
+                                    sombras=[[round(v, 2) for v in d['rect']] for d in formas[:-1]],
+                                    raio=round(formas[-1]['rect'].height * .17, 2), cor=cor(formas[-1]['fill']))
         elif re.fullmatch(r'Restam só \d+ vagas?', t):
             key, formato = 'restam', 'restam'
             arte['valores']['restam'] = re.search(r'\d+', t)[0]
@@ -446,6 +454,8 @@ def ler_arte(p, titulo_fixo=False):
         if e['tracos']:
             el['traco'] = estilo_traco(e['tracos'], sum(1 for ch in t if not ch.isspace()))
         arte['textos'].append(el)
+        if formato == 'desconto' and arte.get('selo') and 'texto' not in arte['selo']:
+            arte['selo']['texto'] = {k: el[k] for k in ('x', 'y', 'tam', 'peso', 'cor', 'maxW') if k in el}
         if not formato:
             arte['valores'].setdefault(key, t)
     return arte
@@ -649,6 +659,25 @@ def banco(doc, fotos_artes):
     return itens
 
 
+SELO_EXTRA = {'1 pacote': 200, '2 pacotes': 240, 'Últimas vagas': 500}  # altura onde o selo fica em quem não tem
+
+
+def selo_extra(nome, W, ref):
+    y0 = SELO_EXTRA.get(nome)
+    if y0 is None or not ref or 'texto' not in ref:
+        return None, None
+    dx = W + 60 - ref['rect'][2]  # espelhado: sai pela borda direita
+    dy = y0 - ref['rect'][1]
+    def mover(q):
+        return [round(q[0] + dx, 2), round(q[1] + dy, 2), round(q[2] + dx, 2), round(q[3] + dy, 2)]
+    selo = dict(rect=mover(ref['rect']), sombras=[mover(q) for q in ref['sombras']], raio=ref['raio'], cor=ref['cor'])
+    # espelhado, o texto tem que caber no pedaço que aparece na arte
+    tx = selo['rect'][0] + 30
+    selo['texto'] = dict(ref['texto'], x=round(tx, 2), y=round(ref['texto']['y'] + dy, 2), maxW=round(W - tx - 24, 1))
+    texto = dict(tipo='texto', key='desconto_1', formato='desconto', de='preco_de_1', ls=0, **selo['texto'])
+    return selo, texto
+
+
 def vaga_logo(n, textos):
     """Lugar da logo do agente: à direita da pílula do telefone, com a altura dela (borda escura).
     ponytail: medido nas camadas; se o designer marcar o lugar no .ai, ler de lá."""
@@ -691,6 +720,7 @@ def main():
         for k, v in a['valores'].items():
             valores.setdefault(k, v)
     ref = next(a['titulo'] for a in artes if a['titulo'])
+    selo_ref = next((a['selo'] for a in artes if a.get('selo')), None)
     layouts, fotos = [], {}
     for n, ((pno, nome), a) in enumerate(zip(PRANCHETAS, artes), 1):
         print(f'arte {n}: {nome} (prancheta {pno + 1})')
@@ -700,11 +730,15 @@ def main():
         foto['padrao'] = fotos.setdefault(xref, 'layout' if not fotos else f'layout-{n}')
         textos = sorted(a['textos'], key=lambda t: t['tipo'] != 'preco')  # preço embaixo do "7x de"
         r = doc[pno].rect
+        if not a.get('selo'):  # todas as artes têm selo de desconto; quem não tinha ganha na borda direita
+            a['selo'], extra = selo_extra(nome, round(r.width), selo_ref)
+            if extra:
+                textos.append(extra)
         vaga = vaga_logo(n, textos)
         for t in textos:  # a letra miúda cresce sem invadir a linha das pílulas
             subir_miudo(t, vaga[1] + vaga[2] + 8 if vaga else 0)
             t.pop('_fonte', None), t.pop('_txt', None)
-        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto, logo=vaga,
+        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto, logo=vaga, selo=a.get('selo'),
                             textos=textos + ([a['titulo']] if a['titulo'] else [])))
         print(f'  {len(textos)} textos, personagem: {"sim" if foto["personagem"] else "não"}, foto: {foto["padrao"]}')
     itens = banco(doc, [(nome, xref) for xref, nome in fotos.items()])
