@@ -40,7 +40,9 @@ Implementações de referência (mesmas regras):
 usuario  = { email, nome, papel: "master"|"vendedor" }
 excursao = { id, vendedor, vendedorNome?, nome, observacoes, ida, volta,          // datas "AAAA-MM-DD"
              vagas_total (número ou null), vagas_vendidas, grupo_responsavel, grupo_telefone,
-             atualizada (ms), arte: {atual, foto, personagem, ajuste, campos, campanha?}, mini: dataURL JPEG }
+             atualizada (ms), arte: {atual, foto, personagem, ajuste, campos, campanha?, passageiros?}, mini: dataURL JPEG }
+// passageiros = [{nome, telefone, documento, nascimento "AAAA-MM-DD", embarque, poltrona, pagamento, sinal (bool), falta, obs}]
+// o site grava vagas_vendidas = número de passageiros quando a lista não está vazia
 campanha = { id, nome, status: "rascunho"|"ativa"|"pausada"|"encerrada", limite_venda "AAAA-MM-DD"|"",
              vagas_total (número ou null), criada_por, atualizada (ms), mini,
              resumo, embarques, retorno, sinal, quitar_ate, pagamento: [texto], comissao, criancas, roteiro,

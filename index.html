@@ -144,6 +144,43 @@
   #arte-campanha p { margin: 0; }
   .fim-form .leve { margin: 14px 0 0; }
   #espera-editor { padding: 0 24px; }
+  /* agenda */
+  .mes-nav { margin-top: 0; }
+  .mes-nav button { min-width: 44px; justify-content: center; font-size: 18px; }
+  .legenda { display: flex; flex-wrap: wrap; gap: 8px; margin: -10px 0 12px; }
+  .legenda .ev { display: inline-block; }
+  .calendario { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: hidden; border: 2px solid var(--linha); border-radius: 14px; background: #fff; }
+  .dia-semana { padding: 8px 4px; background: var(--navy); font-size: 13px; font-weight: 700; color: #fff; text-align: center; }
+  .dia { display: flex; flex-direction: column; gap: 3px; min-width: 0; min-height: 104px; padding: 4px; border-top: 1px solid var(--linha); border-left: 1px solid var(--linha); }
+  .dia:nth-child(7n + 1) { border-left: 0; }
+  .dia.fora { background: #f5f8f8; color: #9aa6ad; }
+  .num-dia { align-self: flex-start; min-width: 26px; height: 26px; border-radius: 13px; font-size: 13px; font-weight: 700; line-height: 26px; text-align: center; }
+  .dia.hoje .num-dia { background: var(--sol); color: var(--navy); }
+  .ev { display: block; padding: 2px 6px; border-radius: 5px; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; }
+  .ev.excursao { background: var(--navy); color: #fff; }
+  .ev.campanha { background: var(--sol); color: var(--navy); }
+  .ev.outros { background: var(--agua-clara); color: var(--navy); }
+  .item-agenda { display: block; padding: 12px 14px; border: 2px solid var(--linha); border-left: 8px solid var(--navy); border-radius: 12px; background: #fff; color: var(--suave); text-decoration: none; }
+  .item-agenda.campanha { border-left-color: var(--sol-forte); }
+  .item-agenda.outros { border-left-color: var(--agua); }
+  .item-agenda strong { display: block; color: var(--navy); }
+  /* passageiros */
+  .tabela-wrap { overflow-x: auto; margin: 12px 0; border: 2px solid var(--linha); border-radius: 12px; background: #fff; }
+  .planilha { border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+  .planilha th { padding: 9px 8px; background: var(--navy); font-weight: 700; color: #fff; text-align: left; white-space: nowrap; }
+  .planilha td { padding: 0; border-top: 1px solid var(--linha); border-left: 1px solid var(--linha); vertical-align: top; }
+  .planilha td.num { padding: 11px 8px 0; color: var(--suave); text-align: right; }
+  .planilha input:not([type=checkbox]) { display: block; width: 100%; height: 42px; padding: 0 8px; border: 0; background: transparent; font-size: 14px; }
+  .planilha input:focus { outline: 2px solid var(--sol-forte); outline-offset: -2px; background: #fff8df; }
+  .planilha input[type=checkbox] { display: block; width: 22px; height: 22px; margin: 10px auto; accent-color: var(--navy); }
+  .planilha .idade { display: block; padding: 0 8px 4px; font-size: 11px; color: var(--suave); }
+  .planilha tr.nova td { background: #f7fbfa; }
+  .planilha .tirar { width: 40px; height: 40px; border: 0; background: none; font-size: 22px; color: var(--erro); cursor: pointer; }
+  @media (max-width: 600px) {
+    .dia { min-height: 58px; padding: 2px; }
+    .dia .ev { height: 7px; padding: 0; font-size: 0; }
+    .dia-semana { font-size: 11px; }
+  }
   .faixa-demo { display: flex; align-items: center; justify-content: center; gap: 10px; height: 40px; padding: 0 12px; overflow: hidden; background: var(--sol); font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; }
   .faixa-demo button { flex: none; height: 28px; padding: 0 10px; border: 2px solid var(--navy); border-radius: 8px; background: none; font-size: 13px; font-weight: 800; color: var(--navy); cursor: pointer; }
   body.demo .app { height: calc(100% - 96px); }
@@ -260,6 +297,9 @@
     <a href="#/excursoes" data-tela="excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <span class="longo">Minhas excursões</span><span class="curto">Excursões</span></a>
+    <a href="#/agenda" data-tela="agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      Agenda</a>
     <a href="#/campanhas" data-tela="campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       Campanhas</a>
@@ -334,6 +374,9 @@
     <a class="atalho" href="#/excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <strong>Minhas excursões</strong><span id="inicio-qtd"></span></a>
+    <a class="atalho" href="#/agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      <strong>Agenda</strong>Excursões e campanhas no calendário</a>
     <a class="atalho" href="#/campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       <strong>Campanhas</strong>Excursões do resort para vender</a>
@@ -356,6 +399,30 @@
   <p class="sinc" id="sinc-lista" aria-live="polite"></p>
   <div class="abas" id="abas"></div>
   <div class="lista" id="lista"></div>
+</section>
+
+<section class="tela larga" id="agenda" hidden>
+  <div class="cabeca"><h1 id="agenda-mes">Agenda</h1>
+    <div class="acoes-card mes-nav">
+      <button type="button" id="mes-ant" aria-label="Mês anterior">‹</button>
+      <button type="button" id="mes-hoje">Hoje</button>
+      <button type="button" id="mes-prox" aria-label="Próximo mês">›</button>
+    </div></div>
+  <p class="legenda"><span class="ev excursao">Minhas excursões</span><span class="ev campanha">Campanhas</span><span class="ev outros" data-master hidden>Excursões dos vendedores</span></p>
+  <div class="calendario" id="calendario"></div>
+  <h2 class="rotulo-secao">Neste mês</h2>
+  <div class="lista" id="agenda-lista"></div>
+</section>
+
+<section class="tela larga" id="passageiros" hidden>
+  <p class="volta"><a class="link" href="#/excursoes">← Minhas excursões</a></p>
+  <div class="cabeca"><h1 id="pass-titulo">Passageiros</h1>
+    <div class="acoes-card"><button type="button" class="abrir" id="pass-baixar">Baixar planilha (Excel)</button></div></div>
+  <p class="resumo" id="pass-resumo"></p>
+  <p class="ajuda">Escreva direto nas células. Para trazer a planilha que vocês já usam, copie as linhas lá e cole (Ctrl+V)
+    na primeira célula vazia: cada coluna entra na ordem da tabela.</p>
+  <div class="tabela-wrap"><table class="planilha" id="pass-tabela"></table></div>
+  <p class="sinc" id="sinc-pass" aria-live="polite"></p>
 </section>
 
 <section class="tela larga" id="campanhas" hidden>
@@ -959,7 +1026,8 @@ function paraServidor(ex) {
     id: ex.idRemoto || '', nome: nomeDe(ex), observacoes: c.dx_observacoes || '', ida: ida || '', volta: volta || '',
     vagas_total: c.dx_vagas ?? '', vagas_vendidas: c.dx_vendidas ?? '', grupo_responsavel: c.dx_responsavel || '',
     grupo_telefone: c.dx_telefone_grupo || '', mini: ex.mini || '',
-    arte: { atual: ex.atual, foto: ex.foto, personagem: ex.personagem, ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '' },
+    arte: { atual: ex.atual, foto: ex.foto, personagem: ex.personagem, ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '',
+      passageiros: ex.passageiros || [] },
   };
 }
 function deServidor(x, id = novoId()) { // a planilha manda: o que a master mudar lá (vagas etc.) vale
@@ -968,7 +1036,7 @@ function deServidor(x, id = novoId()) { // a planilha manda: o que a master muda
     dx_responsavel: x.grupo_responsavel, dx_telefone_grupo: x.grupo_telefone };
   return { id, idRemoto: x.id, criada: x.atualizada, atualizada: x.atualizada, versao: 0, pendente: false, nova: false,
     atual: a.atual ?? 0, foto: a.foto ?? 'layout', personagem: a.personagem ?? true, ajuste: a.ajuste ?? {}, campos, mini: x.mini || '',
-    campanha: a.campanha || '' };
+    campanha: a.campanha || '', passageiros: a.passageiros || [] };
 }
 
 function agendarSinc(ms = 3000) { clearTimeout(sincTimer); sincTimer = setTimeout(sincronizar, ms); }
@@ -1032,6 +1100,7 @@ async function puxar() {
     if (sinc.estado !== 'enviando') sinc = { estado: 'ok', msg: '' };
     if (!$('excursoes').hidden) montarExcursoes();
     if (!$('inicio').hidden) montarInicio();
+    if (!$('agenda').hidden) desenharAgenda();
     if (!$('painel').hidden) desenharPainel();
   } catch (e) {
     if (sessaoInvalida(e)) return sair(e.message);
@@ -1052,6 +1121,7 @@ function mostrarSinc() {
   const t = textoSinc();
   $('salvo').textContent = !aberta ? '' : aberta.tipo === 'campanha' ? 'Rascunho no aparelho até salvar na campanha' : t;
   $('sinc-lista').textContent = t;
+  $('sinc-pass').textContent = t;
 }
 
 function novaExcursao() {
@@ -1201,7 +1271,8 @@ function montarExcursoes() {
     const duplicar = Object.assign(el('button', '', 'Duplicar'), { type: 'button' });
     duplicar.onclick = () => {
       const agora = Date.now();
-      const copia = { ...structuredClone(ex), id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 1, pendente: true, nova: false };
+      const copia = { ...structuredClone(ex), id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 1, pendente: true, nova: false,
+        passageiros: [] };
       if (gravar([copia, ...excursoes()])) { aviso('Excursão duplicada'); montarExcursoes(); agendarSinc(500); }
     };
     const excluir = Object.assign(el('button', 'perigo', 'Excluir'), { type: 'button' });
@@ -1211,7 +1282,9 @@ function montarExcursoes() {
       if (gravar(excursoes().filter(e => e.id !== ex.id))) { aviso('Excursão excluída'); montarExcursoes(); agendarSinc(500); }
     };
     if (ex.campanha) info.append(el('p', '', 'Arte de campanha'));
-    acoes.append(Object.assign(el('a', 'abrir', 'Abrir'), { href: `#/arte/${ex.id}` }), ...(ex.campanha ? [] : [duplicar]), excluir);
+    const npass = (ex.passageiros || []).filter(passageiroCheio).length;
+    acoes.append(Object.assign(el('a', 'abrir', 'Abrir'), { href: `#/arte/${ex.id}` }),
+      Object.assign(el('a', '', `Passageiros (${npass})`), { href: `#/passageiros/${ex.id}` }), ...(ex.campanha ? [] : [duplicar]), excluir);
     info.append(acoes);
     card.append(miniDe(ex.mini), info);
     return card;
@@ -1715,9 +1788,190 @@ $('salvar-campanha').onclick = async () => {
   }
 };
 
+// ---------- passageiros: a planilha de quem vai em cada excursão ----------
+const COLUNAS = [['nome', 'Nome', 200, 'text'], ['telefone', 'Telefone', 150, 'tel'], ['documento', 'Documento', 140, 'text'],
+  ['nascimento', 'Nascimento', 150, 'date'], ['embarque', 'Embarque', 180, 'text'], ['poltrona', 'Poltrona', 90, 'text'],
+  ['pagamento', 'Pagamento', 140, 'text'], ['sinal', 'Sinal pago', 90, 'check'], ['falta', 'Falta (R$)', 110, 'text'],
+  ['obs', 'Observação', 240, 'text']];
+const passageiroCheio = p => Object.values(p || {}).some(v => v !== '' && v !== false && v != null);
+function idade(d) {
+  if (!d) return '';
+  const n = new Date(d + 'T12:00:00'), h = new Date();
+  let a = h.getFullYear() - n.getFullYear();
+  if (h < new Date(h.getFullYear(), n.getMonth(), n.getDate())) a--;
+  return a >= 0 && a < 130 ? a : '';
+}
+function dataISO(v) {  // "5/3/1990" ou "1990-03-05" -> "1990-03-05"
+  const s = String(v).trim(), m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
+  if (m) {
+    const ano = m[3].length === 2 ? (+m[3] > 30 ? '19' : '20') + m[3] : m[3];
+    return `${ano}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  }
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : '';
+}
+(() => {  // cabeçalho da tabela
+  const t = $('pass-tabela'), cols = t.appendChild(el('colgroup'));
+  const ws = [44, ...COLUNAS.map(c => c[2]), 44];
+  for (const w of ws) cols.appendChild(el('col')).style.width = w + 'px';
+  t.style.width = ws.reduce((a, b) => a + b) + 'px';
+  const tr = t.createTHead().insertRow();
+  tr.append(el('th', '', 'Nº'), ...COLUNAS.map(c => el('th', '', c[1])), el('th'));
+  t.createTBody();
+})();
+let passId = null;
+const excursaoPass = () => excursoes().find(e => e.id === passId);
+function montarPassageiros(id) {
+  passId = id;
+  const ex = excursaoPass();
+  if (!ex) return location.replace('#/excursoes');
+  $('pass-titulo').textContent = `Passageiros – ${nomeDe(ex)}`;
+  desenharPassageiros();
+}
+function resumoPassageiros() {
+  const ex = excursaoPass(), n = (ex.passageiros || []).filter(passageiroCheio).length, [ida, volta] = periodo(ex);
+  const vagas = ex.campos.dx_vagas;
+  $('pass-resumo').textContent = [ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : 'Sem datas',
+    `${n} ${n === 1 ? 'passageiro' : 'passageiros'}${vagas ? ` de ${vagas} vagas` : ''}`,
+    vagas && n > +vagas ? 'passou do número de vagas' : ''].filter(Boolean).join(' · ');
+  $('sinc-pass').textContent = textoSinc();
+}
+function desenharPassageiros(foco) {
+  const ex = excursaoPass(), lista = ex.passageiros || [];
+  const linha = (p, i, nova) => {
+    const tr = el('tr', nova ? 'nova' : '');
+    tr.append(el('td', 'num', nova ? '+' : String(i + 1)));
+    for (const [k, nome, , tipo] of COLUNAS) {
+      const td = el('td'), inp = el('input');
+      if (tipo === 'check') { inp.type = 'checkbox'; inp.checked = !!p[k]; } else { inp.type = tipo; inp.value = p[k] ?? ''; }
+      if (k === 'nome' && nova) inp.placeholder = 'Novo passageiro…';
+      Object.assign(inp.dataset, { linha: i, col: k });
+      inp.setAttribute('aria-label', `${nome}, ${nova ? 'nova linha' : `linha ${i + 1}`}`);
+      td.append(inp);
+      if (k === 'nascimento') td.append(el('small', 'idade', idade(p[k]) !== '' ? `${idade(p[k])} anos` : ''));
+      tr.append(td);
+    }
+    const td = tr.appendChild(el('td'));
+    if (!nova) {
+      td.append(Object.assign(el('button', 'tirar', '×'), { type: 'button', title: 'Tirar da lista', onclick: () => {
+        if (confirm(`Tirar ${p.nome || 'este passageiro'} da lista?`)) mudarPassageiros(l => l.splice(i, 1));
+      } }));
+    }
+    return tr;
+  };
+  $('pass-tabela').tBodies[0].replaceChildren(...lista.map((p, i) => linha(p, i)), linha({}, lista.length, true));
+  if (foco) $('pass-tabela').querySelector(`input[data-linha="${foco.linha}"][data-col="${foco.col}"]`)?.focus();
+  resumoPassageiros();
+}
+function mudarPassageiros(fn, redesenhar = true) {
+  const lista = excursoes(), i = lista.findIndex(e => e.id === passId);
+  if (i < 0) return;
+  const ex = lista[i], pass = structuredClone(ex.passageiros || []);
+  fn(pass);
+  while (pass.length && !passageiroCheio(pass.at(-1))) pass.pop();  // linha vazia no fim não conta
+  const n = pass.filter(passageiroCheio).length;
+  Object.assign(ex, { passageiros: pass, campos: n ? { ...ex.campos, dx_vendidas: String(n) } : ex.campos,  // vendidas = passageiros
+    atualizada: Date.now(), versao: (ex.versao || 0) + 1, pendente: true, nova: false });
+  if (!gravar(lista)) return;
+  agendarSinc(2000);
+  if (redesenhar) desenharPassageiros(redesenhar === true ? null : redesenhar); else resumoPassageiros();
+}
+$('pass-tabela').addEventListener('input', e => {
+  const t = e.target, i = +t.dataset.linha, k = t.dataset.col;
+  if (!k) return;
+  let v = t.type === 'checkbox' ? t.checked : t.value;
+  if (k === 'telefone') t.value = v = formatarTelefone(v);
+  if (k === 'nascimento') t.nextSibling.textContent = idade(v) !== '' ? `${idade(v)} anos` : '';
+  const nova = i >= (excursaoPass().passageiros || []).length;
+  mudarPassageiros(l => { (l[i] ??= {})[k] = v; }, nova ? { linha: i, col: k } : false);  // linha nova: redesenha e volta pra célula
+});
+// colar da planilha (Excel/Google): cada linha vira um passageiro, as colunas seguem a ordem da tabela
+$('pass-tabela').addEventListener('paste', e => {
+  const txt = (e.clipboardData?.getData('text') || '').replace(/\r/g, '').replace(/\n+$/, '');
+  const k = e.target.dataset?.col;
+  if (!k || !/[\t\n]/.test(txt)) return;
+  e.preventDefault();
+  const i0 = +e.target.dataset.linha, c0 = COLUNAS.findIndex(c => c[0] === k);
+  const linhas = txt.split('\n').map(l => l.split('\t'));
+  mudarPassageiros(l => linhas.forEach((cols, j) => {
+    const p = l[i0 + j] ??= {};
+    cols.forEach((v, m) => {
+      const col = COLUNAS[c0 + m];
+      if (!col) return;
+      const [chave, , , tipo] = col;
+      p[chave] = tipo === 'check' ? /^(s|sim|x|ok|pago|1|true|verdadeiro)$/i.test(v.trim())
+        : tipo === 'date' ? dataISO(v) : chave === 'telefone' ? formatarTelefone(v) : v.trim();
+    });
+  }));
+  aviso(`${linhas.length} ${linhas.length === 1 ? 'linha colada' : 'linhas coladas'}`);
+});
+$('pass-baixar').onclick = () => {
+  const ex = excursaoPass(), lista = (ex.passageiros || []).filter(passageiroCheio);
+  const cab = ['Nº', ...COLUNAS.map(c => c[1]), 'Idade'];
+  const linhas = lista.map((p, i) => [i + 1, ...COLUNAS.map(([k, , , tipo]) =>
+    tipo === 'check' ? (p[k] ? 'Sim' : 'Não') : tipo === 'date' ? dataBR(p[k] || '') : p[k] ?? ''), idade(p.nascimento)]);
+  // CSV com ; e BOM: o Excel em português abre direto com acentos e colunas certas
+  const csv = '\ufeff' + [cab, ...linhas].map(l => l.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\r\n');
+  const nome = nomeDe(ex).replace(/[\\/:*?"<>|]+/g, ' ').trim();
+  Object.assign(el('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })), download: `Passageiros - ${nome}.csv` }).click();
+  aviso('Planilha baixada');
+};
+
+// ---------- agenda: excursões e campanhas no calendário ----------
+let mesAgenda = null;
+const isoDia = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function montarAgenda() {
+  if (!mesAgenda) { const h = new Date(); mesAgenda = new Date(h.getFullYear(), h.getMonth(), 1); }
+  desenharAgenda();
+  carregarCampanhas().then(() => { if (!$('agenda').hidden) desenharAgenda(); }).catch(() => {});
+}
+function eventosAgenda() {
+  const evs = excursoes().map(ex => {
+    const [ida, volta] = periodo(ex), n = (ex.passageiros || []).filter(passageiroCheio).length;
+    return ida && { tipo: 'excursao', nome: nomeDe(ex), ida, volta: volta || ida, href: `#/passageiros/${ex.id}`,
+      info: `${n} ${n === 1 ? 'passageiro' : 'passageiros'}` };
+  });
+  if (eMaster() && painelDados) {
+    evs.push(...painelDados.filter(x => x.vendedor !== sessao.usuario.email && x.ida).map(x => ({
+      tipo: 'outros', nome: `${x.nome || 'Excursão'} · ${x.vendedorNome}`, ida: x.ida, volta: x.volta || x.ida, href: '#/painel',
+      info: textoVagas(x.vagas_total, x.vagas_vendidas) })));
+  }
+  evs.push(...campanhasCache().map(c => {
+    const [ida, volta] = c.arte?.campos ? periodo(c.arte) : [];
+    return ida && { tipo: 'campanha', nome: c.nome || 'Campanha', ida, volta: volta || ida, href: `#/campanha/${c.id}`,
+      info: SELO_CAMPANHA[situacaoCampanha(c)][0] };
+  }));
+  return evs.filter(Boolean);
+}
+function desenharAgenda() {
+  const ano = mesAgenda.getFullYear(), mes = mesAgenda.getMonth(), h = hoje(), evs = eventosAgenda();
+  const titulo = mesAgenda.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  $('agenda-mes').textContent = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+  const inicio = new Date(ano, mes, 1 - new Date(ano, mes, 1).getDay());  // domingo da primeira semana
+  const dias = Array.from({ length: 42 }, (_, k) => {
+    const d = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate() + k), s = isoDia(d);
+    const cel = el('div', `dia${d.getMonth() !== mes ? ' fora' : ''}${s === h ? ' hoje' : ''}`);
+    cel.append(el('span', 'num-dia', String(d.getDate())));
+    for (const ev of evs.filter(e => e.ida <= s && s <= e.volta)) {
+      cel.append(Object.assign(el('a', `ev ${ev.tipo}`, ev.nome), { href: ev.href, title: `${ev.nome} · ${dataBR(ev.ida)} a ${dataBR(ev.volta)}` }));
+    }
+    return cel;
+  });
+  $('calendario').replaceChildren(...['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(d => el('div', 'dia-semana', d)), ...dias);
+  const ini = isoDia(new Date(ano, mes, 1)), fim = isoDia(new Date(ano, mes + 1, 0));
+  const doMes = evs.filter(e => e.ida <= fim && e.volta >= ini).sort((a, b) => a.ida.localeCompare(b.ida));
+  $('agenda-lista').replaceChildren(...(doMes.length ? doMes.map(ev => {
+    const a = Object.assign(el('a', `item-agenda ${ev.tipo}`), { href: ev.href });
+    a.append(el('strong', '', ev.nome), el('small', '', [`${dataBR(ev.ida)} a ${dataBR(ev.volta)}`, ev.info].filter(Boolean).join(' · ')));
+    return a;
+  }) : [el('div', 'vazio', 'Nada marcado neste mês.')]));
+}
+$('mes-ant').onclick = () => { mesAgenda = new Date(mesAgenda.getFullYear(), mesAgenda.getMonth() - 1, 1); desenharAgenda(); };
+$('mes-prox').onclick = () => { mesAgenda = new Date(mesAgenda.getFullYear(), mesAgenda.getMonth() + 1, 1); desenharAgenda(); };
+$('mes-hoje').onclick = () => { mesAgenda = null; montarAgenda(); };
+
 // ---------- telas ----------
 const TELAS = { entrar: 'Entrar', 'criar-senha': 'Crie sua senha', 'criar-master': 'Criar conta master', inicio: 'Início',
-  editor: 'Criar arte', excursoes: 'Minhas excursões', campanhas: 'Campanhas', campanha: 'Campanha', 'campanha-editar': 'Campanha',
+  editor: 'Criar arte', excursoes: 'Minhas excursões', agenda: 'Agenda', passageiros: 'Passageiros', campanhas: 'Campanhas', campanha: 'Campanha', 'campanha-editar': 'Campanha',
   painel: 'Painel', contas: 'Contas' };
 function rota() {
   const [pagina, id] = location.hash.replace(/^#\/?/, '').split('/');
@@ -1745,6 +1999,8 @@ function rota() {
     if (pagina === 'excursoes') { tela = 'excursoes'; montarExcursoes(); if (velho) puxar(); }
     else if (pagina === 'painel' && eMaster()) { tela = 'painel'; montarPainel(); }
     else if (pagina === 'contas' && eMaster()) { tela = 'contas'; $('resultado-conta').hidden = true; montarContas(); }
+    else if (pagina === 'agenda') { tela = 'agenda'; montarAgenda(); if (velho) puxar(); }
+    else if (pagina === 'passageiros' && id) { tela = 'passageiros'; montarPassageiros(id); }
     else if (pagina === 'campanhas') { tela = 'campanhas'; montarCampanhas(); }
     else if (pagina === 'campanha' && id) { tela = 'campanha'; montarFicha(id); }
     else if (pagina === 'campanha-editar' && eGestor()) { tela = 'campanha-editar'; montarFormCampanha(id); }
@@ -1755,7 +2011,8 @@ function rota() {
   if (sessao) $('nome-usuario').textContent = sessao.usuario.nome;
   document.querySelectorAll('[data-master]').forEach(e => e.hidden = !eMaster());
   document.querySelectorAll('[data-gestor]').forEach(e => e.hidden = !eGestor());
-  const noMenu = tela.startsWith('campanha') || aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas' : tela;
+  const noMenu = tela.startsWith('campanha') || aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas'
+    : tela === 'passageiros' ? 'excursoes' : tela;
   document.querySelectorAll('.menu a').forEach(a => {
     if (a.dataset.tela === noMenu) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
@@ -2095,7 +2352,7 @@ const offs = {};
 function desenhar(c, i, escala, marca) {
   const L = LAYOUTS[i], item = fotoItem(), im = img(item.src);
   const p = estado.personagem && L.foto.personagem;
-  const precisa = [im, img(L.foto.base), img(L.foto.mascara), ...(p ? [img(p.src)] : [])];
+  const precisa = [im, img(L.foto.base), img(L.foto.mascara), ...(p ? [img(p.src)] : []), ...(L.foto.frente ? [img(L.foto.frente)] : [])];
   if (!fontesOk || !precisa.every(pronta)) return false; // onload das imagens chama de novo
   const v = valores();
   c.setTransform(escala, 0, 0, escala, 0, 0);
@@ -2113,6 +2370,7 @@ function desenhar(c, i, escala, marca) {
   c.drawImage(o.canvas, 0, 0, W, H);
   c.drawImage(img(L.foto.base), 0, 0, W, H);
   if (p) { const [x0, y0, x1, y1] = p.rect; c.drawImage(img(p.src), x0, y0, x1 - x0, y1 - y0); }
+  if (L.foto.frente) c.drawImage(img(L.foto.frente), 0, 0, W, H); // o que o .ai tem na frente do personagem (rodapé...)
   const fim = {}; // onde cada texto terminou (o preço riscado vem logo depois das parcelas)
   for (const t of L.textos) DESENHA[t.tipo](c, t, v, marca, fim);
   return true;

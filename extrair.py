@@ -455,42 +455,29 @@ def ajustar_titulo_desenho(td, ref, valores):
 
 
 # ---------------------------------------------------------------- camadas
+def render_sem(pno, remover, manter_fotos=()):
+    """Página sem textos, sem imagens (menos as pedidas) e sem os desenhos de `remover`, com fundo transparente."""
+    doc = fitz.open(SRC)
+    p = doc[pno]
+    if remover:
+        faltam = remover_desenhos(p, remover)
+        if faltam:
+            print(f'  aviso: {faltam} de {len(remover)} desenhos não achados no PDF')
+        p = doc.reload_page(p)
+    sem_texto(p)
+    for im in {im['xref'] for im in p.get_image_info(xrefs=True)} - set(manter_fotos):
+        p.delete_image(im)
+    return p.get_pixmap(dpi=DPI, alpha=True)
+
+
 def camadas(pno, remover, n):
     info = fitz.open(SRC)[pno].get_image_info(xrefs=True)
     foto = max(info, key=lambda im: im['width'] * im['height'])
     outras = sorted({im['xref'] for im in info if im['xref'] != foto['xref']})
-
-    doc = fitz.open(SRC)
-    p = doc[pno]
-    if remover:  # contornos e título em desenho: o canvas redesenha
-        faltam = remover_desenhos(p, remover)
-        if faltam:
-            print(f'  aviso: {faltam} de {len(remover)} desenhos de título/contorno não achados no PDF')
-        p = doc.reload_page(p)
-    sem_texto(p)
-    for x in [foto['xref'], *outras]:
-        p.delete_image(x)
-    base = p.get_pixmap(dpi=DPI, alpha=True)
-    base.save(AQUI / f'camadas/arte{n}-base.png')
-    base_a = np.frombuffer(base.samples, np.uint8).reshape(base.height, base.width, 4)[..., 3]
-
-    doc = fitz.open(SRC)
-    p = doc[pno]
-    sem_texto(p, fitz.PDF_REDACT_LINE_ART_REMOVE_IF_TOUCHED)
-    for x in outras:
-        p.delete_image(x)
-    pix = p.get_pixmap(dpi=DPI, alpha=True)
-    alfa = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, 4)[..., 3]
-    zeros = np.zeros_like(alfa)
-    Image.fromarray(np.dstack([zeros, zeros, zeros, alfa]), 'RGBA').save(AQUI / f'camadas/arte{n}-mascara.png')
-    ys, xs = np.nonzero(alfa)
-    vy, vx = np.nonzero((alfa > 0) & (base_a < 128))
     k = 72 / DPI
-    spec = dict(mascara=f'camadas/arte{n}-mascara.png', base=f'camadas/arte{n}-base.png', padrao=None,
-                box=[xs.min() * k, ys.min() * k, (xs.max() + 1) * k, (ys.max() + 1) * k],
-                visivel=[vx.min() * k, vy.min() * k, (vx.max() + 1) * k, (vy.max() + 1) * k],
-                original=ret(foto['bbox']), personagem=None)
 
+    # personagem: a imagem que sobra (a última visível)
+    personagem = None
     for x in outras:
         doc = fitz.open(SRC)
         p = doc[pno]
@@ -504,10 +491,42 @@ def camadas(pno, remover, n):
             continue  # imagem escondida
         caixa = (xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
         Image.open(io.BytesIO(pix.tobytes('png'))).crop(caixa).save(AQUI / f'camadas/arte{n}-personagem.png')
-        spec['personagem'] = dict(src=f'camadas/arte{n}-personagem.png', rect=[v * k for v in caixa])
-    spec['box'], spec['visivel'] = ret(spec['box']), ret(spec['visivel'])
-    if spec['personagem']:
-        spec['personagem']['rect'] = ret(spec['personagem']['rect'])
+        personagem = (x, dict(src=f'camadas/arte{n}-personagem.png', rect=ret([v * k for v in caixa])))
+
+    # o que o designer pôs NA FRENTE do personagem (rodapé, faixa...) vai numa camada à parte, desenhada depois dele
+    frente, pg = [], fitz.open(SRC)[pno]
+    if personagem:
+        bb = fitz.Rect(next(im['bbox'] for im in pg.get_image_info(xrefs=True) if im['xref'] == personagem[0]))
+        seq = max(i for i, (t, r) in enumerate(pg.get_bboxlog())
+                  if 'image' in t and abs(fitz.Rect(r).x0 - bb.x0) < 2 and abs(fitz.Rect(r).y0 - bb.y0) < 2)
+        tirar = {d['seqno'] for d in remover}
+        desenhos = [d for d in pg.get_drawings() if d['seqno'] not in tirar]
+        frente = [d for d in desenhos if d['seqno'] > seq]
+        tras = [d for d in desenhos if d['seqno'] < seq]
+
+    base = render_sem(pno, list(remover) + frente)
+    base.save(AQUI / f'camadas/arte{n}-base.png')
+    base_a = np.frombuffer(base.samples, np.uint8).reshape(base.height, base.width, 4)[..., 3]
+    if frente:
+        render_sem(pno, list(remover) + tras).save(AQUI / f'camadas/arte{n}-frente.png')
+        print(f'  {len(frente)} desenhos na frente do personagem')
+
+    doc = fitz.open(SRC)
+    p = doc[pno]
+    sem_texto(p, fitz.PDF_REDACT_LINE_ART_REMOVE_IF_TOUCHED)
+    for x in outras:
+        p.delete_image(x)
+    pix = p.get_pixmap(dpi=DPI, alpha=True)
+    alfa = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, 4)[..., 3]
+    zeros = np.zeros_like(alfa)
+    Image.fromarray(np.dstack([zeros, zeros, zeros, alfa]), 'RGBA').save(AQUI / f'camadas/arte{n}-mascara.png')
+    ys, xs = np.nonzero(alfa)
+    vy, vx = np.nonzero((alfa > 0) & (base_a < 128))
+    spec = dict(mascara=f'camadas/arte{n}-mascara.png', base=f'camadas/arte{n}-base.png', padrao=None,
+                frente=f'camadas/arte{n}-frente.png' if frente else None,
+                box=ret([xs.min() * k, ys.min() * k, (xs.max() + 1) * k, (ys.max() + 1) * k]),
+                visivel=ret([vx.min() * k, vy.min() * k, (vx.max() + 1) * k, (vy.max() + 1) * k]),
+                original=ret(foto['bbox']), personagem=personagem[1] if personagem else None)
     return spec, foto['xref']
 
 

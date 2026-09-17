@@ -79,3 +79,7 @@
 - 17/09: usuário decidiu que o site publicado fica só local (demonstração, sem planilha) até o TI migrar o banco;
   `DEMO` é o padrão fora do localhost e `?planilha` liga o Apps Script.
 - 17/09: editor começa pela escolha da arte (Escolha a arte → Dados da excursão → Valores → Título e contato → Foto).
+- 17/09: personagem atrás do que o .ai desenha depois dele (`camadas/arteN-frente.png`, ordem pelo `get_bboxlog`).
+  Aba **Agenda** (calendário do mês: minhas excursões, campanhas, e para a master as dos vendedores) e tela
+  **Passageiros** por excursão (planilha editável, colar do Excel, baixar CSV que abre no Excel). Passageiros ficam
+  em `arte.passageiros` (sem mudança no servidor). Testado no `?demo` (desktop e celular). Não publicado.
