@@ -122,3 +122,8 @@ base no lugar e para antes de encostar na linha das pílulas: 18 no Story/Feed/V
 
 17/09 (6): "Baixar vídeo" também nas artes próprias do agente (último passo, ao lado de "Baixar imagem");
 usa o mesmo `gravarVideo` do motion da campanha, com a arte que estiver aberta.
+
+17/09 (7): pasta por excursão (`#/pasta/<id>`): a excursão guarda `layouts` (as artes dela) e `anim`
+(o movimento dos vídeos). A tela lista cada criativo com imagem/vídeo/editar, os arquivos da campanha
+e os três movimentos com preview rodando (cascata, zoom, deslizar). `paraServidor`/`deServidor` levam
+`layouts` e `anim`; o hash aceita `#/arte/<id>?layout=&passo=`.

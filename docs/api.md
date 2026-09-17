@@ -45,7 +45,9 @@ Implementações de referência (mesmas regras):
 ```
 usuario  = { email, nome, papel: "master"|"vendedor" }
 excursao = { id, vendedor, vendedorNome?, nome, ida, volta,          // arte salva do agente; datas "AAAA-MM-DD"
-             atualizada (ms), arte: {atual, foto, personagem, ajuste, campos, campanha?}, mini: dataURL JPEG }
+             atualizada (ms), arte: {atual, layouts: [n], anim: 'cascata'|'zoom'|'desliza',
+                                    foto, personagem, ajuste, campos, campanha?}, mini: dataURL JPEG }
+             (`layouts` = as artes da pasta; `anim` = o movimento dos vídeos dela)
 // personagem: id da pasta personagens/, "arte" (o do .ai) ou "" (nenhum); antes de 17/09 era true/false
 // campos.logo = "1" mostra a logo do agente (a imagem fica só no aparelho dele, não vai ao servidor)
 campanha = { id, nome, status: "rascunho"|"ativa",   // montada no construtor do gerador pelo criador (17/09/2026)

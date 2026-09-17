@@ -105,7 +105,7 @@
   .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
   .camp-card { display: grid; grid-template-columns: 96px 1fr; gap: 14px; padding: 12px; border: 2px solid var(--linha); border-radius: 14px; background: #fff; color: var(--suave); text-decoration: none; }
   .camp-card:hover { border-color: var(--navy); }
-  .camp-card img, .camp-card .sem-mini { width: 96px; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; background: var(--fundo); }
+  .camp-card img, .camp-card canvas, .camp-card .sem-mini { display: block; width: 96px; height: auto; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; object-position: top; background: var(--fundo); }
   .camp-card h2 { margin: 6px 0 4px; font-size: 17px; font-weight: 800; line-height: 1.25; color: var(--navy); }
   .camp-card p { margin: 0; font-size: 14px; }
   .checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
@@ -118,7 +118,7 @@
   @media (max-width: 600px) {
     .grade { grid-template-columns: 1fr; }
     .camp-card { grid-template-columns: 80px 1fr; }
-    .camp-card img, .camp-card .sem-mini { width: 80px; }
+    .camp-card img, .camp-card canvas, .camp-card .sem-mini { width: 80px; }
   }
 
   /* ---------- editor ---------- */
@@ -168,6 +168,8 @@
   .opcao strong { display: block; font-size: 16px; font-weight: 800; color: var(--navy); }
   .opcao small { display: block; font-size: 13px; color: var(--suave); }
 
+  #pasta-anims { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); max-width: 860px; }
+  #pasta-anims .opcao canvas { aspect-ratio: 4 / 5; object-fit: cover; object-position: top; }
   .cats { display: flex; gap: 8px; margin: 0 0 10px; padding-bottom: 6px; overflow-x: auto; }
   .cats button { flex: none; height: 40px; padding: 0 16px; border: 2px solid var(--linha); border-radius: 20px; background: #fff; font-size: 14px; font-weight: 600; cursor: pointer; }
   .cats button[aria-pressed=true] { border-color: var(--navy); background: var(--navy); color: #fff; }
@@ -339,6 +341,18 @@
   <div class="cabeca"><h1>Campanhas</h1><a class="botao-acao" href="#/campanha-arte/nova" id="nova-campanha" hidden>+ Nova campanha</a></div>
   <p class="sinc" id="sinc-campanhas" aria-live="polite"></p>
   <div class="grade" id="lista-campanhas"></div>
+</section>
+
+<section class="tela larga" id="pasta" hidden>
+  <div class="cabeca"><h1 id="pasta-nome">Pasta</h1><a class="botao-acao" id="pasta-add">+ Criar mais criativos</a></div>
+  <p class="sinc" id="pasta-info"></p>
+  <h2 class="rotulo-secao">Movimento dos vídeos</h2>
+  <p class="ajuda">Toque para ver como fica. Vale para os vídeos desta pasta.</p>
+  <div class="artes" id="pasta-anims"></div>
+  <h2 class="rotulo-secao">Criativos</h2>
+  <div class="grade" id="pasta-itens"></div>
+  <div id="pasta-arquivos"></div>
+  <div id="espera-pasta"></div>
 </section>
 
 <main class="app" id="editor" hidden>
@@ -781,7 +795,7 @@ function gravar(lista, chave = chaveLocal()) {
   }
 }
 const novoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-const assinatura = ex => JSON.stringify([ex.atual, ex.foto, ex.personagem, ex.ajuste, ex.campos]);
+const assinatura = ex => JSON.stringify([ex.atual, ex.layouts, ex.anim, ex.foto, ex.personagem, ex.ajuste, ex.campos]);
 
 function importarDoAparelho() { // excursões salvas antes de existir conta
   const antigas = ler('village.excursoes');
@@ -795,7 +809,8 @@ function paraServidor(ex) {
   const c = ex.campos, [ida, volta] = periodo(ex);
   return {
     id: ex.idRemoto || '', nome: nomeDe(ex), ida: ida || '', volta: volta || '', mini: ex.mini || '',
-    arte: { atual: ex.atual, foto: ex.foto, personagem: ex.personagem, ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '' },
+    arte: { atual: ex.atual, layouts: ex.layouts || [], anim: ex.anim || '', foto: ex.foto, personagem: ex.personagem,
+      ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '' },
   };
 }
 // personagem era true/false até 17/09; agora é o id escolhido ('arte' = o do .ai, '' = nenhum)
@@ -803,7 +818,8 @@ const qualPersonagem = p => p === true || p == null ? 'arte' : p === false ? '' 
 function deServidor(x, id = novoId()) {
   const a = x.arte || {};
   return { id, idRemoto: x.id, criada: x.atualizada, atualizada: x.atualizada, versao: 0, pendente: false, nova: false,
-    atual: a.atual ?? 0, foto: a.foto ?? 'layout', personagem: qualPersonagem(a.personagem), ajuste: a.ajuste ?? {}, campos: a.campos || {},
+    atual: a.atual ?? 0, layouts: a.layouts?.length ? a.layouts : [a.atual ?? 0], anim: a.anim || ANIMS[0].id,
+    foto: a.foto ?? 'layout', personagem: qualPersonagem(a.personagem), ajuste: a.ajuste ?? {}, campos: a.campos || {},
     mini: x.mini || '', campanha: a.campanha || '' };
 }
 
@@ -895,7 +911,7 @@ function novaExcursao() {
   campos.logo = '1'; // aparece se o agente tiver logo
   const agora = Date.now();
   const ex = { id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 0, pendente: false, nova: true,
-    atual: 0, foto: 'layout', personagem: 'arte', ajuste: {}, campos, mini: '' };
+    atual: 0, layouts: [0], anim: ANIMS[0].id, foto: 'layout', personagem: 'arte', ajuste: {}, campos, mini: '' };
   gravar([ex, ...excursoes()]);
   return ex;
 }
@@ -908,6 +924,8 @@ function abrirExcursao(ex) {
       campos: { ...a.campos, ...Object.fromEntries(dele) } };
   }
   aberta = ex;
+  if (!ex.campanha && ex.tipo !== 'campanha') ex.layouts = pastaLayouts(ex); // pasta antiga: a arte que ela já tinha
+  estado.anim = ANIMS.some(a => a.id === ex.anim) ? ex.anim : ANIMS[0].id;
   Object.assign(estado, { atual: Math.min(LAYOUTS.length - 1, ex.atual ?? 0), foto: ex.foto, personagem: qualPersonagem(ex.personagem), ajuste: structuredClone(ex.ajuste ?? {}), foco: null });
   preencher(ex.campos);
   form.elements.local.readOnly = !!ex.campanha;
@@ -923,8 +941,13 @@ function abrirExcursao(ex) {
   $('titulo-artes').textContent = criador ? 'Artes da campanha' : 'Escolha a arte';
   $('ajuda-artes').hidden = !criador;
   $('titulo-contato').textContent = criador ? 'Nome, título e local' : 'Contato e logo';
-  document.querySelectorAll('#artes .inclui').forEach((l, j) => { l.hidden = !criador; l.querySelector('input').checked = !!ex.layouts?.includes(j); });
-  document.querySelectorAll('.opcao-wrap').forEach((w, j) => w.hidden = !!lays && !lays.includes(j));
+  const marcar = criador || !ex.campanha; // só a arte de campanha não escolhe: os layouts vêm prontos
+  document.querySelectorAll('#artes .inclui').forEach((l, j) => {
+    l.hidden = !marcar;
+    l.lastChild.textContent = criador ? 'Na campanha' : 'Nesta pasta';
+    l.querySelector('input').checked = !!ex.layouts?.includes(j);
+  });
+  document.querySelectorAll('#artes .opcao-wrap').forEach((w, j) => w.hidden = !!lays && !lays.includes(j));
   mostrarLogo();
   mostrarComissao();
   montarBanco();
@@ -940,7 +963,8 @@ function abrirExcursao(ex) {
 }
 
 function estadoAtual(base) {
-  return { ...base, atual: estado.atual, foto: estado.foto, personagem: estado.personagem, ajuste: estado.ajuste,
+  return { ...base, atual: estado.atual, layouts: aberta?.layouts ?? base.layouts, anim: estado.anim,
+    foto: estado.foto, personagem: estado.personagem, ajuste: estado.ajuste,
     campos: Object.fromEntries(new FormData(form)) };
 }
 function miniatura() { // aberto por arquivo local o navegador bloqueia a miniatura; o resto salva igual
@@ -999,7 +1023,7 @@ function situacaoDatas(ida, volta) {
   return volta && volta < h ? 'encerradas' : 'acontecendo';
 }
 const situacao = ex => situacaoDatas(...periodo(ex));
-const nomeDe = ex => ex.campos.dx_nome?.trim() || `${(LAYOUTS[ex.atual] ?? LAYOUTS[0]).nome}${ex.campos.telefone ? ' · ' + ex.campos.telefone : ''}`;
+const nomeDe = ex => ex.campos.dx_nome?.trim() || ex.campos.local?.trim() || (LAYOUTS[ex.atual] ?? LAYOUTS[0]).nome;
 function detalhesDe(ex) {
   const [ida, volta] = periodo(ex), L = LAYOUTS[ex.atual] ?? LAYOUTS[0];
   return [ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : 'Sem datas',
@@ -1064,11 +1088,104 @@ function montarExcursoes() {
       if (ex.idRemoto) gravar([...ler(chaveExcluidas()), ex.idRemoto], chaveExcluidas());
       if (gravar(excursoes().filter(e => e.id !== ex.id))) { aviso('Arte excluída'); montarExcursoes(); agendarSinc(500); }
     };
-    acoes.append(Object.assign(el('a', 'abrir', 'Abrir'), { href: `#/arte/${ex.id}` }), ...(ex.campanha ? [] : [duplicar]), excluir);
+    acoes.append(Object.assign(el('a', 'abrir', 'Abrir pasta'), { href: `#/pasta/${ex.id}` }),
+      Object.assign(el('a', 'leve', 'Editar'), { href: `#/arte/${ex.id}` }), ...(ex.campanha ? [] : [duplicar]), excluir);
     info.append(acoes);
     card.append(miniDe(ex.mini), info);
     return card;
   }));
+}
+
+// ---------- pasta: a excursão com todos os criativos dela (imagem, vídeo e arquivos) ----------
+const ANIMS = [
+  { id: 'cascata', nome: 'Cascata', desc: 'As peças entram uma a uma, de cima para baixo.' },
+  { id: 'zoom', nome: 'Zoom', desc: 'Tudo cresce junto, do meio para fora.' },
+  { id: 'desliza', nome: 'Deslizar', desc: 'As peças entram deslizando pelas laterais.' },
+];
+const pastaLayouts = ex => ex.campanha ? layoutsDe(campanhaPorId(ex.campanha) || {})
+  : ex.layouts?.length ? ex.layouts.filter(i => LAYOUTS[i]) : [ex.atual ?? 0];
+const temVideo = (ex, i) => LAYOUTS[i].foto.pecas?.length
+  && (!ex.campanha || (campanhaPorId(ex.campanha)?.motions || []).some(m => MOTIONS.find(x => x.id === m)?.layout === LAYOUTS[i].nome));
+const esperarDesenho = fn => new Promise(ok => { const t = () => fn() ? ok() : setTimeout(t, 120); t(); });
+
+function montarPasta(ex) {
+  cancelAnimationFrame(tocando?.raf);
+  tocando = null;
+  $('pasta-nome').textContent = nomeDe(ex);
+  $('pasta-info').textContent = detalhesDe(ex).join(' · ');
+  $('pasta-add').href = `#/arte/${ex.id}?passo=${P_ARTE}`;
+  $('pasta-add').hidden = !!ex.campanha; // na campanha as artes são as que o criador liberou
+  const lays = pastaLayouts(ex);
+  $('pasta-anims').replaceChildren(...(lays.some(i => temVideo(ex, i)) ? ANIMS.map(a => opcaoAnim(a, lays)) : []));
+  $('pasta-itens').replaceChildren(...lays.map(i => cartaoCriativo(ex, i)));
+  const arqs = (ex.campanha && campanhaPorId(ex.campanha)?.arquivos) || [];
+  $('pasta-arquivos').replaceChildren(...(arqs.length
+    ? [el('h2', 'rotulo-secao', 'Arquivos da campanha'), ...arqs.map(x => {
+        const box = el('div', 'material arq'), info = el('div');
+        info.append(el('strong', '', x.nome), el('small', '', tamanhoArq(x.tamanho)));
+        box.append(info, Object.assign(el('button', 'leve', 'Baixar'), { type: 'button', onclick: () => baixarArquivo(x) }));
+        return box;
+      })] : []));
+}
+
+function opcaoAnim(a, lays) { // cada estilo se mostra rodando na primeira arte da pasta
+  const i = lays.find(j => LAYOUTS[j].foto.pecas?.length) ?? lays[0], [W, H] = tamanho(i);
+  const wrap = el('div', 'opcao-wrap'), bt = Object.assign(el('button', 'opcao'), { type: 'button' });
+  const mini = Object.assign(el('canvas'), { width: 288, height: Math.round(288 * H / W) });
+  bt.setAttribute('aria-pressed', estado.anim === a.id);
+  bt.append(mini, el('strong', '', a.nome), el('small', '', a.desc));
+  esperarDesenho(() => desenhar(mini.getContext('2d'), i, 288 / W)).then(() => {});
+  bt.onclick = () => {
+    cancelAnimationFrame(tocando?.raf);
+    tocando = null;
+    estado.anim = a.id;
+    if (aberta) { aberta.anim = a.id; salvarAberta(); }
+    document.querySelectorAll('#pasta-anims .opcao').forEach(b => b.setAttribute('aria-pressed', false));
+    bt.setAttribute('aria-pressed', true);
+    tocar(mini, i);
+  };
+  wrap.append(bt);
+  return wrap;
+}
+
+async function imagemDe(i) { // a arte inteira, fora do editor
+  const [W, H] = tamanho(i), c = Object.assign(document.createElement('canvas'), { width: W * S, height: H * S });
+  await esperarDesenho(() => desenhar(c.getContext('2d'), i, S));
+  return new Promise(ok => c.toBlob(ok, 'image/png'));
+}
+
+function cartaoCriativo(ex, i) {
+  const [W, H] = tamanho(i), box = el('article', 'camp-card'), info = el('div'), acoes = el('div', 'acoes-card');
+  const mini = Object.assign(el('canvas'), { width: 216, height: Math.round(216 * H / W) });
+  esperarDesenho(() => desenhar(mini.getContext('2d'), i, 216 / W)).then(() => {});
+  const nome = `village-${LAYOUTS[i].nome.replace(/\s+/g, '-')}`;
+  const img = Object.assign(el('button', 'abrir', 'Baixar imagem'), { type: 'button' });
+  img.onclick = async () => {
+    ocupado(img, 'Gerando…');
+    try { baixar(await imagemDe(i), `${nome}.png`); aviso('Imagem baixada'); } finally { livre(img); }
+  };
+  const vid = Object.assign(el('button', '', 'Baixar vídeo'), { type: 'button' });
+  vid.onclick = async () => {
+    ocupado(vid, 'Gravando…');
+    const caixa = $('espera-pasta').appendChild(el('p', 'espera'));
+    caixa.textContent = `Gravando o vídeo de "${LAYOUTS[i].nome}". Leva uns 8 segundos, não saia desta tela.`;
+    try {
+      const blob = await gravarVideo(i);
+      baixar(blob, `${nome}.${blob.type.includes('mp4') ? 'mp4' : 'webm'}`);
+      aviso('Vídeo baixado');
+    } catch (e) {
+      aviso(e.message);
+    } finally {
+      caixa.remove();
+      livre(vid);
+    }
+  };
+  info.append(el('h2', '', LAYOUTS[i].nome), el('p', '', DESCRICAO[LAYOUTS[i].nome] ?? ''));
+  acoes.append(img, ...(temVideo(ex, i) ? [vid] : []),
+    Object.assign(el('a', 'leve', 'Editar'), { href: `#/arte/${ex.id}?layout=${i + 1}` }));
+  info.append(acoes);
+  box.append(mini, info);
+  return box;
 }
 
 // ---------- campanhas: vêm do sistema do resort; o criador monta a arte, o agente põe telefone e logo ----------
@@ -1380,20 +1497,31 @@ $('datas-agente').onchange = e => mudarCampanha(r => r.datas = e.target.checked 
 
 // ---------- telas ----------
 const TELAS = { entrar: 'Entrar', 'criar-senha': 'Crie sua senha', 'criar-master': 'Criar conta master', inicio: 'Início',
-  editor: 'Criar arte', excursoes: 'Minhas artes', campanhas: 'Campanhas' };
+  editor: 'Criar arte', excursoes: 'Minhas artes', campanhas: 'Campanhas', pasta: 'Pasta' };
 function rota() {
-  const [pagina, id] = location.hash.replace(/^#\/?/, '').split('/');
+  const [pagina, cru] = location.hash.replace(/^#\/?/, '').split('/');
+  const [id, busca] = (cru || '').split('?'); // #/arte/<id>?layout=3&passo=1 vem da pasta
+  const params = new URLSearchParams(busca || '');
   let tela;
   if (!sessao) {
     tela = pagina === 'criar-master' ? 'criar-master' : pagina === 'criar-senha' && senhaPendente ? 'criar-senha' : 'entrar';
     if (tela === 'entrar') verificarMaster();
   } else if (pagina === 'nova') {
     return location.replace(`#/arte/${novaExcursao().id}`);
+  } else if (pagina === 'pasta') {
+    const ex = excursoes().find(e => e.id === id);
+    if (!ex) return location.replace('#/excursoes');
+    tela = 'pasta';
+    abrirExcursao(ex); // o desenho sai do formulário: a pasta carrega a arte igual ao editor
+    montarPasta(ex);
   } else if (pagina === 'arte') {
     const ex = excursoes().find(e => e.id === id);
     if (!ex) return location.replace('#/excursoes');
     tela = 'editor';
     abrirExcursao(ex);
+    const lay = +params.get('layout');
+    if (lay >= 1 && LAYOUTS[lay - 1]) selecionarArte(lay - 1);
+    if (ativos.includes(+params.get('passo'))) irPara(+params.get('passo'));
   } else if (pagina === 'campanha-arte' && eGestor()) {
     const r = rascunhoArteCampanha(id);
     if (!r) return location.replace('#/campanhas');
@@ -1412,7 +1540,7 @@ function rota() {
   for (const t of Object.keys(TELAS)) $(t).hidden = t !== tela;
   $('menu').hidden = $('conta').hidden = !sessao;
   if (sessao) $('nome-usuario').textContent = sessao.usuario.nome;
-  const noMenu = aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas' : tela;
+  const noMenu = aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas' : tela === 'pasta' ? 'excursoes' : tela;
   document.querySelectorAll('.menu a').forEach(a => {
     if (a.dataset.tela === noMenu) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
@@ -1820,13 +1948,18 @@ const offs = {};
 const volta = x => 1 + 2.7 * (x - 1) ** 3 + 1.7 * (x - 1) ** 2; // ease-out-back
 const entre = (s, ini, dur) => Math.max(0, Math.min(1, (s - ini) / dur));
 const roteiros = new Map();
-function roteiro(L) {
-  if (roteiros.has(L)) return roteiros.get(L);
+function roteiro(L, estilo = ANIMS[0].id) {
+  const cache = `${LAYOUTS.indexOf(L)}-${estilo}`;
+  if (roteiros.has(cache)) return roteiros.get(cache);
   const W = L.w || 1080, H = L.h || 1350;
   const pecas = (L.foto.pecas || []).map((p, n) => {
     const [x0, y0, x1, y1] = p.rect;
-    const modo = y1 > H - 2 && x1 - x0 > .8 * W ? 'baixo' : x0 < 2 && x1 < .7 * W ? 'esq' : x1 > W - 2 && x0 > .3 * W ? 'dir' : 'pula';
-    return { ...p, modo, ini: modo === 'baixo' ? .1 : .3 + n * .22 };
+    const borda = y1 > H - 2 && x1 - x0 > .8 * W ? 'baixo' : x0 < 2 && x1 < .7 * W ? 'esq' : x1 > W - 2 && x0 > .3 * W ? 'dir' : 'pula';
+    // cascata: uma peça por vez · zoom: todas crescendo quase juntas · desliza: todas entram pela lateral mais perto
+    const modo = borda === 'baixo' ? 'baixo' // o rodapé sempre sobe de baixo
+      : estilo === 'zoom' ? 'pula' : estilo === 'desliza' ? ((x0 + x1) / 2 < W / 2 ? 'esq' : 'dir') : borda;
+    const ini = borda === 'baixo' ? .1 : estilo === 'zoom' ? .2 + n * .06 : estilo === 'desliza' ? .2 + n * .12 : .3 + n * .22;
+    return { ...p, modo, ini };
   });
   const ponto = t => t.linhas ? [t.linhas[0].x + 5, t.linhas[0].y - 5] : t.cx != null ? [t.cx, t.y0 + 2] : [t.x + 2, t.y - 2];
   const area = r => (r[2] - r[0]) * (r[3] - r[1]);
@@ -1840,7 +1973,7 @@ function roteiro(L) {
     donos.set(t, { n, ini: n != null ? pecas[n].ini + .25 + ordem * .07 : .4 + 1.6 * y / H });
   }
   const r = { pecas, donos };
-  roteiros.set(L, r);
+  roteiros.set(cache, r);
   return r;
 }
 function mover(c, L, p, s) { // transforma o canvas para a peça no instante s; devolve a opacidade
@@ -1863,7 +1996,7 @@ function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem 
   const lugar = L.foto.personagem, escolhido = PERSONAGENS.find(x => x.id === estado.personagem);
   const p = lugar && (escolhido ? img(escolhido.src) : estado.personagem === 'arte' && img(lugar.src));
   const lg = L.logo && v.logo === '1' && minhaLogo() && img(minhaLogo());
-  const R = anim != null && L.foto.pecas?.length ? roteiro(L) : null, s = anim ?? 99;
+  const R = anim != null && L.foto.pecas?.length ? roteiro(L, estado.anim) : null, s = anim ?? 99;
   const camadas = R ? [img(L.foto.fundo), ...R.pecas.map(x => img(x.src))] : [img(L.foto.base), ...(L.foto.frente ? [img(L.foto.frente)] : [])];
   const precisa = [im, img(L.foto.mascara), ...camadas, ...(p ? [p] : []), ...(lg ? [lg] : [])];
   if (!fontesOk || !precisa.every(pronta)) return false; // onload das imagens chama de novo
@@ -2027,7 +2160,13 @@ const opcoes = LAYOUTS.map((L, i) => {
   lb.hidden = true;
   lb.append(cb, 'Na campanha');
   cb.onchange = () => {
-    mudarCampanha(r => r.layouts = cb.checked ? [...new Set([...r.layouts, i])].sort() : r.layouts.filter(x => x !== i));
+    const muda = r => r.layouts = cb.checked ? [...new Set([...r.layouts, i])].sort() : r.layouts.filter(x => x !== i);
+    if (aberta?.tipo === 'campanha') mudarCampanha(muda);
+    else if (aberta) {
+      if (!cb.checked && aberta.layouts.length < 2) { cb.checked = true; return aviso('A pasta precisa de pelo menos uma arte.'); }
+      muda(aberta);
+      salvarAberta();
+    }
     if (cb.checked) selecionarArte(i); else mostrarPacotes();
   };
   return mini;
@@ -2054,7 +2193,8 @@ function selecionarArte(i) {
 
 // campanha: aparecem os pacotes de todas as artes marcadas
 function mostrarPacotes() {
-  const ks = (aberta?.tipo === 'campanha' ? [...new Set([...aberta.layouts, estado.atual])] : [estado.atual]).flatMap(chaves);
+  const lays = aberta && !aberta.campanha ? [...new Set([...(aberta.layouts || []), estado.atual])] : [estado.atual];
+  const ks = lays.flatMap(chaves);
   document.querySelectorAll('.pacote').forEach(p => p.hidden = !ks.includes(`preco_${p.dataset.pacote}`));
   document.querySelectorAll('.pacote h3').forEach(h => h.hidden = new Set(ks.filter(k => /^preco_\d+$/.test(k))).size < 2);
   $('linha-restam').hidden = !ks.includes('restam');
