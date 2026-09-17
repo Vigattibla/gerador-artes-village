@@ -496,7 +496,7 @@
     </nav>
 
     <form id="form" novalidate>
-      <section class="passo" data-passo="1">
+      <section class="passo" data-passo="2" hidden>
         <h2 tabindex="-1">Dados da excursão</h2>
         <label>Nome da excursão<input class="campo" name="dx_nome" autocomplete="off" placeholder="Ex.: Grupo escola Sete Lagoas">
           <span class="ajuda">Aparece só na sua lista, não vai na arte.</span></label>
@@ -510,7 +510,7 @@
         <label>Observações<textarea class="campo" name="dx_observacoes" rows="4"></textarea></label>
       </section>
 
-      <section class="passo" data-passo="2" hidden>
+      <section class="passo" data-passo="1">
         <h2 tabindex="-1">Escolha a arte</h2>
         <div class="artes" id="artes"></div>
       </section>
@@ -580,8 +580,8 @@ const estado = {
 // o vendedor só mexe nisto na arte (marcação do usuário, 15/09); o resto vem travado do .ai
 const EDITAVEL = /^(preco|preco_de|ida|volta|parcelas|pag)_\d+$|^(local|telefone|restam|titulo\d+)$/;
 const editavel = k => aberta?.campanha ? k === 'telefone' : EDITAVEL.test(k); // arte de campanha: vendedor só troca o telefone
-const PASSOS = ['Dados da excursão', 'Escolha a arte', 'Valores e datas', 'Título e contato', 'Foto e personagem'];
-const P_ARTE = 2, P_VALORES = 3, P_FOTO = 5;
+const PASSOS = ['Escolha a arte', 'Dados da excursão', 'Valores e datas', 'Título e contato', 'Foto e personagem']; // arte primeiro: a pessoa vê o que vai preencher
+const P_ARTE = 1, P_DADOS = 2, P_VALORES = 3, P_FOTO = 5;
 const DESCRICAO = { '1 pacote': 'Um preço e a lista do que está incluso', '2 pacotes': 'Dois preços, um embaixo do outro',
   Story: 'Vertical, para Stories e Status', Feed: 'Post do feed com a foto grande', 'Últimas vagas': 'Story com as vagas que restam',
   Carrossel: 'Tela da oferta para carrossel' };
@@ -2170,7 +2170,7 @@ function usarPassos(lista) {
 }
 function irPara(n, campo) {
   if (!ativos.includes(n)) return;
-  if (n > 1 && estado.passo === 1 && !validarDados()) return;
+  if (estado.passo === P_DADOS && n > P_DADOS && ativos.includes(P_DADOS) && !validarDados()) return;
   if (ativos.includes(P_VALORES) && n > P_VALORES && estado.passo <= P_VALORES && !validarValores()) {
     if (estado.passo !== P_VALORES) { irPara(P_VALORES); validarValores(); }
     return;

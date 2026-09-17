@@ -78,3 +78,4 @@
   Falta: usuário colar o Codigo.gs novo no Apps Script, rodar `configurar`, nova versão da implantação; publicar o site.
 - 17/09: usuário decidiu que o site publicado fica só local (demonstração, sem planilha) até o TI migrar o banco;
   `DEMO` é o padrão fora do localhost e `?planilha` liga o Apps Script.
+- 17/09: editor começa pela escolha da arte (Escolha a arte → Dados da excursão → Valores → Título e contato → Foto).
