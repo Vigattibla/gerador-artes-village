@@ -119,3 +119,6 @@ Pendente do usuário: letra miúda das artes (aviso legal em 12,5 px num 1080 = 
 17/09 (5): letra miúda do rodapé maior. `subir_miudo` no extrair.py sobe o bloco até 18 px mantendo a
 base no lugar e para antes de encostar na linha das pílulas: 18 no Story/Feed/Vagas/Carrossel,
 17 em "2 pacotes" e 15,5 em "1 pacote" (caixa estreita).
+
+17/09 (6): "Baixar vídeo" também nas artes próprias do agente (último passo, ao lado de "Baixar imagem");
+usa o mesmo `gravarVideo` do motion da campanha, com a arte que estiver aberta.

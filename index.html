@@ -443,6 +443,7 @@
       <button type="button" class="secundario" id="voltar">Voltar</button>
       <button type="button" class="principal" id="continuar">Continuar</button>
       <button type="button" class="principal" id="baixar" hidden>Baixar imagem</button>
+      <button type="button" class="secundario" id="baixar-video" hidden>Baixar vídeo</button>
       <button type="button" class="secundario" id="enviar" hidden>Enviar</button>
       <button type="button" class="secundario" id="finalizar" hidden>Finalizar</button>
       <button type="button" class="principal" id="salvar-campanha" hidden>Salvar campanha</button>
@@ -1998,6 +1999,7 @@ function irPara(n, campo) {
   $('voltar').hidden = pos === 0;
   $('continuar').hidden = ultimo;
   $('baixar').hidden = !ultimo || deCampanha;
+  $('baixar-video').hidden = !ultimo || deCampanha || !LAYOUTS[estado.atual].foto.pecas?.length;
   $('enviar').hidden = !ultimo || !podeEnviar || deCampanha;
   $('salvar-campanha').hidden = !ultimo || !deCampanha;
   $('finalizar').hidden = !ultimo || deCampanha;
@@ -2182,6 +2184,22 @@ cv.addEventListener('pointercancel', () => toque = null);
 // ---------- baixar e enviar ----------
 const nomeArquivo = () => `village-${LAYOUTS[estado.atual].nome.replace(/\s+/g, '-')}.png`;
 const imagem = () => new Promise(ok => cv.toBlob(ok, 'image/png'));
+$('baixar-video').onclick = async () => {
+  const bt = $('baixar-video'), i = estado.atual;
+  ocupado(bt, 'Gravando…');
+  const caixa = $('espera-editor').appendChild(el('p', 'espera'));
+  caixa.textContent = 'Gravando o vídeo desta arte. Leva uns 8 segundos, não saia desta tela.';
+  try {
+    const blob = await gravarVideo(i);
+    baixar(blob, nomeArquivo().replace(/\.png$/, blob.type.includes('mp4') ? '.mp4' : '.webm'));
+    aviso('Vídeo baixado');
+  } catch (e) {
+    aviso(e.message);
+  } finally {
+    caixa.remove();
+    livre(bt);
+  }
+};
 $('baixar').onclick = async () => {
   Object.assign(el('a'), { href: URL.createObjectURL(await imagem()), download: nomeArquivo() }).click();
   aviso('Imagem baixada');
