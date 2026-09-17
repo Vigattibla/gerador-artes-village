@@ -83,3 +83,35 @@
   Aba **Agenda** (calendário do mês: minhas excursões, campanhas, e para a master as dos vendedores) e tela
   **Passageiros** por excursão (planilha editável, colar do Excel, baixar CSV que abre no Excel). Passageiros ficam
   em `arte.passageiros` (sem mudança no servidor). Testado no `?demo` (desktop e celular). Não publicado.
+- 17/09 (noite): **foco só em gerar arte** (conversa do usuário com o TI): campanhas/gestão vão para o sistema do
+  resort, que manda as campanhas por API. Saíram agenda, passageiros, painel, contas, ficha/vendas/formulário de
+  campanha e o passo "Dados da excursão" (menu: Início, Criar arte, Minhas artes, Campanhas). Entraram: título só
+  para o criador (conta master) com letra que diminui para caber; calculadora de desconto pelo preço do pacote;
+  logo do agente (aparelho, caixa ao lado do telefone, lugar medido pelo `extrair.py` → `LAYOUTS[].logo`);
+  escolha de personagem (`personagens/*.png` → `PERSONAGENS`; hoje menino e 2 cachorros provisórios; faltam
+  bebê e menina, que não estão mais no .ai). Testado no `?demo` (criador e agente, desktop e celular). Não publicado.
+  Ideia do usuário: kit com impressos e vídeo/GIF (pesquisa: MP4 via WebCodecs + Mediabunny no navegador; PDF A5/A4).
+- 17/09 (noite, 2): **construtor de campanha** do criador: "+ Nova campanha", passo 1 marca as artes da campanha,
+  passo 3 com nome, passo 5 "Materiais" (vídeos animados Story/Últimas vagas/Feed com prévia, arquivos no IndexedDB,
+  publicar). Agente: escolhe só entre as artes da campanha e baixa vídeo MP4 (MediaRecorder, 8 s, testado: MP4
+  1080×1920) e arquivos. Logo do agente no selo igual ao do Village. Usuário pediu manter só local por enquanto.
+- 17/09: agente informa a comissão (%) na arte de campanha; preço e valor riscado da arte sobem junto (`campos.comissao`).
+- 17/09: vídeo anima as peças da arte, não só o texto: `extrair.py` separa as peças (manchas da imagem sem o fundo
+  grande) em `camadas/arteN-pecaK.png` + `arteN-fundo.png` (formas grandes redesenhadas; tirar desenho do PDF falha
+  nos contornos empilhados). No canvas: rodapé sobe, peças da borda deslizam, as outras "pulam" com leve passo além,
+  texto entra junto com a peça, personagem sobe, preço pulsa, foto se afasta. Arte parada continua na base.
+  Botão "Finalizar" no fim das próprias artes (salva e volta para Minhas artes). .ai salvo com o cachorro no Carrossel.
+
+17/09 (2): quem cria a excursão continua sendo o master (preço, título, pacote, layouts), mas o
+ônibus e a saída costumam ser do agente — então, na arte de campanha, o agente agora edita a data
+de ida, a de volta e as vagas restantes. O passo "Datas e vagas" aparece para ele com o bloco de
+preço/parcelas escondido (`#pacotes.so-datas`). No vídeo, as peças coladas na borda entram sem o
+"passo além" (usavam `volta`, agora `suave`), senão o corte reto delas aparecia dentro da arte.
+
+17/09 (3): a campanha guarda `datas: 'agente' | 'master'` — o criador marca no passo dos valores quem
+põe a data da saída e as vagas. Em 'master', o agente nem vê o passo "Datas e vagas". Em "Minhas artes",
+selo "Campanha do Village" ou "Arte sua" para separar o que veio pronto do que é do próprio agente.
+Pendente do usuário: letra miúda das artes (aviso legal em 12,5 px num 1080 = ~4,5 px no celular).
+
+17/09 (4): quem cria a campanha também baixa o MP4 (botão "Baixar vídeo" ao lado de "Incluir"; mesmo
+`gravarVideo` do agente). Subido para o GitHub Pages.

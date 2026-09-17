@@ -1,8 +1,11 @@
-# PRD – Gerador de Artes para Vendedores
+# PRD – Gerador de Artes para Agentes de Viagem
 
 ## Objetivo
-Vendedores do Village Resort geram, sozinhos e sem Illustrator, as artes de divulgação da
-excursão "All Fun Inclusive" com os dados da venda deles. Simples e funcional acima de tudo.
+Agentes de viagem do Village Resort geram, sozinhos e sem Illustrator, as artes de divulgação das
+excursões com o contato e a logo deles. Simples e funcional acima de tudo.
+
+**Escopo (TI, 17/09/2026): o gerador só gera arte.** Criação e gestão de campanhas, vendas, vagas,
+passageiros e contas ficam em outro sistema do resort, que manda as campanhas para cá por API.
 
 ## Usuários
 Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inclusive no celular.
@@ -15,38 +18,40 @@ Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inc
 ## Requisitos
 1. Editável pelo vendedor (marcação do usuário, 15/09/2026): valor, parcelas, ida/volta e local
    (card de preço) e telefone.
-2. Título editável (pedido de 14/09/2026).
+2. Título: só quem cria a campanha muda (TI, 17/09/2026). Frase maior que a do `.ai` diminui a letra para caber.
 3. Travado, sempre igual ao `.ai`: quadro "Tudo Incluso + Lazer" e lista, logo, site, aviso legal e os
    rótulos do card ("A partir de", "para o casal", "por dia"). Site definitivo entra direto no `.ai`.
 4. Foto: escolher de um **banco fechado** (`08 Fotos/Fotos Boas`, categorias pelas subpastas).
    Vendedor não envia foto própria.
-5. Personagem: ligar/desligar.
+5. Personagem: o agente escolhe entre as opções (`personagens/*.png`) ou nenhum, nas artes que têm lugar de personagem.
+   Pedido de 17/09/2026: 4 opções (menino, cachorro, bebê, menina); faltam os PNGs do designer.
+5b. Logo do agente (17/09/2026): o agente envia a logo uma vez (fica no aparelho) e ela entra numa caixa branca à
+   direita da pílula do telefone; liga/desliga por arte.
+5c. Calculadora de desconto (17/09/2026): preço do pacote sem e com desconto → divide pelas parcelas e preenche o
+   valor e o valor antigo; o selo de % OFF acompanha.
 6. Baixar PNG e copiar imagem.
 7. Posição e estilo idênticos ao `.ai`; ajustes do designer entram rodando a extração.
 
-## Contas e biblioteca (pedido de 15/09/2026)
-8. Login por e-mail e senha. Contas e excursões numa **planilha Google do resort**, servida por
-   Apps Script (escolha do usuário em 15/09/2026: grátis, com o que já tem). Site continua no GitHub Pages.
-9. Papéis: **conta master** (chefe da área; a própria pessoa cria a master no site escolhendo a senha;
-   cria as outras contas, desativa, troca senha; vê o painel geral com as excursões de todos) e
-   **vendedor** (vê e mexe só nas próprias excursões). Conta nova recebe senha provisória da master e
-   a pessoa cria a própria senha ao entrar (pedido de 15/09/2026).
-10. Biblioteca do vendedor: cada excursão guarda a arte pronta (tudo que foi preenchido), nome interno,
-    observações, vagas (total e vendidas) e contato do responsável pelo grupo. Dá pra abrir, editar,
-    baixar de novo e duplicar.
-11. Situação calculada pelas datas: próxima (ida depois de hoje), acontecendo (entre ida e volta),
-    encerrada (volta antes de hoje).
-
-## Campanhas (pedido de 15/09/2026)
-12. Aba Campanhas tipo painel (detalhes em `docs/spec-campanhas.md`). A master publica (o tipo de conta adsign foi removido
-    em 17/09/2026) a campanha com arte, informações
-    da excursão, vagas totais e materiais; pesquisa em CRMs e portais de parceiros para completar os campos.
-13. Vendedor pega a campanha e faz a arte trocando **só o telefone** (datas, valor, título e foto travados).
-14. Vagas somadas: cada venda informada desconta do total da campanha; master confirma ou cancela vendas.
-15. Novas artes (layouts) vêm do `.ai` pelo `extrair.py`, rodado com o Claude (o site não lê Illustrator).
-
-16. Futuro (16/09/2026): vendedor escolher o personagem. O `.ai` já tem, fora das pranchetas, o bebê e a menina
-    além do menino e do cachorro; a extração hoje só pega o personagem de cada prancheta.
+## Contas, biblioteca e campanhas
+8. Login continua (hoje planilha Google/Apps Script ou demonstração); o TI vai ligar o sistema dele (`docs/api.md`).
+9. Papéis: **criador de campanha** (conta master: monta a arte da campanha, muda título e valores) e **agente**.
+10. Minhas artes: cada arte salva (abrir, duplicar, excluir), separada por datas.
+11a. Construtor de campanha (17/09/2026, pedido do usuário: começar pelo criador; o do agente fica mais simples
+    depois, dentro do sistema do resort): nome, valores e datas, título, foto e personagem, **quais artes entram**,
+    **vídeos animados** (liga/desliga cada um, com prévia) e **arquivos** para os agentes baixarem; publicar ou rascunho.
+    Agente baixa a arte (só entre as da campanha), os vídeos (MP4 gravado no navegador com o contato e a logo dele)
+    e os arquivos. Quem cria a excursão é sempre o master (produto, preço, título, layouts); o **ônibus e a saída
+    costumam ser do agente**, então na arte de campanha ele edita data de ida, data de volta e vagas restantes
+    (passo "Datas e vagas", com o bloco de preço escondido). O agente não digita preço: informa a **comissão (%)**
+    e o preço da arte = preço da campanha × (1 + %),
+    inclusive o valor riscado. Logo do agente no mesmo selo do "Village Resort" (borda, base e fundo medidos no .ai).
+11. Campanhas: vêm do sistema do resort. O criador monta/edita a arte; o agente faz a dele trocando telefone, logo e
+    personagem (datas, valor, título e foto travados).
+12. Novas artes (layouts) vêm do `.ai` pelo `extrair.py`, rodado com o Claude (o site não lê Illustrator).
+13. Removido em 17/09/2026 (vai para o sistema do resort): agenda, planilha de passageiros, painel, contas,
+    ficha/vendas/formulário de campanha e o passo "Dados da excursão".
+14. Próximo (ideia do usuário, 17/09/2026): kit por campanha com outros formatos — impressos (PDF A5/A4) e
+    vídeo/GIF animado para Reels/Status.
 
 ## Fora de escopo / decisões
 - Preço com 4 dígitos (não existe).

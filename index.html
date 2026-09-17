@@ -68,6 +68,8 @@
   .continuar img, .continuar .sem-mini { width: 72px; flex: none; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; background: var(--fundo); }
   .continuar strong { display: block; font-size: 16px; font-weight: 800; color: var(--navy); }
   .continuar small { display: block; font-size: 13px; }
+  #pacotes.so-datas .calc, #pacotes.so-datas > .pacote > label,
+  #pacotes.so-datas > .pacote > .rotulo { display: none; } /* campanha: o preço é do Village */
   .rotulo-secao { margin: 30px 0 10px; font-size: 18px; font-weight: 800; color: var(--navy); }
   .rodape-conta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 32px; font-size: 14px; color: var(--suave); }
   .rodape-conta button { height: 40px; padding: 0 14px; border: 2px solid var(--linha); border-radius: 10px; background: #fff; font-weight: 700; color: var(--navy); cursor: pointer; }
@@ -90,12 +92,6 @@
   .vazio a { display: inline-flex; align-items: center; height: 48px; margin-top: 12px; padding: 0 20px; border-radius: 12px; background: var(--sol); font-weight: 800; color: var(--navy); text-decoration: none; }
   .nota, .sinc { margin: 18px 0 0; font-size: 13px; color: var(--suave); }
   .sinc { margin: -12px 0 16px; }
-  .resumo { margin: 0 0 14px; font-weight: 700; color: var(--navy); }
-  .filtros { max-width: 360px; }
-  .pessoa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; border: 2px solid var(--linha); border-radius: 14px; background: #fff; }
-  .pessoa strong { display: block; color: var(--navy); }
-  .pessoa small { display: block; margin-bottom: 6px; font-size: 13px; color: var(--suave); }
-  .pessoa .acoes-card { margin-top: 0; }
   .selo { display: inline-block; margin-right: 6px; padding: 2px 8px; border-radius: 6px; background: var(--agua-clara); font-size: 12px; font-weight: 700; color: var(--navy); }
   .selo.alerta { background: #fff1c7; }
   .selo.off { background: #f5dcda; color: var(--erro); }
@@ -112,81 +108,14 @@
   .camp-card img, .camp-card .sem-mini { width: 96px; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; background: var(--fundo); }
   .camp-card h2 { margin: 6px 0 4px; font-size: 17px; font-weight: 800; line-height: 1.25; color: var(--navy); }
   .camp-card p { margin: 0; font-size: 14px; }
-  .pegou { margin-top: 6px !important; font-weight: 700; color: var(--navy); }
-  .vagas { margin-top: 8px; }
-  .vagas small { display: block; margin-top: 4px; font-size: 13px; color: var(--suave); }
-  .barra-vagas { height: 8px; border-radius: 4px; background: var(--agua-clara); overflow: hidden; }
-  .barra-vagas span { display: block; height: 100%; background: var(--agua); }
-  .volta { margin: 0 0 12px; }
-  .ficha-topo { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start; }
-  .ficha-topo img, .ficha-topo .sem-mini { width: 100%; aspect-ratio: 4 / 5; border-radius: 8px; object-fit: cover; background: #fff; box-shadow: 0 8px 24px rgba(38, 50, 79, .18); }
-  .tela .ficha-topo h1 { margin: 8px 0; }
-  .resumo-camp { margin: 0 0 14px; color: var(--suave); }
-  .fatos { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0 0 12px; font-size: 15px; }
-  .fatos dt { font-weight: 700; color: var(--navy); }
-  .fatos dd { margin: 0; }
-  .bloco { margin-top: 14px; padding: 18px 20px; border: 2px solid var(--linha); border-radius: 14px; background: #fff; }
-  .bloco h2 { margin: 0 0 8px; font-size: 18px; font-weight: 800; color: var(--navy); }
-  .texto-livre { margin: 0; white-space: pre-line; }
-  .material { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 12px 0; }
-  .material + .material { border-top: 1px solid var(--linha); }
-  .material p { flex: 1 1 260px; }
-  .material .leve { margin: 0; }
-  .link-material { display: block; margin-top: 10px; font-weight: 700; color: var(--navy); }
-  .sub { margin: 8px 0 6px; font-size: 15px; font-weight: 800; color: var(--navy); }
-  .ranking { margin: 0 0 14px; padding-left: 22px; }
-  #vendas-campanha .pessoa { margin-bottom: 10px; }
   .checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
   .checks label { display: flex; align-items: center; gap: 8px; margin: 0; padding: 10px 14px; border: 2px solid var(--linha); border-radius: 10px; background: #fff; }
   .checks input { width: 20px; height: 20px; margin: 0; accent-color: var(--navy); }
-  #arte-campanha { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-  #arte-campanha img, #arte-campanha .sem-mini { width: 72px; flex: none; aspect-ratio: 4 / 5; border-radius: 6px; object-fit: cover; background: var(--fundo); }
-  #arte-campanha p { margin: 0; }
-  .fim-form .leve { margin: 14px 0 0; }
   #espera-editor { padding: 0 24px; }
-  /* agenda */
-  .mes-nav { margin-top: 0; }
-  .mes-nav button { min-width: 44px; justify-content: center; font-size: 18px; }
-  .legenda { display: flex; flex-wrap: wrap; gap: 8px; margin: -10px 0 12px; }
-  .legenda .ev { display: inline-block; }
-  .calendario { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: hidden; border: 2px solid var(--linha); border-radius: 14px; background: #fff; }
-  .dia-semana { padding: 8px 4px; background: var(--navy); font-size: 13px; font-weight: 700; color: #fff; text-align: center; }
-  .dia { display: flex; flex-direction: column; gap: 3px; min-width: 0; min-height: 104px; padding: 4px; border-top: 1px solid var(--linha); border-left: 1px solid var(--linha); }
-  .dia:nth-child(7n + 1) { border-left: 0; }
-  .dia.fora { background: #f5f8f8; color: #9aa6ad; }
-  .num-dia { align-self: flex-start; min-width: 26px; height: 26px; border-radius: 13px; font-size: 13px; font-weight: 700; line-height: 26px; text-align: center; }
-  .dia.hoje .num-dia { background: var(--sol); color: var(--navy); }
-  .ev { display: block; padding: 2px 6px; border-radius: 5px; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; }
-  .ev.excursao { background: var(--navy); color: #fff; }
-  .ev.campanha { background: var(--sol); color: var(--navy); }
-  .ev.outros { background: var(--agua-clara); color: var(--navy); }
-  .item-agenda { display: block; padding: 12px 14px; border: 2px solid var(--linha); border-left: 8px solid var(--navy); border-radius: 12px; background: #fff; color: var(--suave); text-decoration: none; }
-  .item-agenda.campanha { border-left-color: var(--sol-forte); }
-  .item-agenda.outros { border-left-color: var(--agua); }
-  .item-agenda strong { display: block; color: var(--navy); }
-  /* passageiros */
-  .tabela-wrap { overflow-x: auto; margin: 12px 0; border: 2px solid var(--linha); border-radius: 12px; background: #fff; }
-  .planilha { border-collapse: collapse; table-layout: fixed; font-size: 14px; }
-  .planilha th { padding: 9px 8px; background: var(--navy); font-weight: 700; color: #fff; text-align: left; white-space: nowrap; }
-  .planilha td { padding: 0; border-top: 1px solid var(--linha); border-left: 1px solid var(--linha); vertical-align: top; }
-  .planilha td.num { padding: 11px 8px 0; color: var(--suave); text-align: right; }
-  .planilha input:not([type=checkbox]) { display: block; width: 100%; height: 42px; padding: 0 8px; border: 0; background: transparent; font-size: 14px; }
-  .planilha input:focus { outline: 2px solid var(--sol-forte); outline-offset: -2px; background: #fff8df; }
-  .planilha input[type=checkbox] { display: block; width: 22px; height: 22px; margin: 10px auto; accent-color: var(--navy); }
-  .planilha .idade { display: block; padding: 0 8px 4px; font-size: 11px; color: var(--suave); }
-  .planilha tr.nova td { background: #f7fbfa; }
-  .planilha .tirar { width: 40px; height: 40px; border: 0; background: none; font-size: 22px; color: var(--erro); cursor: pointer; }
-  @media (max-width: 600px) {
-    .dia { min-height: 58px; padding: 2px; }
-    .dia .ev { height: 7px; padding: 0; font-size: 0; }
-    .dia-semana { font-size: 11px; }
-  }
   .faixa-demo { display: flex; align-items: center; justify-content: center; gap: 10px; height: 40px; padding: 0 12px; overflow: hidden; background: var(--sol); font-size: 13px; font-weight: 700; color: var(--navy); white-space: nowrap; }
   .faixa-demo button { flex: none; height: 28px; padding: 0 10px; border: 2px solid var(--navy); border-radius: 8px; background: none; font-size: 13px; font-weight: 800; color: var(--navy); cursor: pointer; }
   body.demo .app { height: calc(100% - 96px); }
   @media (max-width: 600px) {
-    .ficha-topo { grid-template-columns: 1fr; }
-    .ficha-topo img, .ficha-topo .sem-mini { width: 60%; }
     .grade { grid-template-columns: 1fr; }
     .camp-card { grid-template-columns: 80px 1fr; }
     .camp-card img, .camp-card .sem-mini { width: 80px; }
@@ -203,7 +132,7 @@
 
   .painel { display: flex; flex-direction: column; min-height: 0; background: #fff; border-left: 1px solid var(--linha); }
   .passos { padding: 16px 24px 0; }
-  .passos ol { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .passos ol { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0; padding: 0; list-style: none; }
   .passos button { display: block; width: 100%; height: 28px; padding: 10px 0; border: 0; background: none; cursor: pointer; }
   .passos button::before { content: ""; display: block; height: 8px; border-radius: 4px; background: var(--agua-clara); }
   .passos button.feito::before { background: var(--agua); }
@@ -246,6 +175,29 @@
   .fotos button { padding: 0; border: 3px solid transparent; border-radius: 9px; background: none; cursor: pointer; }
   .fotos button[aria-pressed=true] { border-color: var(--sol-forte); }
   .fotos img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; }
+  .pers { grid-template-columns: repeat(4, 1fr); max-height: none; }
+  .pers img, .pers .nenhum { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 6px; background: var(--fundo); }
+  .pers .nenhum { display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--suave); }
+  .pers small { display: block; padding: 4px 0 2px; font-size: 12px; font-weight: 600; }
+  .logo-box { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; }
+  .logo-box img { height: 56px; max-width: 160px; object-fit: contain; padding: 4px; border: 2px solid var(--linha); border-radius: 10px; background: #fff; }
+  .logo-box .leve { margin: 0; }
+  .opcao-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .opcao-wrap .opcao { flex: 1; }
+  .inclui { display: flex; align-items: center; gap: 8px; margin: 0; padding: 8px 10px; border: 2px solid var(--linha); border-radius: 10px; font-size: 14px; }
+  .inclui input { width: 20px; height: 20px; margin: 0; accent-color: var(--navy); }
+  .material { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: center; padding: 10px; margin-bottom: 10px; border: 2px solid var(--linha); border-radius: 12px; }
+  .material canvas { width: 72px; border-radius: 6px; background: var(--fundo); }
+  .material strong { display: block; color: var(--navy); }
+  .material small { display: block; font-size: 13px; color: var(--suave); }
+  .material .acoes-card { margin-top: 6px; }
+  .material .acoes-card button, .material .acoes-card a { height: 36px; padding: 0 12px; }
+  .material.arq { grid-template-columns: 1fr auto; }
+  .contagem-camp { margin: 4px 0 0; font-size: 13px; font-weight: 600; color: var(--navy); }
+  .calc { margin: 0 0 16px; padding: 12px 14px; border: 2px dashed var(--linha); border-radius: 12px; }
+  .calc summary { font-weight: 700; color: var(--navy); cursor: pointer; }
+  .calc[open] summary { margin-bottom: 12px; }
+  .calc output { display: block; margin: -6px 0 4px; font-size: 14px; font-weight: 700; color: var(--navy); }
   input[type=range] { display: block; width: 100%; height: 32px; margin: 6px 0 0; accent-color: var(--navy); }
   .leve { height: 44px; margin: 0 0 18px; padding: 0 16px; border: 2px solid var(--linha); border-radius: 10px; background: #fff; font-size: 14px; font-weight: 700; color: var(--navy); cursor: pointer; }
   .interruptor { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border: 2px solid var(--linha); border-radius: 12px; font-size: 16px; }
@@ -296,19 +248,10 @@
       <span class="longo">Criar arte</span><span class="curto">Criar</span></a>
     <a href="#/excursoes" data-tela="excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      <span class="longo">Minhas excursões</span><span class="curto">Excursões</span></a>
-    <a href="#/agenda" data-tela="agenda">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      Agenda</a>
+      <span class="longo">Minhas artes</span><span class="curto">Artes</span></a>
     <a href="#/campanhas" data-tela="campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       Campanhas</a>
-    <a href="#/painel" data-tela="painel" data-master hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M11 20V4M17 20v-6M3 20h18"/></svg>
-      Painel</a>
-    <a href="#/contas" data-tela="contas" data-master hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 20a6.5 6.5 0 0 0-3-5.5"/></svg>
-      Contas</a>
   </nav>
   <div class="conta" id="conta" hidden><span id="nome-usuario"></span><button type="button" class="sair">Sair</button></div>
 </header>
@@ -329,8 +272,8 @@
     <h2>Teste no computador</h2>
     <p class="ajuda">Só aparece no localhost. Entra sem senha no servidor falso da planilha.</p>
     <div class="acoes-card">
-      <button type="button" data-papel="master">Entrar como master</button>
-      <button type="button" data-papel="vendedor">Entrar como vendedor</button>
+      <button type="button" data-papel="master">Entrar como criador de campanha</button>
+      <button type="button" data-papel="vendedor">Entrar como agente</button>
     </div>
     <p class="erro" hidden></p>
   </div>
@@ -370,22 +313,13 @@
   <div class="atalhos">
     <a class="atalho principal" href="#/nova">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      <strong>Criar arte</strong>Monte a arte de uma excursão passo a passo</a>
+      <strong>Criar arte</strong>Escolha um modelo, coloque seu contato e baixe</a>
     <a class="atalho" href="#/excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      <strong>Minhas excursões</strong><span id="inicio-qtd"></span></a>
-    <a class="atalho" href="#/agenda">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      <strong>Agenda</strong>Excursões e campanhas no calendário</a>
+      <strong>Minhas artes</strong><span id="inicio-qtd"></span></a>
     <a class="atalho" href="#/campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
-      <strong>Campanhas</strong>Excursões do resort para vender</a>
-    <a class="atalho" href="#/painel" data-master hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M11 20V4M17 20v-6M3 20h18"/></svg>
-      <strong>Painel</strong>Excursões de todas as pessoas</a>
-    <a class="atalho" href="#/contas" data-master hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 20a6.5 6.5 0 0 0-3-5.5"/></svg>
-      <strong>Contas</strong>Criar e controlar os acessos</a>
+      <strong>Campanhas</strong>Artes prontas do resort para divulgar</a>
   </div>
   <div id="inicio-ultima" hidden>
     <h2 class="rotulo-secao">Continuar de onde parou</h2>
@@ -395,156 +329,16 @@
 </section>
 
 <section class="tela" id="excursoes" hidden>
-  <h1>Minhas excursões</h1>
+  <h1>Minhas artes</h1>
   <p class="sinc" id="sinc-lista" aria-live="polite"></p>
   <div class="abas" id="abas"></div>
   <div class="lista" id="lista"></div>
 </section>
 
-<section class="tela larga" id="agenda" hidden>
-  <div class="cabeca"><h1 id="agenda-mes">Agenda</h1>
-    <div class="acoes-card mes-nav">
-      <button type="button" id="mes-ant" aria-label="Mês anterior">‹</button>
-      <button type="button" id="mes-hoje">Hoje</button>
-      <button type="button" id="mes-prox" aria-label="Próximo mês">›</button>
-    </div></div>
-  <p class="legenda"><span class="ev excursao">Minhas excursões</span><span class="ev campanha">Campanhas</span><span class="ev outros" data-master hidden>Excursões dos vendedores</span></p>
-  <div class="calendario" id="calendario"></div>
-  <h2 class="rotulo-secao">Neste mês</h2>
-  <div class="lista" id="agenda-lista"></div>
-</section>
-
-<section class="tela larga" id="passageiros" hidden>
-  <p class="volta"><a class="link" href="#/excursoes">← Minhas excursões</a></p>
-  <div class="cabeca"><h1 id="pass-titulo">Passageiros</h1>
-    <div class="acoes-card"><button type="button" class="abrir" id="pass-baixar">Baixar planilha (Excel)</button></div></div>
-  <p class="resumo" id="pass-resumo"></p>
-  <p class="ajuda">Escreva direto nas células. Para trazer a planilha que vocês já usam, copie as linhas lá e cole (Ctrl+V)
-    na primeira célula vazia: cada coluna entra na ordem da tabela.</p>
-  <div class="tabela-wrap"><table class="planilha" id="pass-tabela"></table></div>
-  <p class="sinc" id="sinc-pass" aria-live="polite"></p>
-</section>
-
 <section class="tela larga" id="campanhas" hidden>
-  <div class="cabeca"><h1>Campanhas</h1><a class="botao-acao" href="#/campanha-editar/nova" data-gestor hidden>+ Nova campanha</a></div>
+  <div class="cabeca"><h1>Campanhas</h1><a class="botao-acao" href="#/campanha-arte/nova" id="nova-campanha" hidden>+ Nova campanha</a></div>
   <p class="sinc" id="sinc-campanhas" aria-live="polite"></p>
-  <div class="abas" id="abas-campanhas"></div>
   <div class="grade" id="lista-campanhas"></div>
-</section>
-
-<section class="tela" id="campanha" hidden>
-  <p class="volta"><a class="link" href="#/campanhas">← Campanhas</a></p>
-  <div id="ficha"></div>
-  <form class="caixa bloco" id="form-venda" novalidate hidden>
-    <h2>Informar venda</h2>
-    <p class="ajuda" id="venda-restam"></p>
-    <label>Nome do cliente<input class="campo" name="cliente" autocomplete="off"></label>
-    <div class="dupla">
-      <label>Telefone<input class="campo" name="telefone" type="tel" inputmode="tel" autocomplete="off" placeholder="(31) 99999-9999"></label>
-      <label>Pessoas<input class="campo" name="pessoas" type="number" inputmode="numeric" min="1" value="1"></label>
-    </div>
-    <label>Ponto de embarque<select class="campo" name="embarque"></select></label>
-    <label>Forma de pagamento<select class="campo" name="pagamento"></select></label>
-    <label class="interruptor">Sinal pago<input type="checkbox" name="sinal_pago"></label>
-    <label>Observação<textarea class="campo" name="obs" rows="2"></textarea></label>
-    <p class="erro" hidden></p>
-    <button class="botao-grande" type="submit">Registrar venda</button>
-    <p class="ajuda">A venda entra como "Aguardando confirmação" até a conta master confirmar.</p>
-  </form>
-  <div id="vendas-campanha"></div>
-</section>
-
-<section class="tela" id="campanha-editar" hidden>
-  <p class="volta"><a class="link" id="voltar-campanha" href="#/campanhas">← Voltar</a></p>
-  <h1 id="titulo-editar">Nova campanha</h1>
-  <form id="form-campanha" novalidate>
-    <div class="caixa">
-      <h2>Campanha</h2>
-      <label>Nome<input class="campo" name="nome" autocomplete="off" placeholder="Ex.: All Fun Inclusive – Feriado de Novembro"></label>
-      <label>Resumo<textarea class="campo" name="resumo" rows="2"></textarea>
-        <span class="ajuda">Uma ou duas frases: para quem é e por que vale a pena.</span></label>
-      <div class="dupla">
-        <label>Situação<select class="campo" name="status">
-          <option value="rascunho">Rascunho</option><option value="ativa">Vendendo</option>
-          <option value="pausada">Pausada</option><option value="encerrada">Encerrada</option>
-        </select></label>
-        <label>Vende até<input class="campo" name="limite_venda" type="date"></label>
-      </div>
-      <label>Total de vagas<input class="campo" name="vagas_total" type="number" inputmode="numeric" min="0">
-        <span class="ajuda">As vendas de todos os vendedores descontam daqui. Rascunho só a master vê.</span></label>
-    </div>
-    <div class="caixa">
-      <h2>Arte, datas e valor</h2>
-      <div id="arte-campanha"></div>
-      <button class="leve" type="submit" value="arte">Salvar e montar a arte</button>
-    </div>
-    <div class="caixa">
-      <h2>Embarque</h2>
-      <label>Pontos de embarque<textarea class="campo" name="embarques" rows="3" placeholder="Praça da Estação, Belo Horizonte – 6h&#10;Big Shopping, Contagem – 6h40"></textarea>
-        <span class="ajuda">Um por linha, com o horário.</span></label>
-      <label>Retorno<input class="campo" name="retorno" autocomplete="off" placeholder="Ex.: Domingo, saída às 16h"></label>
-    </div>
-    <div class="caixa">
-      <h2>Pagamento</h2>
-      <div class="rotulo">Formas de pagamento<div class="checks">
-        <label><input type="checkbox" name="pagamento" value="Pix">Pix</label>
-        <label><input type="checkbox" name="pagamento" value="Cartão de crédito">Cartão de crédito</label>
-        <label><input type="checkbox" name="pagamento" value="Boleto">Boleto</label>
-        <label><input type="checkbox" name="pagamento" value="Dinheiro">Dinheiro</label>
-      </div></div>
-      <div class="dupla">
-        <label>Sinal ou entrada<input class="campo" name="sinal" autocomplete="off" placeholder="Ex.: R$ 200"></label>
-        <label>Quitar até<input class="campo" name="quitar_ate" type="date"></label>
-      </div>
-      <label>Comissão do vendedor<input class="campo" name="comissao" autocomplete="off" placeholder="Ex.: 10% por venda confirmada"></label>
-      <label>Crianças<textarea class="campo" name="criancas" rows="2" placeholder="Ex.: até 5 anos no colo não paga; 6 a 10 anos paga meia"></textarea></label>
-    </div>
-    <div class="caixa">
-      <h2>Informações da excursão</h2>
-      <label>Roteiro<textarea class="campo" name="roteiro" rows="5" placeholder="Sexta: chegada e jantar&#10;Sábado: ..."></textarea></label>
-      <label>O que está incluso<textarea class="campo" name="inclui" rows="3"></textarea></label>
-      <label>O que não está incluso<textarea class="campo" name="nao_inclui" rows="3"></textarea></label>
-      <label>Documentos exigidos<textarea class="campo" name="documentos" rows="2" placeholder="Ex.: RG ou CNH com foto; menores com autorização"></textarea></label>
-      <label>Política de cancelamento<textarea class="campo" name="cancelamento" rows="3"></textarea></label>
-      <label>Regras e avisos<textarea class="campo" name="regras" rows="3" placeholder="Bagagem, bebidas, animais…"></textarea></label>
-      <label>Contato do guia<input class="campo" name="contato_guia" autocomplete="off" placeholder="Nome e telefone"></label>
-    </div>
-    <div class="caixa">
-      <h2>Materiais para os vendedores</h2>
-      <label>Textos prontos para o WhatsApp<textarea class="campo" name="textos" rows="6"></textarea>
-        <span class="ajuda">Deixe uma linha em branco entre um texto e outro. Cada texto ganha um botão de copiar.</span></label>
-      <label>Links<textarea class="campo" name="links" rows="3" placeholder="Roteiro em PDF – https://drive.google.com/…&#10;Vídeo do resort – https://…"></textarea>
-        <span class="ajuda">Um por linha: nome e link.</span></label>
-    </div>
-    <p class="erro" hidden></p>
-    <div class="fim-form">
-      <button class="botao-grande" type="submit">Salvar campanha</button>
-      <button class="leve" type="button" id="excluir-campanha" hidden>Excluir campanha</button>
-    </div>
-  </form>
-</section>
-
-<section class="tela" id="painel" hidden>
-  <h1>Painel</h1>
-  <label class="filtros">Pessoa<select class="campo" id="filtro-pessoa"></select></label>
-  <p class="resumo" id="resumo-painel"></p>
-  <div class="abas" id="abas-painel"></div>
-  <div class="lista" id="lista-painel"></div>
-</section>
-
-<section class="tela" id="contas" hidden>
-  <h1>Contas</h1>
-  <form class="caixa" id="form-conta" novalidate>
-    <h2>Adicionar pessoa</h2>
-    <p class="ajuda">A conta é gravada na planilha do Google, então criar leva alguns segundos.</p>
-    <label>Nome<input class="campo" name="nome" autocomplete="off"></label>
-    <label>E-mail<input class="campo" name="email" type="email" autocomplete="off" inputmode="email"></label>
-    <p class="erro" hidden></p>
-    <button class="botao-grande" type="submit">Criar conta</button>
-  </form>
-  <div class="codigo" id="resultado-conta" role="status" hidden></div>
-  <h2 class="rotulo-secao">Pessoas com acesso</h2>
-  <div class="lista" id="lista-contas"></div>
 </section>
 
 <main class="app" id="editor" hidden>
@@ -553,7 +347,7 @@
       <canvas id="arte" width="2160" height="2700"></canvas>
       <div class="alvo" id="alvo" hidden></div>
     </div>
-    <p class="dica">Toque no preço, nas datas, no título ou no telefone da arte para editar. Arraste a foto para ajustar.</p>
+    <p class="dica">Toque no que quer mudar na arte (preço, datas, telefone, logo). Arraste a foto para ajustar.</p>
   </section>
 
   <section class="painel" aria-label="Edição">
@@ -563,50 +357,84 @@
     </nav>
 
     <form id="form" novalidate>
-      <section class="passo" data-passo="2" hidden>
-        <h2 tabindex="-1">Dados da excursão</h2>
-        <label>Nome da excursão<input class="campo" name="dx_nome" autocomplete="off" placeholder="Ex.: Grupo escola Sete Lagoas">
-          <span class="ajuda">Aparece só na sua lista, não vai na arte.</span></label>
-        <div class="dupla">
-          <label>Vagas<input class="campo" name="dx_vagas" type="number" inputmode="numeric" min="0"></label>
-          <label>Vendidas<input class="campo" name="dx_vendidas" type="number" inputmode="numeric" min="0"></label>
-        </div>
-        <p class="erro" id="erro-dados" hidden></p>
-        <label>Responsável pelo grupo<input class="campo" name="dx_responsavel" autocomplete="off"></label>
-        <label>Telefone do responsável<input class="campo" name="dx_telefone_grupo" type="tel" inputmode="tel" autocomplete="off" placeholder="(31) 99999-9999"></label>
-        <label>Observações<textarea class="campo" name="dx_observacoes" rows="4"></textarea></label>
-      </section>
-
       <section class="passo" data-passo="1">
-        <h2 tabindex="-1">Escolha a arte</h2>
+        <h2 tabindex="-1" id="titulo-artes">Escolha a arte</h2>
+        <p class="ajuda" id="ajuda-artes" hidden>Marque as artes que fazem parte da campanha. Toque numa arte para ver e ajustar.</p>
         <div class="artes" id="artes"></div>
       </section>
 
-      <section class="passo" data-passo="3" hidden>
-        <h2 tabindex="-1">Valores e datas</h2>
+      <section class="passo" data-passo="2" hidden>
+        <h2 tabindex="-1" id="titulo-valores">Valores e datas</h2>
+        <p class="codigo" id="nota-datas" hidden>O valor vem da campanha. Aqui você põe a data da sua saída e as vagas do seu ônibus.</p>
         <div id="pacotes"></div>
         <label id="linha-restam" hidden>Vagas restantes<input class="campo" name="restam" type="number" inputmode="numeric" min="0">
           <span class="ajuda">Aparece na etiqueta "Restam só … vagas".</span></label>
+        <label class="interruptor" id="linha-datas-agente" hidden>O agente põe a data da saída e as vagas
+          <input type="checkbox" id="datas-agente"></label>
+        <p class="ajuda" id="ajuda-datas" hidden>Marque quando o ônibus é do agente. Desmarcado, a data e as vagas
+          são as suas e o agente não muda.</p>
+      </section>
+
+      <section class="passo" data-passo="3" hidden>
+        <h2 tabindex="-1" id="titulo-contato">Contato e logo</h2>
+        <label id="linha-nome" hidden>Nome da campanha<input class="campo" name="dx_nome" autocomplete="off" placeholder="Ex.: Feriado de Novembro">
+          <span class="ajuda">Os agentes veem esse nome na lista de campanhas.</span></label>
+        <p class="codigo" id="nota-campanha" hidden>Esta arte é de uma campanha: valor, título e foto já vêm prontos. Coloque a data da sua saída, a sua comissão, o seu telefone e a sua logo.</p>
+        <div id="linha-titulo" hidden>
+          <label>Título, linha de cima<input class="campo maiusculas" name="titulo1" autocomplete="off" maxlength="28"></label>
+          <label>Título, linha de baixo<input class="campo maiusculas" name="titulo2" autocomplete="off" maxlength="28">
+            <span class="ajuda">Só quem cria a campanha muda o título. Se a frase passar do tamanho da arte, a letra diminui para caber.</span></label>
+        </div>
+        <label>Local<input class="campo" name="local" autocomplete="off"></label>
+        <label id="linha-comissao" hidden>Sua comissão<span class="dinheiro"><span>%</span>
+          <input class="campo" name="comissao" inputmode="decimal" autocomplete="off" placeholder="0"></span>
+          <span class="ajuda" id="ajuda-comissao">Somada ao valor da campanha. O preço da arte já sai com ela.</span></label>
+        <label>Telefone<input class="campo" name="telefone" type="tel" inputmode="tel" autocomplete="off" placeholder="(31) 99999-9999"></label>
+        <div id="linha-logo">
+          <div class="rotulo">Sua logo
+            <div class="logo-box"><img id="logo-img" alt="Sua logo" hidden>
+              <button type="button" class="leve" id="logo-escolher">Escolher logo</button>
+              <button type="button" class="leve" id="logo-tirar" hidden>Apagar logo</button></div>
+            <span class="ajuda">PNG com fundo transparente fica melhor. Ela fica guardada neste aparelho e vale para todas as suas artes.</span></div>
+          <input type="file" id="logo-arquivo" accept="image/png,image/jpeg,image/webp" hidden>
+          <input type="hidden" name="logo">
+          <label class="interruptor" id="linha-usar-logo" hidden>Mostrar minha logo na arte<input type="checkbox" id="usar-logo"></label>
+        </div>
       </section>
 
       <section class="passo" data-passo="4" hidden>
-        <h2 tabindex="-1">Título e contato</h2>
-        <p class="codigo" id="nota-campanha" hidden>Esta arte é de uma campanha: datas, valor, título e foto já vêm prontos. Coloque só o seu telefone e baixe.</p>
-        <label>Título, linha de cima<input class="campo maiusculas" name="titulo1" autocomplete="off"></label>
-        <label>Título, linha de baixo<input class="campo maiusculas" name="titulo2" autocomplete="off">
-          <span class="ajuda">Frases curtas cabem melhor na arte.</span></label>
-        <label>Local<input class="campo" name="local" autocomplete="off"></label>
-        <label>Telefone<input class="campo" name="telefone" type="tel" inputmode="tel" autocomplete="off" placeholder="(31) 99999-9999"></label>
+        <h2 tabindex="-1">Foto e personagem</h2>
+        <div id="linha-foto">
+          <div class="cats" id="cats"></div>
+          <div class="fotos" id="fotos"></div>
+          <label>Aproximar a foto<input type="range" id="zoom" min="1" max="3" step="0.01" value="1">
+            <span class="ajuda">Arraste a foto na arte para escolher o enquadramento.</span></label>
+          <button type="button" class="leve" id="padrao">Voltar a foto ao lugar</button>
+        </div>
+        <div class="rotulo" id="linha-pers">Personagem<div class="fotos pers" id="pers"></div></div>
       </section>
 
       <section class="passo" data-passo="5" hidden>
-        <h2 tabindex="-1">Foto e personagem</h2>
-        <div class="cats" id="cats"></div>
-        <div class="fotos" id="fotos"></div>
-        <label>Aproximar a foto<input type="range" id="zoom" min="1" max="3" step="0.01" value="1">
-          <span class="ajuda">Arraste a foto na arte para escolher o enquadramento.</span></label>
-        <button type="button" class="leve" id="padrao">Voltar a foto ao lugar</button>
-        <label class="interruptor" id="linha-pers">Mostrar personagem<input type="checkbox" id="pers"></label>
+        <h2 tabindex="-1">Materiais</h2>
+        <div id="mat-criador">
+          <h3>Vídeos animados</h3>
+          <p class="ajuda">Marque os que os agentes vão poder baixar, já com o telefone e a logo deles. Toque em "Ver" para assistir e em "Baixar vídeo" para levar o MP4 desta arte.</p>
+          <div id="motions"></div>
+          <h3>Arquivos para os agentes</h3>
+          <div id="arquivos"></div>
+          <button type="button" class="leve" id="add-arquivo">Adicionar arquivo</button>
+          <input type="file" id="arquivo-input" multiple hidden>
+          <span class="ajuda">PDF para imprimir, roteiro, fotos, vídeos… até 20 MB cada.</span>
+          <h3>Publicação</h3>
+          <label class="interruptor">Publicar para os agentes<input type="checkbox" id="publicar"></label>
+        </div>
+        <div id="mat-agente">
+          <h3>Vídeos animados</h3>
+          <div id="videos-agente"></div>
+          <h3>Arquivos da campanha</h3>
+          <div id="arquivos-agente"></div>
+        </div>
+        <div id="espera-video"></div>
       </section>
     </form>
 
@@ -616,7 +444,8 @@
       <button type="button" class="principal" id="continuar">Continuar</button>
       <button type="button" class="principal" id="baixar" hidden>Baixar imagem</button>
       <button type="button" class="secundario" id="enviar" hidden>Enviar</button>
-      <button type="button" class="principal" id="salvar-campanha" hidden>Salvar na campanha</button>
+      <button type="button" class="secundario" id="finalizar" hidden>Finalizar</button>
+      <button type="button" class="principal" id="salvar-campanha" hidden>Salvar campanha</button>
     </div>
   </section>
 </main>
@@ -639,23 +468,36 @@ const API = LOCAL ? q.get('api') || 'http://localhost:8766'
 const estado = {
   atual: Math.min(LAYOUTS.length - 1, Math.max(0, (+q.get('layout') || 1) - 1)),
   foto: q.get('foto') ?? 'layout',
-  personagem: q.get('personagem') !== '0',
+  personagem: q.get('personagem') === '0' ? '' : q.get('personagem') || 'arte', // 'arte' = o do .ai; '' = nenhum
   ajuste: {},
   passo: 1,
   foco: null,
 };
-// o vendedor só mexe nisto na arte (marcação do usuário, 15/09); o resto vem travado do .ai
-const EDITAVEL = /^(preco|preco_de|ida|volta|parcelas|pag)_\d+$|^(local|telefone|restam|titulo\d+)$/;
-const editavel = k => aberta?.campanha ? k === 'telefone' : EDITAVEL.test(k); // arte de campanha: vendedor só troca o telefone
-const PASSOS = ['Escolha a arte', 'Dados da excursão', 'Valores e datas', 'Título e contato', 'Foto e personagem']; // arte primeiro: a pessoa vê o que vai preencher
-const P_ARTE = 1, P_DADOS = 2, P_VALORES = 3, P_FOTO = 5;
+// o agente só mexe nisto na arte (marcação do usuário, 15/09); o resto vem travado do .ai
+const EDITAVEL = /^(preco|preco_de|ida|volta|parcelas|pag)_\d+$|^(local|telefone|restam|logo|comissao)$/;
+const TITULO = /^titulo\d+$/;
+// título só quem cria a campanha muda (TI, 17/09); arte de campanha: o agente só põe telefone e logo
+// campanha: o preço é do Village; a saída (ônibus, datas, vagas) é do agente quando o criador marcou assim
+const datasDoAgente = () => campanhaPorId(aberta?.campanha)?.datas !== 'master';
+const editavel = k => aberta?.campanha
+  ? k === 'telefone' || k === 'logo' || /^preco_\d+$/.test(k) || (datasDoAgente() && (/^(ida|volta)_\d+$/.test(k) || k === 'restam'))
+  : TITULO.test(k) ? eGestor() : k === 'logo' ? aberta?.tipo !== 'campanha' : EDITAVEL.test(k);
+const PASSOS = ['Escolha a arte', 'Valores e datas', 'Contato e logo', 'Foto e personagem', 'Materiais']; // arte primeiro: a pessoa vê o que vai preencher
+const P_ARTE = 1, P_VALORES = 2, P_CONTATO = 3, P_FOTO = 4, P_MAT = 5;
+// vídeos que o criador pode pôr na campanha: animação feita no próprio canvas da arte
+const MOTIONS = [
+  { id: 'story', nome: 'Story animado', desc: 'Vertical 9:16, 8 s. A foto se aproxima e os textos entram um a um.', layout: 'Story' },
+  { id: 'vagas', nome: 'Últimas vagas animado', desc: 'Vertical 9:16, 8 s, com a etiqueta de vagas.', layout: 'Últimas vagas' },
+  { id: 'feed', nome: 'Feed animado', desc: 'Post 4:5, 8 s, para o feed e o Status.', layout: 'Feed' },
+].filter(m => LAYOUTS.some(L => L.nome === m.layout));
+const layoutDe = m => LAYOUTS.findIndex(L => L.nome === m.layout);
 const DESCRICAO = { '1 pacote': 'Um preço e a lista do que está incluso', '2 pacotes': 'Dois preços, um embaixo do outro',
   Story: 'Vertical, para Stories e Status', Feed: 'Post do feed com a foto grande', 'Últimas vagas': 'Story com as vagas que restam',
   Carrossel: 'Tela da oferta para carrossel' };
-const passoDe = k => /^(preco|preco_de|ida|volta|parcelas|pag)_|^restam$/.test(k) ? P_VALORES : 4;
+const passoDe = k => aberta?.campanha ? (datasDoAgente() && /^(ida|volta)_|^restam$/.test(k) ? P_VALORES : P_CONTATO) : /^(preco|preco_de|ida|volta|parcelas|pag)_|^restam$/.test(k) ? P_VALORES : P_CONTATO;
 const chaves = i => LAYOUTS[i].textos.flatMap(t => t.tipo === 'titulo' ? t.linhas.map(l => l.key) : t.campos || [t.de || t.key]);
 const $ = id => document.getElementById(id);
-const form = $('form'), cv = $('arte'), zoom = $('zoom'), pers = $('pers');
+const form = $('form'), cv = $('arte'), zoom = $('zoom');
 
 function el(tag, classe, texto) {
   const e = document.createElement(tag);
@@ -733,12 +575,7 @@ function demoApi(acao, p) {
   const agora = Date.now(), conta = email => db.contas.find(c => c.email === email), nome = e => conta(e)?.nome || e;
   const publico = c => ({ email: c.email, nome: c.nome, papel: c.papel });
   const usuario = () => { const c = conta(String(p.token || '').slice(5)); return c?.ativo ? c : falha('Entre de novo para continuar.'); };
-  const gestor = () => { const u = usuario(); return u.papel !== 'master' ? falha('Só a conta master pode fazer isso.') : u; };
-  const master = () => { const u = usuario(); return u.papel !== 'master' ? falha('Só a conta master pode fazer isso.') : u; };
-  const numero = v => v === '' || v == null || isNaN(+v) ? null : Math.max(0, Math.floor(+v));
-  const vendidas = (id, sem) => db.vendas.filter(v => v.campanha === id && v.status !== 'cancelada' && v.id !== sem).reduce((s, v) => s + v.pessoas, 0);
-  const participar = (id, email) => { if (!db.participantes.includes(`${id} ${email}`)) db.participantes.push(`${id} ${email}`); };
-  const campanha = (c, u) => ({ ...c, vendidas: vendidas(c.id), peguei: db.participantes.includes(`${c.id} ${u.email}`) });
+  const gestor = () => { const u = usuario(); return u.papel !== 'master' ? falha('Só quem cria a campanha pode fazer isso.') : u; };
   const r = (() => {
     switch (acao) {
       case 'status': return { precisaMaster: false };
@@ -751,70 +588,25 @@ function demoApi(acao, p) {
       case 'salvar': {
         const u = usuario(), x = p.excursao || {}, atual = db.excursoes.find(e => e.id === x.id);
         if (atual && atual.vendedor !== u.email) falha('Essa excursão é de outra pessoa.');
-        const nova = { ...x, id: atual?.id || crypto.randomUUID(), vendedor: u.email, atualizada: agora,
-          vagas_total: numero(x.vagas_total), vagas_vendidas: numero(x.vagas_vendidas) || 0 };
+        const nova = { ...x, id: atual?.id || crypto.randomUUID(), vendedor: u.email, atualizada: agora };
         db.excursoes = [nova, ...db.excursoes.filter(e => e.id !== nova.id)];
         return { excursao: { id: nova.id, atualizada: agora } };
       }
       case 'excluir': { const u = usuario(); db.excursoes = db.excursoes.filter(e => e.id !== p.id || e.vendedor !== u.email); return {}; }
-      case 'contas': master(); return { contas: db.contas.map(c => ({ ...publico(c), ativo: c.ativo, aguardandoSenha: !!c.provisoria })) };
-      case 'salvarConta': {
-        const u = master(), email = String(p.email || '').trim().toLowerCase(), c = conta(email);
-        if (c?.email === u.email && (p.ativo === false || p.novaProvisoria)) falha('Isso não vale para a sua própria conta.');
-        const provisoria = !c || p.novaProvisoria ? String(100000 + Math.floor(Math.random() * 900000)) : '';
-        if (!c) {
-          if (!String(p.nome || '').trim()) falha('Digite o nome da pessoa.');
-          db.contas.push({ email, nome: p.nome.trim(), papel: 'vendedor', ativo: p.ativo !== false, provisoria });
-        } else {
-          if (typeof p.ativo === 'boolean') c.ativo = p.ativo;
-          if (provisoria) c.provisoria = provisoria;
-        }
-        return { provisoria };
-      }
       case 'campanhas': {
         const u = usuario();
-        return { campanhas: db.campanhas.filter(c => u.papel !== 'vendedor' || c.status !== 'rascunho').sort((a, b) => b.atualizada - a.atualizada).map(c => campanha(c, u)) };
+        return { campanhas: db.campanhas.filter(c => u.papel === 'master' || c.status === 'ativa').sort((a, b) => b.atualizada - a.atualizada) };
       }
       case 'salvarCampanha': {
-        const u = gestor(), x = p.campanha || {}, atual = db.campanhas.find(c => c.id === x.id);
-        if (x.id && !atual) falha('Essa campanha não existe mais.');
-        const c = { ...(atual || { criada_por: u.email, status: 'rascunho' }), ...x, id: atual?.id || crypto.randomUUID(), atualizada: agora };
-        if ('vagas_total' in x) c.vagas_total = numero(x.vagas_total);
-        if (!String(c.nome || '').trim()) falha('Dê um nome para a campanha.');
-        if (c.vagas_total != null && c.vagas_total < vendidas(c.id)) falha(`Já foram vendidas ${vendidas(c.id)} vagas. O total não pode ser menor que isso.`);
-        db.campanhas = [c, ...db.campanhas.filter(y => y.id !== c.id)];
-        return { campanha: campanha(c, u) };
+        const u = gestor(), x = p.campanha || {};
+        if (!String(x.nome || '').trim()) falha('Dê um nome para a campanha.');
+        let c = db.campanhas.find(y => y.id === x.id);
+        if (!c) db.campanhas.push(c = { id: x.id || crypto.randomUUID(), criada_por: u.email });
+        Object.assign(c, { nome: x.nome.trim(), status: x.status, layouts: x.layouts, motions: x.motions, arquivos: x.arquivos, datas: x.datas,
+          arte: x.arte, mini: x.mini, atualizada: agora });
+        return { campanha: c };
       }
-      case 'excluirCampanha':
-        gestor();
-        if (db.vendas.some(v => v.campanha === p.id)) falha('Essa campanha já tem vendas. Mude a situação para Encerrada em vez de excluir.');
-        db.campanhas = db.campanhas.filter(c => c.id !== p.id);
-        return {};
-      case 'pegarCampanha': participar(p.id, usuario().email); return {};
-      case 'vendas': {
-        const u = usuario();
-        return { vendas: db.vendas.filter(v => (!p.campanha || v.campanha === p.campanha) && (u.papel === 'master' || v.vendedor === u.email)).map(v => ({ ...v, vendedorNome: nome(v.vendedor) })) };
-      }
-      case 'salvarVenda': {
-        const u = usuario(), x = p.venda || {}, atual = db.vendas.find(v => v.id === x.id);
-        if (atual) {
-          if (u.papel !== 'master' && (atual.vendedor !== u.email || x.status !== 'cancelada' || atual.status !== 'pendente')) falha('Só a conta master confirma ou muda uma venda.');
-          const c = db.campanhas.find(y => y.id === atual.campanha);
-          if (atual.status === 'cancelada' && x.status !== 'cancelada' && c?.vagas_total != null && atual.pessoas > c.vagas_total - vendidas(c.id, atual.id)) falha('Não há vagas para reativar essa venda.');
-          atual.status = x.status;
-          return { venda: atual };
-        }
-        const c = db.campanhas.find(y => y.id === x.campanha), pessoas = numero(x.pessoas) || 0;
-        if (c?.status !== 'ativa') falha('Essa campanha não está aceitando vendas.');
-        if (c.limite_venda && c.limite_venda < hoje()) falha('O prazo de venda dessa campanha acabou.');
-        if (!String(x.cliente || '').trim()) falha('Digite o nome do cliente.');
-        if (pessoas < 1) falha('Digite quantas pessoas.');
-        if (c.vagas_total != null && pessoas > c.vagas_total - vendidas(c.id)) falha(`Só restam ${Math.max(0, c.vagas_total - vendidas(c.id))} vagas nessa campanha.`);
-        const v = { ...x, id: crypto.randomUUID(), vendedor: u.email, cliente: x.cliente.trim(), pessoas, status: 'pendente', criada: agora };
-        db.vendas.push(v);
-        participar(c.id, u.email);
-        return { venda: v };
-      }
+      case 'excluirCampanha': gestor(); db.campanhas = db.campanhas.filter(c => c.id !== p.id); return {};
       default: return falha('Ação desconhecida.');
     }
   })();
@@ -826,35 +618,14 @@ function demoSemente() {
     ida_1: '2026-11-13', volta_1: '2026-11-16' }; // igual à miniatura demo-mini.jpg
   const agora = Date.now(), dia = 86400000;
   return {
-    contas: [['master', 'master', 'Chefe (demonstração)'],
-      ['vendedor', 'vendedor', 'Vendedora (demonstração)'], ['carlos', 'vendedor', 'Carlos (exemplo)']]
+    contas: [['master', 'master', 'Criador de campanha (demonstração)'], ['vendedor', 'vendedor', 'Agente (demonstração)']]
       .map(([id, papel, nome]) => ({ email: `${id}@demo`, nome, papel, ativo: true, provisoria: '' })),
     excursoes: [],
-    participantes: ['feriado carlos@demo'],
     campanhas: [{
-      id: 'feriado', criada_por: 'master@demo', atualizada: agora, status: 'ativa',
-      nome: 'All Fun Inclusive – Feriado de Novembro', resumo: 'Pacote completo com tudo incluso para casais e famílias.',
-      limite_venda: '2026-11-05', vagas_total: 40, embarques: 'Praça da Estação, Belo Horizonte – 6h\nBig Shopping, Contagem – 6h40',
-      retorno: 'Domingo, saída do resort às 16h', sinal: 'R$ 200 no Pix', quitar_ate: '2026-11-10', pagamento: ['Pix', 'Cartão de crédito'],
-      comissao: '10% por venda confirmada', criancas: 'Até 5 anos no colo não paga.\n6 a 10 anos paga meia.',
-      roteiro: 'Sexta: chegada e jantar.\nSábado: parque aquático e festa.\nDomingo: café da manhã e retorno.',
-      inclui: 'Transporte, hospedagem, todas as refeições e bebidas, lazer completo.', nao_inclui: 'Passeios fora do resort.',
-      documentos: 'RG ou CNH com foto. Menores com certidão de nascimento ou autorização.',
-      cancelamento: 'Até 30 dias antes: devolve 90%.\nDe 29 a 15 dias: devolve 50%.\nMenos de 15 dias: sem devolução.',
-      regras: 'Uma mala e uma bolsa de mão por pessoa.', contato_guia: 'Marcos – (31) 98888-7777',
-      textos: 'Feriado de Novembro no Village Resort! Tudo incluso, com transporte saindo de BH. Garanta sua vaga comigo 👇\n\nÚltimas vagas pro feriado! Me chama no WhatsApp.',
-      links: 'Roteiro em PDF – https://example.com/roteiro.pdf',
-      arte: { atual: 0, foto: 'layout', personagem: true, ajuste: {}, campos }, mini: 'demo-mini.jpg',
-    }, {
-      id: 'reveillon', criada_por: 'master@demo', atualizada: agora - dia, status: 'rascunho',
-      nome: 'Réveillon All Fun Inclusive', resumo: 'Virada do ano no resort. Em preparação.', vagas_total: 60,
+      id: 'feriado', status: 'ativa', atualizada: agora, nome: 'All Fun Inclusive – Feriado de Novembro',
+      layouts: [0, 2, 3], motions: ['story'], arquivos: [],
+      arte: { atual: 0, foto: 'layout', personagem: 'arte', ajuste: {}, campos }, mini: 'demo-mini.jpg',
     }],
-    vendas: [
-      { id: 'v1', campanha: 'feriado', vendedor: 'carlos@demo', cliente: 'Família Souza', telefone: '(31) 98765-4321', pessoas: 4,
-        embarque: 'Praça da Estação, Belo Horizonte – 6h', pagamento: 'Pix', sinal_pago: true, obs: '', status: 'confirmada', criada: agora - 2 * dia },
-      { id: 'v2', campanha: 'feriado', vendedor: 'carlos@demo', cliente: 'Ana e Paulo', telefone: '(31) 99123-4567', pessoas: 2,
-        embarque: 'Big Shopping, Contagem – 6h40', pagamento: 'Cartão de crédito', sinal_pago: false, obs: 'Querem quarto térreo', status: 'pendente', criada: agora - dia },
-    ],
   };
 }
 
@@ -867,7 +638,7 @@ function guardarSessao(s) {
   try { if (s) localStorage[CHAVE_SESSAO] = JSON.stringify(s); else localStorage.removeItem(CHAVE_SESSAO); } catch {}
 }
 const eMaster = () => sessao?.usuario.papel === 'master';
-const eGestor = () => eMaster(); // só a master cria e edita campanhas
+const eGestor = () => eMaster(); // a conta master é quem cria as campanhas
 
 function entrou(r) {
   guardarSessao({ token: r.token, usuario: r.usuario });
@@ -879,7 +650,6 @@ function sair(mensagem) {
   clearTimeout(salvarTimer);
   if (aberta) salvarAgora();
   aberta = null;
-  painelDados = null;
   guardarSessao(null);
   irParaHash('#/');
   if (mensagem) mostrarErro($('form-entrar').querySelector('.erro'), mensagem);
@@ -888,7 +658,7 @@ function irParaHash(h) { if (location.hash === h) rota(); else location.hash = h
 // no celular o menu rola de lado: deixa o item da tela atual à vista
 // (de novo quando a fonte carrega ou a tela muda, porque aí a largura do menu muda)
 function centralizarMenu() {
-  const menu = $('menu'), ativo = menu.querySelector('[aria-current]');
+  const menu = $('menu'), ativo = menu?.querySelector('[aria-current]'); // na tela de entrar não há menu
   if (ativo) menu.scrollLeft = ativo.offsetLeft - menu.offsetLeft - (menu.clientWidth - ativo.offsetWidth) / 2;
 }
 addEventListener('resize', centralizarMenu);
@@ -904,7 +674,7 @@ if (DEMO) {
   $('faixa-demo').hidden = false;
   $('form-entrar').hidden = true;
   $('dev').querySelector('h2').textContent = 'Demonstração';
-  $('dev').querySelector('.ajuda').textContent = 'Escolha um perfil para conhecer o sistema. Nada vai para a planilha: o que você fizer fica só neste navegador.';
+  $('dev').querySelector('.ajuda').textContent = 'Escolha um perfil para conhecer o gerador. Nada vai para o servidor: o que você fizer fica só neste navegador.';
   $('recomecar-demo').onclick = () => {
     if (!confirm('Apagar tudo o que foi feito na demonstração e começar de novo?')) return;
     try { Object.keys(localStorage).filter(k => k.startsWith('village.demo.') || k.endsWith('@demo')).forEach(k => localStorage.removeItem(k)); } catch {}
@@ -1023,20 +793,17 @@ function importarDoAparelho() { // excursões salvas antes de existir conta
 function paraServidor(ex) {
   const c = ex.campos, [ida, volta] = periodo(ex);
   return {
-    id: ex.idRemoto || '', nome: nomeDe(ex), observacoes: c.dx_observacoes || '', ida: ida || '', volta: volta || '',
-    vagas_total: c.dx_vagas ?? '', vagas_vendidas: c.dx_vendidas ?? '', grupo_responsavel: c.dx_responsavel || '',
-    grupo_telefone: c.dx_telefone_grupo || '', mini: ex.mini || '',
-    arte: { atual: ex.atual, foto: ex.foto, personagem: ex.personagem, ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '',
-      passageiros: ex.passageiros || [] },
+    id: ex.idRemoto || '', nome: nomeDe(ex), ida: ida || '', volta: volta || '', mini: ex.mini || '',
+    arte: { atual: ex.atual, foto: ex.foto, personagem: ex.personagem, ajuste: ex.ajuste, campos: c, campanha: ex.campanha || '' },
   };
 }
-function deServidor(x, id = novoId()) { // a planilha manda: o que a master mudar lá (vagas etc.) vale
+// personagem era true/false até 17/09; agora é o id escolhido ('arte' = o do .ai, '' = nenhum)
+const qualPersonagem = p => p === true || p == null ? 'arte' : p === false ? '' : p;
+function deServidor(x, id = novoId()) {
   const a = x.arte || {};
-  const campos = { ...(a.campos || {}), dx_observacoes: x.observacoes, dx_vagas: x.vagas_total ?? '', dx_vendidas: x.vagas_vendidas ?? '',
-    dx_responsavel: x.grupo_responsavel, dx_telefone_grupo: x.grupo_telefone };
   return { id, idRemoto: x.id, criada: x.atualizada, atualizada: x.atualizada, versao: 0, pendente: false, nova: false,
-    atual: a.atual ?? 0, foto: a.foto ?? 'layout', personagem: a.personagem ?? true, ajuste: a.ajuste ?? {}, campos, mini: x.mini || '',
-    campanha: a.campanha || '', passageiros: a.passageiros || [] };
+    atual: a.atual ?? 0, foto: a.foto ?? 'layout', personagem: qualPersonagem(a.personagem), ajuste: a.ajuste ?? {}, campos: a.campos || {},
+    mini: x.mini || '', campanha: a.campanha || '' };
 }
 
 function agendarSinc(ms = 3000) { clearTimeout(sincTimer); sincTimer = setTimeout(sincronizar, ms); }
@@ -1084,7 +851,6 @@ async function puxar() {
   ultimoPuxar = Date.now();
   try {
     const { excursoes: remotas } = await api('listar', { token: sessao.token });
-    if (eMaster()) painelDados = remotas;
     const minhas = new Map(remotas.filter(x => x.vendedor === sessao.usuario.email).map(x => [x.id, x]));
     const excluidas = new Set(ler(chaveExcluidas()));
     const lista = [];
@@ -1100,8 +866,6 @@ async function puxar() {
     if (sinc.estado !== 'enviando') sinc = { estado: 'ok', msg: '' };
     if (!$('excursoes').hidden) montarExcursoes();
     if (!$('inicio').hidden) montarInicio();
-    if (!$('agenda').hidden) desenharAgenda();
-    if (!$('painel').hidden) desenharPainel();
   } catch (e) {
     if (sessaoInvalida(e)) return sair(e.message);
     sinc = { estado: 'offline', msg: e.message };
@@ -1121,35 +885,54 @@ function mostrarSinc() {
   const t = textoSinc();
   $('salvo').textContent = !aberta ? '' : aberta.tipo === 'campanha' ? 'Rascunho no aparelho até salvar na campanha' : t;
   $('sinc-lista').textContent = t;
-  $('sinc-pass').textContent = t;
 }
 
 function novaExcursao() {
   const ultima = excursoes().sort((a, b) => b.atualizada - a.atualizada)[0];
   const campos = Object.fromEntries(Object.keys(VALORES).filter(k => EDITAVEL.test(k)).map(k => [k, VALORES[k]]));
-  if (ultima) for (const k of ['telefone', 'local']) if (ultima.campos[k]) campos[k] = ultima.campos[k]; // o vendedor não redigita
+  if (ultima) for (const k of ['telefone', 'local']) if (ultima.campos[k]) campos[k] = ultima.campos[k]; // o agente não redigita
+  campos.logo = '1'; // aparece se o agente tiver logo
   const agora = Date.now();
   const ex = { id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 0, pendente: false, nova: true,
-    atual: 0, foto: 'layout', personagem: true, ajuste: {}, campos, mini: '' };
+    atual: 0, foto: 'layout', personagem: 'arte', ajuste: {}, campos, mini: '' };
   gravar([ex, ...excursoes()]);
   return ex;
 }
 
 function abrirExcursao(ex) {
   const c = ex.campanha && campanhaPorId(ex.campanha);
-  if (c?.arte?.campos) { // arte de campanha: vale o que a master definiu; do vendedor fica só o telefone e os dados dele
-    const a = arteDe(c), dele = Object.entries(ex.campos).filter(([k]) => k === 'telefone' || k.startsWith('dx_'));
-    ex = { ...ex, ...a, campos: { ...a.campos, ...Object.fromEntries(dele) } };
+  if (c?.arte?.campos) { // arte de campanha: vale o que o criador definiu; do agente ficam telefone, logo, personagem e a arte escolhida
+    const a = arteDe(c), lays = layoutsDe(c), dele = Object.entries(ex.campos).filter(([k]) => ['telefone', 'logo', 'dx_nome', 'comissao'].includes(k));
+    ex = { ...ex, ...a, atual: lays.includes(ex.atual) ? ex.atual : lays[0], personagem: ex.personagem,
+      campos: { ...a.campos, ...Object.fromEntries(dele) } };
   }
   aberta = ex;
-  Object.assign(estado, { atual: Math.min(LAYOUTS.length - 1, ex.atual ?? 0), foto: ex.foto, personagem: ex.personagem, ajuste: structuredClone(ex.ajuste ?? {}), foco: null });
+  Object.assign(estado, { atual: Math.min(LAYOUTS.length - 1, ex.atual ?? 0), foto: ex.foto, personagem: qualPersonagem(ex.personagem), ajuste: structuredClone(ex.ajuste ?? {}), foco: null });
   preencher(ex.campos);
-  for (const n of ['titulo1', 'titulo2', 'local']) if (form.elements[n]) form.elements[n].readOnly = !!ex.campanha;
+  form.elements.local.readOnly = !!ex.campanha;
   $('nota-campanha').hidden = !ex.campanha;
-  pers.checked = estado.personagem;
+  $('nota-campanha').textContent = `Esta arte é de uma campanha: valor, título e foto já vêm prontos. Coloque ${
+    ex.campanha && datasDoAgente() ? 'a data da sua saída, ' : ''}a sua comissão, o seu telefone e a sua logo.`;
+  const criador = ex.tipo === 'campanha', lays = criador ? null : c ? layoutsDe(c) : null;
+  $('linha-titulo').hidden = !eGestor() || !!ex.campanha;
+  $('linha-logo').hidden = criador;
+  $('linha-foto').hidden = !!ex.campanha;
+  $('linha-nome').hidden = !criador;
+  $('linha-comissao').hidden = !ex.campanha;
+  $('titulo-artes').textContent = criador ? 'Artes da campanha' : 'Escolha a arte';
+  $('ajuda-artes').hidden = !criador;
+  $('titulo-contato').textContent = criador ? 'Nome, título e local' : 'Contato e logo';
+  document.querySelectorAll('#artes .inclui').forEach((l, j) => { l.hidden = !criador; l.querySelector('input').checked = !!ex.layouts?.includes(j); });
+  document.querySelectorAll('.opcao-wrap').forEach((w, j) => w.hidden = !!lays && !lays.includes(j));
+  mostrarLogo();
+  mostrarComissao();
   montarBanco();
-  mostrarErro($('erro-dados'), '');
-  usarPassos(ex.tipo === 'campanha' ? [P_ARTE, P_VALORES, 4, P_FOTO] : ex.campanha ? [4] : PASSOS.map((_, i) => i + 1));
+  const temPers = (lays || [estado.atual]).some(j => LAYOUTS[j].foto.personagem);
+  const temMat = c && (c.motions?.length || c.arquivos?.length);
+  usarPassos(criador ? PASSOS.map((_, i) => i + 1)
+    : ex.campanha ? [...(lays.length > 1 ? [P_ARTE] : []), ...(datasDoAgente() ? [P_VALORES] : []), P_CONTATO, ...(temPers ? [P_FOTO] : []), ...(temMat ? [P_MAT] : [])]
+    : [P_ARTE, P_VALORES, P_CONTATO, P_FOTO]);
+  montarMateriais();
   selecionarArte(estado.atual);
   irPara(ativos.includes(+q.get('passo')) ? +q.get('passo') : ativos[0]);
   mostrarSinc();
@@ -1215,13 +998,11 @@ function situacaoDatas(ida, volta) {
   return volta && volta < h ? 'encerradas' : 'acontecendo';
 }
 const situacao = ex => situacaoDatas(...periodo(ex));
-const nomeDe = ex => ex.campos.dx_nome?.trim() || [ex.campos.titulo1, ex.campos.titulo2].filter(s => s?.trim()).join(' ') || 'Excursão sem título';
-const textoVagas = (total, vendidas) => total !== '' && total != null ? `${vendidas || 0} de ${total} vagas vendidas` : '';
+const nomeDe = ex => ex.campos.dx_nome?.trim() || `${(LAYOUTS[ex.atual] ?? LAYOUTS[0]).nome}${ex.campos.telefone ? ' · ' + ex.campos.telefone : ''}`;
 function detalhesDe(ex) {
   const [ida, volta] = periodo(ex), L = LAYOUTS[ex.atual] ?? LAYOUTS[0];
   return [ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : 'Sem datas',
-    ex.campos.preco_1 ? `${L.nome}, a partir de R$ ${ex.campos.preco_1}` : L.nome,
-    textoVagas(ex.campos.dx_vagas, ex.campos.dx_vendidas)].filter(Boolean);
+    ex.campos.preco_1 ? `${L.nome}, a partir de R$ ${ex.campos.preco_1}` : L.nome].filter(Boolean);
 }
 function miniDe(src) {
   return src ? Object.assign(el('img'), { src, alt: '' }) : el('div', 'sem-mini');
@@ -1229,7 +1010,7 @@ function miniDe(src) {
 
 function montarInicio() {
   const lista = excursoes().sort((a, b) => b.atualizada - a.atualizada);
-  $('inicio-qtd').textContent = lista.length ? `${lista.length} ${lista.length > 1 ? 'excursões' : 'excursão'}` : 'Nenhuma excursão ainda';
+  $('inicio-qtd').textContent = lista.length ? `${lista.length} ${lista.length > 1 ? 'artes' : 'arte'}` : 'Nenhuma arte ainda';
   $('inicio-conta').textContent = `Conta de ${sessao.usuario.nome} (${sessao.usuario.email})`;
   $('inicio-ultima').hidden = !lista.length;
   if (!lista.length) return;
@@ -1260,156 +1041,36 @@ function montarExcursoes() {
   grupos.encerradas.reverse(); // mais recentes primeiro
   abas($('abas'), grupos, aba, k => { aba = k; montarExcursoes(); });
   if (!grupos[aba].length) {
-    const vazio = el('div', 'vazio', lista.length ? 'Nenhuma excursão aqui.' : 'Você ainda não tem excursões.');
+    const vazio = el('div', 'vazio', lista.length ? 'Nenhuma arte aqui.' : 'Você ainda não tem artes.');
     vazio.append(el('br'), Object.assign(el('a', '', 'Criar arte'), { href: '#/nova' }));
     return $('lista').replaceChildren(vazio);
   }
   $('lista').replaceChildren(...grupos[aba].map(ex => {
     const card = el('article', 'excursao'), info = el('div'), acoes = el('div', 'acoes-card');
-    info.append(el('h2', '', nomeDe(ex)), ...detalhesDe(ex).map(t => el('p', '', t)));
-    if (ex.pendente) info.append(el('p', 'pendente', 'Ainda não foi para a planilha'));
+    // fica claro de quem é a arte: a da campanha vem pronta do Village, a outra é do próprio agente
+    info.append(el('span', ex.campanha ? 'selo' : 'selo cinza', ex.campanha ? 'Campanha do Village' : 'Arte sua'),
+      el('h2', '', nomeDe(ex)), ...detalhesDe(ex).map(t => el('p', '', t)));
+    if (ex.pendente) info.append(el('p', 'pendente', 'Ainda não foi para o servidor'));
     const duplicar = Object.assign(el('button', '', 'Duplicar'), { type: 'button' });
     duplicar.onclick = () => {
       const agora = Date.now();
-      const copia = { ...structuredClone(ex), id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 1, pendente: true, nova: false,
-        passageiros: [] };
-      if (gravar([copia, ...excursoes()])) { aviso('Excursão duplicada'); montarExcursoes(); agendarSinc(500); }
+      const copia = { ...structuredClone(ex), id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 1, pendente: true, nova: false };
+      if (gravar([copia, ...excursoes()])) { aviso('Arte duplicada'); montarExcursoes(); agendarSinc(500); }
     };
     const excluir = Object.assign(el('button', 'perigo', 'Excluir'), { type: 'button' });
     excluir.onclick = () => {
       if (!confirm(`Excluir "${nomeDe(ex)}"? Não dá pra desfazer.`)) return;
       if (ex.idRemoto) gravar([...ler(chaveExcluidas()), ex.idRemoto], chaveExcluidas());
-      if (gravar(excursoes().filter(e => e.id !== ex.id))) { aviso('Excursão excluída'); montarExcursoes(); agendarSinc(500); }
+      if (gravar(excursoes().filter(e => e.id !== ex.id))) { aviso('Arte excluída'); montarExcursoes(); agendarSinc(500); }
     };
-    if (ex.campanha) info.append(el('p', '', 'Arte de campanha'));
-    const npass = (ex.passageiros || []).filter(passageiroCheio).length;
-    acoes.append(Object.assign(el('a', 'abrir', 'Abrir'), { href: `#/arte/${ex.id}` }),
-      Object.assign(el('a', '', `Passageiros (${npass})`), { href: `#/passageiros/${ex.id}` }), ...(ex.campanha ? [] : [duplicar]), excluir);
+    acoes.append(Object.assign(el('a', 'abrir', 'Abrir'), { href: `#/arte/${ex.id}` }), ...(ex.campanha ? [] : [duplicar]), excluir);
     info.append(acoes);
     card.append(miniDe(ex.mini), info);
     return card;
   }));
 }
 
-// painel da master: excursões de todo mundo, direto da planilha
-let painelDados = null, abaPainel = null, filtroPessoa = '';
-async function montarPainel() {
-  if (painelDados) desenharPainel();
-  else $('lista-painel').replaceChildren(el('p', 'nota', 'Carregando excursões da planilha…'));
-  await puxar();
-  if (!painelDados) $('lista-painel').replaceChildren(el('p', 'erro', 'Não deu pra carregar agora. Tente de novo em instantes.'));
-}
-function desenharPainel() {
-  const pessoas = [...new Map(painelDados.map(x => [x.vendedor, x.vendedorNome])).entries()].sort((a, b) => a[1].localeCompare(b[1]));
-  const select = $('filtro-pessoa');
-  select.replaceChildren(Object.assign(el('option', '', 'Todas'), { value: '' }),
-    ...pessoas.map(([email, nome]) => Object.assign(el('option', '', nome), { value: email })));
-  select.value = filtroPessoa;
-  const lista = ordenar(painelDados.filter(x => !filtroPessoa || x.vendedor === filtroPessoa), x => [x.ida, x.volta]);
-  const grupos = Object.fromEntries(ABAS.map(([k]) => [k, lista.filter(x => situacaoDatas(x.ida, x.volta) === k)]));
-  abaPainel ??= ABAS.find(([k]) => grupos[k].length)?.[0] ?? 'proximas';
-  grupos.encerradas.reverse();
-  const comVagas = lista.filter(x => x.vagas_total != null && x.vagas_total !== '');
-  const total = comVagas.reduce((s, x) => s + (+x.vagas_total || 0), 0), vendidas = comVagas.reduce((s, x) => s + (+x.vagas_vendidas || 0), 0);
-  $('resumo-painel').textContent = `${lista.length} ${lista.length === 1 ? 'excursão' : 'excursões'}` + (comVagas.length ? `, ${vendidas} de ${total} vagas vendidas` : '');
-  abas($('abas-painel'), grupos, abaPainel, k => { abaPainel = k; desenharPainel(); });
-  $('lista-painel').replaceChildren(...(grupos[abaPainel].length ? grupos[abaPainel].map(x => {
-    const card = el('article', 'excursao'), info = el('div');
-    info.append(el('h2', '', x.nome || 'Excursão sem título'), el('p', '', `Vendedor: ${x.vendedorNome}`),
-      el('p', '', x.ida ? `Ida ${dataBR(x.ida)}, volta ${dataBR(x.volta || x.ida)}` : 'Sem datas'));
-    const vagas = textoVagas(x.vagas_total, x.vagas_vendidas);
-    if (vagas) info.append(el('p', '', vagas));
-    if (x.grupo_responsavel) info.append(el('p', '', `Grupo: ${x.grupo_responsavel}${x.grupo_telefone ? ', ' + x.grupo_telefone : ''}`));
-    card.append(miniDe(x.mini), info);
-    return card;
-  }) : [el('div', 'vazio', 'Nenhuma excursão aqui.')]));
-}
-$('filtro-pessoa').onchange = e => { filtroPessoa = e.target.value; abaPainel = null; desenharPainel(); };
-
-// contas (master)
-async function montarContas() {
-  const lista = $('lista-contas');
-  lista.replaceChildren(el('p', 'nota', 'Carregando contas…'));
-  try {
-    const { contas } = await api('contas', { token: sessao.token });
-    lista.replaceChildren(...contas.map(linhaConta));
-  } catch (e) {
-    if (sessaoInvalida(e)) return sair(e.message);
-    const erro = el('p', 'erro', e.message), tentar = Object.assign(el('button', 'leve', 'Tentar de novo'), { type: 'button', onclick: montarContas });
-    lista.replaceChildren(erro, tentar);
-  }
-}
-function linhaConta(c) {
-  const linha = el('div', 'pessoa'), info = el('div');
-  info.append(el('strong', '', c.nome), el('small', '', c.email),
-    el('span', 'selo', c.papel === 'master' ? 'Master' : 'Vendedor'),
-    el('span', !c.ativo ? 'selo off' : c.aguardandoSenha ? 'selo alerta' : 'selo',
-      !c.ativo ? 'Desativada' : c.aguardandoSenha ? 'Ainda não criou a senha' : 'Ativa'));
-  linha.append(info);
-  if (c.email === sessao.usuario.email) { linha.append(el('small', '', 'Você')); return linha; }
-  if (c.papel === 'master') return linha;
-  const acoes = el('div', 'acoes-card');
-  acoes.append(
-    botaoPlanilha(c.ativo ? 'Desativar' : 'Ativar', () => acaoConta({ email: c.email, ativo: !c.ativo }, c.ativo ? 'Conta desativada' : 'Conta ativada')),
-    botaoPlanilha('Nova senha provisória', async () => {
-      if (!confirm(`Gerar uma senha provisória para ${c.nome}? A senha atual dessa pessoa para de funcionar.`)) return;
-      const r = await acaoConta({ email: c.email, novaProvisoria: true }, 'Senha provisória gerada');
-      if (r) mostrarProvisoria(c.nome, r.provisoria);
-    }));
-  linha.append(acoes);
-  return linha;
-}
-async function acaoConta(dados, mensagem) {
-  try {
-    const r = await api('salvarConta', { token: sessao.token, ...dados });
-    aviso(mensagem);
-    montarContas();
-    return r;
-  } catch (e) {
-    if (sessaoInvalida(e)) sair(e.message); else aviso(e.message);
-  }
-}
-function mostrarProvisoria(nome, codigo) {
-  const box = $('resultado-conta');
-  box.replaceChildren(el('span', '', `Senha provisória de ${nome}`), el('strong', '', codigo),
-    el('span', '', 'Passe essa senha para a pessoa. Ela entra com o e-mail e essa senha e cria a senha dela.'));
-  box.hidden = false;
-  box.scrollIntoView({ block: 'nearest' });
-}
-$('form-conta').onsubmit = async e => {
-  e.preventDefault();
-  const f = e.target, erro = f.querySelector('.erro'), bt = f.querySelector('button');
-  const nome = f.elements.nome.value.trim(), email = f.elements.email.value.trim();
-  if (!nome) return mostrarErro(erro, 'Digite o nome da pessoa.');
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return mostrarErro(erro, 'Digite um e-mail válido.');
-  mostrarErro(erro, '');
-  ocupado(bt, 'Criando…');
-  const parar = esperar(f, 'Criando a conta');
-  try {
-    const r = await api('salvarConta', { token: sessao.token, nome, email });
-    f.reset();
-    mostrarProvisoria(nome, r.provisoria);
-    montarContas();
-  } catch (err) {
-    if (sessaoInvalida(err)) return sair(err.message);
-    mostrarErro(erro, err.message);
-  } finally {
-    parar();
-    livre(bt);
-  }
-};
-
-function botaoPlanilha(texto, fn, classe = '') { // grava na planilha: o botão diz isso enquanto espera
-  const b = Object.assign(el('button', classe, texto), { type: 'button' });
-  b.onclick = async () => {
-    b.disabled = true;
-    b.textContent = 'Salvando na planilha…';
-    try { await fn(); } finally { b.disabled = false; b.textContent = texto; }
-  };
-  return b;
-}
-
-// ---------- campanhas: a master publica; vendedores fazem a arte com o telefone deles e informam vendas ----------
+// ---------- campanhas: vêm do sistema do resort; o criador monta a arte, o agente põe telefone e logo ----------
 const chaveCampanhas = () => `village.campanhas.${sessao.usuario.email}`;
 const chaveArteCampanha = () => `village.arte-campanha.${sessao.usuario.email}`;
 const campanhasCache = () => sessao ? ler(chaveCampanhas()) : [];
@@ -1424,18 +1085,8 @@ function carregarCampanhas() {
 function guardarCampanha(c) { gravar([c, ...campanhasCache().filter(x => x.id !== c.id)], chaveCampanhas()); }
 function arteDe(c) {
   const a = c.arte || {};
-  return { atual: a.atual ?? 0, foto: a.foto ?? 'layout', personagem: a.personagem ?? true, ajuste: structuredClone(a.ajuste ?? {}), campos: { ...(a.campos || {}) } };
+  return { atual: a.atual ?? 0, foto: a.foto ?? 'layout', personagem: qualPersonagem(a.personagem), ajuste: structuredClone(a.ajuste ?? {}), campos: { ...(a.campos || {}) } };
 }
-const temVagas = c => c.vagas_total !== '' && c.vagas_total != null;
-const restantes = c => Math.max(0, (+c.vagas_total || 0) - (+c.vendidas || 0));
-function situacaoCampanha(c) {
-  if (c.status !== 'ativa') return c.status || 'rascunho';
-  if (c.limite_venda && c.limite_venda < hoje()) return 'prazo';
-  return temVagas(c) && restantes(c) <= 0 ? 'esgotada' : 'ativa';
-}
-const SELO_CAMPANHA = { ativa: ['Vendendo', ''], esgotada: ['Esgotada', 'alerta'], prazo: ['Prazo de venda acabou', 'alerta'],
-  pausada: ['Pausada', 'alerta'], rascunho: ['Rascunho', 'cinza'], encerrada: ['Encerrada', 'cinza'] };
-const seloCampanha = c => { const [t, k] = SELO_CAMPANHA[situacaoCampanha(c)]; return el('span', `selo ${k}`, t); };
 function datasCampanha(c) {
   const [ida, volta] = c.arte?.campos ? periodo(c.arte) : [];
   return ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : '';
@@ -1444,20 +1095,13 @@ function valorCampanha(c) {
   const k = c.arte?.campos || {}, n = parseInt(k.parcelas_1 ?? k.parcelas, 10); // parcelas vem do campo da arte ("7x de")
   return k.preco_1 ? `A partir de R$ ${k.preco_1} por dia para o casal${n > 1 ? `, em até ${n}x` : ''}` : '';
 }
-const resumoCampanha = c => [datasCampanha(c) || 'Datas a definir na arte', valorCampanha(c), c.limite_venda && `Vende até ${dataBR(c.limite_venda)}`].filter(Boolean);
-function barraVagas(c) {
-  const total = +c.vagas_total || 0, vendidas = Math.min(total, +c.vendidas || 0), box = el('div', 'vagas'), barra = el('div', 'barra-vagas');
-  barra.appendChild(el('span')).style.width = `${total ? vendidas / total * 100 : 0}%`;
-  box.append(barra, el('small', '', `${vendidas} de ${total} vagas vendidas, ${restantes(c)} ${restantes(c) === 1 ? 'restante' : 'restantes'}`));
-  return box;
-}
-const linhas = s => String(s || '').split('\n').map(l => l.trim()).filter(Boolean);
+const layoutsDe = c => c.layouts?.length ? c.layouts : [c.arte?.atual ?? 0];
+const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+const contagemCampanha = c => [plural(layoutsDe(c).length, 'arte', 'artes'), c.motions?.length && plural(c.motions.length, 'vídeo', 'vídeos'),
+  c.arquivos?.length && plural(c.arquivos.length, 'arquivo', 'arquivos')].filter(Boolean).join(' · ');
+const resumoCampanha = c => [datasCampanha(c) || 'Datas a definir na arte', valorCampanha(c)].filter(Boolean);
 
 // vitrine
-const ABAS_GESTOR = [['ativa', 'Vendendo'], ['rascunho', 'Rascunhos'], ['pausada', 'Pausadas'], ['encerrada', 'Encerradas']];
-const ABAS_VENDEDOR = [['disponiveis', 'Disponíveis'], ['minhas', 'Estou vendendo'], ['encerrada', 'Encerradas']];
-const FILTRO_ABA = { disponiveis: c => c.status !== 'encerrada', minhas: c => c.peguei && c.status !== 'encerrada' };
-let abaCampanhas = null;
 async function montarCampanhas() {
   const carregando = carregarCampanhas();
   desenharCampanhas();
@@ -1471,100 +1115,46 @@ async function montarCampanhas() {
   if (!$('campanhas').hidden) desenharCampanhas();
 }
 function desenharCampanhas() {
-  const lista = campanhasCache(), abasLista = eGestor() ? ABAS_GESTOR : ABAS_VENDEDOR;
-  if (!lista.length && campanhasCarregando) {
-    $('abas-campanhas').replaceChildren();
-    return $('lista-campanhas').replaceChildren(el('p', 'nota', 'Carregando campanhas da planilha…'));
+  $('nova-campanha').hidden = !eGestor();
+  const ids = new Set(campanhasCache().map(c => c.id));
+  // campanha nova que ainda não foi salva fica só no aparelho do criador
+  const locais = eGestor() ? ler(chaveArteCampanha()).filter(r => !ids.has(r.id))
+    .map(r => ({ id: r.id, nome: r.campos.dx_nome || 'Campanha sem nome', status: 'nao-salva', layouts: r.layouts, motions: r.motions, arquivos: r.arquivos, arte: r, mini: r.mini })) : [];
+  const lista = [...locais, ...campanhasCache().filter(c => eGestor() || c.arte?.campos)];
+  if (!lista.length) {
+    return $('lista-campanhas').replaceChildren(campanhasCarregando ? el('p', 'nota', 'Carregando campanhas…')
+      : el('div', 'vazio', eGestor() ? 'Nenhuma campanha ainda. Toque em "+ Nova campanha".' : 'Nenhuma campanha disponível ainda.'));
   }
-  const grupos = Object.fromEntries(abasLista.map(([k]) => [k, lista.filter(FILTRO_ABA[k] ?? (c => (c.status || 'rascunho') === k))]));
-  if (!abasLista.some(([k]) => k === abaCampanhas)) abaCampanhas = abasLista.find(([k]) => grupos[k].length)?.[0] ?? abasLista[0][0];
-  abas($('abas-campanhas'), grupos, abaCampanhas, k => { abaCampanhas = k; desenharCampanhas(); }, abasLista);
-  if (!grupos[abaCampanhas].length) {
-    const vazio = el('div', 'vazio', lista.length ? 'Nenhuma campanha aqui.' : eGestor() ? 'Nenhuma campanha ainda.' : 'Nenhuma campanha disponível ainda.');
-    if (eGestor()) vazio.append(el('br'), Object.assign(el('a', '', 'Criar campanha'), { href: '#/campanha-editar/nova' }));
-    return $('lista-campanhas').replaceChildren(vazio);
-  }
-  $('lista-campanhas').replaceChildren(...grupos[abaCampanhas].map(c => {
-    const card = Object.assign(el('a', 'camp-card'), { href: `#/campanha/${c.id}` }), info = el('div');
-    info.append(seloCampanha(c), el('h2', '', c.nome || 'Campanha sem nome'), ...resumoCampanha(c).map(t => el('p', '', t)));
-    if (temVagas(c)) info.append(barraVagas(c));
-    if (c.peguei) info.append(el('p', 'pegou', 'Você está vendendo'));
+  const SELO = { ativa: ['Publicada', ''], rascunho: ['Rascunho', 'cinza'], 'nao-salva': ['Não salva', 'alerta'] };
+  $('lista-campanhas').replaceChildren(...lista.map(c => {
+    const card = el('article', 'camp-card'), info = el('div'), acoes = el('div', 'acoes-card');
+    const [selo, cls] = SELO[c.status] || [c.status || 'Rascunho', 'cinza'];
+    info.append(...(eGestor() ? [el('span', `selo ${cls}`, selo)] : []),
+      el('h2', '', c.nome || 'Campanha sem nome'), ...resumoCampanha(c).map(t => el('p', '', t)), el('p', 'contagem-camp', contagemCampanha(c)));
+    if (eGestor()) {
+      acoes.append(Object.assign(el('a', 'abrir', 'Editar'), { href: `#/campanha-arte/${c.id}` }),
+        Object.assign(el('button', 'perigo', 'Excluir'), { type: 'button', onclick: () => excluirCampanha(c) }));
+    } else {
+      const minha = excursoes().some(e => e.campanha === c.id);
+      acoes.append(Object.assign(el('button', 'abrir', minha ? 'Abrir minha arte' : 'Fazer minha arte'), { type: 'button', onclick: () => fazerMinhaArte(c) }));
+    }
+    info.append(acoes);
     card.append(miniDe(c.mini), info);
     return card;
   }));
 }
 
-// ficha da campanha
-const BLOCOS = [['embarques', 'Embarque'], ['retorno', 'Retorno'], ['roteiro', 'Roteiro'], ['inclui', 'O que está incluso'],
-  ['nao_inclui', 'O que não está incluso'], ['criancas', 'Crianças'], ['documentos', 'Documentos exigidos'],
-  ['cancelamento', 'Cancelamento'], ['regras', 'Regras e avisos'], ['contato_guia', 'Contato do guia']];
-let fichaId = null;
-async function montarFicha(id) {
-  fichaId = id;
-  const carregando = carregarCampanhas();
-  desenharFicha();
-  carregarVendas(id);
-  try { await carregando; } catch {}
-  if (fichaId === id && !$('campanha').hidden) desenharFicha();
-}
-function desenharFicha() {
-  const c = campanhaPorId(fichaId), ficha = $('ficha');
-  if (!c) {
-    $('form-venda').hidden = true;
-    return ficha.replaceChildren(el('p', 'nota', campanhasCarregando ? 'Carregando a campanha…' : 'Essa campanha não foi encontrada.'));
+async function excluirCampanha(c) {
+  if (!confirm(`Excluir a campanha "${c.nome}"? Os agentes deixam de ver. Não dá pra desfazer.`)) return;
+  try {
+    if (c.status !== 'nao-salva') await api('excluirCampanha', { token: sessao.token, id: c.id });
+    gravar(campanhasCache().filter(x => x.id !== c.id), chaveCampanhas());
+    gravar(ler(chaveArteCampanha()).filter(x => x.id !== c.id), chaveArteCampanha());
+    aviso('Campanha excluída');
+    desenharCampanhas();
+  } catch (e) {
+    if (sessaoInvalida(e)) sair(e.message); else aviso(e.message);
   }
-  const topo = el('div', 'ficha-topo'), info = el('div'), fatos = el('dl', 'fatos'), acoes = el('div', 'acoes-card');
-  const fato = (k, v) => { if (v) fatos.append(el('dt', '', k), el('dd', '', v)); };
-  fato('Datas', datasCampanha(c) || 'A definir');
-  fato('Valor', valorCampanha(c));
-  fato('Vende até', c.limite_venda && dataBR(c.limite_venda));
-  fato('Sinal', c.sinal);
-  fato('Quitar até', c.quitar_ate && dataBR(c.quitar_ate));
-  fato('Pagamento', (c.pagamento || []).join(', '));
-  fato('Comissão', c.comissao);
-  info.append(seloCampanha(c), el('h1', '', c.nome || 'Campanha sem nome'));
-  if (c.resumo) info.append(el('p', 'resumo-camp', c.resumo));
-  info.append(fatos);
-  if (temVagas(c)) info.append(barraVagas(c));
-  if (c.arte?.campos) {
-    const tem = excursoes().some(e => e.campanha === c.id);
-    acoes.append(Object.assign(el('button', 'abrir', tem ? 'Abrir minha arte' : 'Fazer minha arte'), { type: 'button', onclick: () => fazerMinhaArte(c) }));
-  }
-  if (situacaoCampanha(c) === 'ativa') {
-    acoes.append(Object.assign(el('button', '', 'Informar venda'), { type: 'button', onclick: () => {
-      $('form-venda').scrollIntoView({ behavior: 'smooth' });
-      $('form-venda').elements.cliente.focus({ preventScroll: true });
-    } }));
-  }
-  if (eGestor()) {
-    acoes.append(Object.assign(el('a', '', 'Editar campanha'), { href: `#/campanha-editar/${c.id}` }),
-      Object.assign(el('a', '', c.arte?.campos ? 'Editar arte' : 'Montar arte'), { href: `#/campanha-arte/${c.id}` }));
-  }
-  info.append(acoes);
-  if (!c.arte?.campos) info.append(el('p', 'nota', eGestor() ? 'A arte ainda não foi montada.' : 'A arte desta campanha ainda está sendo preparada.'));
-  topo.append(c.mini ? Object.assign(el('img'), { src: c.mini, alt: `Arte da campanha ${c.nome}` }) : el('div', 'sem-mini'), info);
-
-  const blocos = BLOCOS.filter(([k]) => String(c[k] || '').trim()).map(([k, nome]) => {
-    const s = el('section', 'bloco');
-    s.append(el('h2', '', nome), el('p', 'texto-livre', c[k]));
-    return s;
-  });
-  const textos = String(c.textos || '').split(/\n\s*\n/).map(t => t.trim()).filter(Boolean);
-  const links = linhas(c.links).map(l => l.match(/^(.*?)[\s–—:-]*(https?:\/\/\S+)$/)).filter(Boolean);
-  if (textos.length || links.length) {
-    const s = el('section', 'bloco');
-    s.append(el('h2', '', 'Materiais para divulgar'));
-    for (const t of textos) {
-      const m = el('div', 'material');
-      m.append(el('p', 'texto-livre', t), Object.assign(el('button', 'leve', 'Copiar texto'), { type: 'button', onclick: () =>
-        navigator.clipboard.writeText(t).then(() => aviso('Texto copiado. É só colar no WhatsApp.'), () => aviso('Não deu pra copiar. Segure o dedo no texto.')) }));
-      s.append(m);
-    }
-    for (const [, nome, url] of links) s.append(Object.assign(el('a', 'link-material', nome || url), { href: url, target: '_blank', rel: 'noopener' }));
-    blocos.push(s);
-  }
-  ficha.replaceChildren(topo, ...blocos);
-  prepararFormVenda(c);
 }
 
 function fazerMinhaArte(c) {
@@ -1573,212 +1163,52 @@ function fazerMinhaArte(c) {
     const agora = Date.now(), a = arteDe(c);
     const telefone = excursoes().sort((x, y) => y.atualizada - x.atualizada).find(e => e.campos.telefone && !e.campanha)?.campos.telefone;
     ex = { id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 1, pendente: true, nova: false, campanha: c.id, ...a,
-      campos: { ...a.campos, dx_nome: c.nome, ...(telefone && { telefone }) }, mini: c.mini || '' };
+      atual: layoutsDe(c)[0], campos: { ...a.campos, dx_nome: c.nome, logo: '1', ...(telefone && { telefone }) }, mini: c.mini || '' };
     if (!gravar([ex, ...excursoes()])) return;
     agendarSinc();
-  }
-  if (!c.peguei) { // registra quem está vendendo; se falhar, a primeira venda registra de novo
-    api('pegarCampanha', { token: sessao.token, id: c.id }).then(() => guardarCampanha({ ...(campanhaPorId(c.id) ?? c), peguei: true })).catch(() => {});
   }
   location.hash = `#/arte/${ex.id}`;
 }
 
-// vendas
-function prepararFormVenda(c) {
-  const f = $('form-venda'), pode = situacaoCampanha(c) === 'ativa';
-  f.hidden = !pode;
-  if (!pode) return;
-  $('venda-restam').textContent = temVagas(c) ? `Restam ${restantes(c)} ${restantes(c) === 1 ? 'vaga' : 'vagas'} nesta campanha.` : '';
-  const chave = JSON.stringify([c.id, c.embarques, c.pagamento]);
-  if (f.dataset.chave === chave) return; // não apaga o que a pessoa está digitando
-  f.dataset.chave = chave;
-  f.reset();
-  mostrarErro(f.querySelector('.erro'), '');
-  const opcoes = (sel, lista) => sel.replaceChildren(...['', ...lista].map(v => Object.assign(el('option', '', v || 'Escolha'), { value: v })));
-  opcoes(f.elements.embarque, linhas(c.embarques));
-  opcoes(f.elements.pagamento, c.pagamento?.length ? c.pagamento : ['Pix', 'Cartão de crédito', 'Boleto', 'Dinheiro']);
-  f.elements.embarque.closest('label').hidden = !linhas(c.embarques).length;
-}
-$('form-venda').addEventListener('input', e => { if (e.target.name === 'telefone') e.target.value = formatarTelefone(e.target.value); });
-$('form-venda').onsubmit = async e => {
-  e.preventDefault();
-  const f = e.target, erro = f.querySelector('.erro'), bt = f.querySelector('button[type=submit]'), c = campanhaPorId(fichaId);
-  if (!c) return;
-  const cliente = f.elements.cliente.value.trim(), pessoas = parseInt(f.elements.pessoas.value, 10);
-  const msg = !cliente ? 'Digite o nome do cliente.' : !(pessoas >= 1) ? 'Digite quantas pessoas vão.'
-    : temVagas(c) && pessoas > restantes(c) ? `Só restam ${restantes(c)} vagas.` : '';
-  if (msg) return mostrarErro(erro, msg);
-  mostrarErro(erro, '');
-  ocupado(bt, 'Registrando…');
-  const parar = esperar(f, 'Registrando a venda');
-  try {
-    await api('salvarVenda', { token: sessao.token, venda: { campanha: c.id, cliente, pessoas, telefone: f.elements.telefone.value,
-      embarque: f.elements.embarque.value, pagamento: f.elements.pagamento.value, sinal_pago: f.elements.sinal_pago.checked, obs: f.elements.obs.value.trim() } });
-    delete f.dataset.chave; // limpa o formulário no próximo desenho
-    aviso('Venda registrada');
-    await Promise.allSettled([carregarCampanhas().then(() => fichaId === c.id && desenharFicha()), carregarVendas(c.id)]);
-  } catch (err) {
-    if (sessaoInvalida(err)) return sair(err.message);
-    mostrarErro(erro, err.message);
-  } finally {
-    parar();
-    livre(bt);
-  }
-};
-
-const STATUS_VENDA = { pendente: ['Aguardando confirmação', 'alerta'], confirmada: ['Confirmada', ''], cancelada: ['Cancelada', 'off'] };
-let vendas = { id: null, lista: [] };
-async function carregarVendas(id) {
-  const box = $('vendas-campanha'), titulo = () => el('h2', 'rotulo-secao', eMaster() ? 'Vendas' : 'Minhas vendas');
-  if (vendas.id !== id) box.replaceChildren(titulo(), el('p', 'nota', 'Carregando vendas…'));
-  try {
-    const r = await api('vendas', { token: sessao.token, campanha: id });
-    vendas = { id, lista: r.vendas };
-    if (fichaId === id) desenharVendas();
-  } catch (e) {
-    if (sessaoInvalida(e)) return sair(e.message);
-    if (fichaId === id) box.replaceChildren(titulo(), el('p', 'erro', e.message));
-  }
-}
-function desenharVendas() {
-  const lista = [...vendas.lista].sort((a, b) => b.criada - a.criada), itens = [el('h2', 'rotulo-secao', eMaster() ? 'Vendas' : 'Minhas vendas')];
-  if (!lista.length) itens.push(el('p', 'nota', 'Nenhuma venda ainda.'));
-  if (eMaster() && lista.length) {
-    const soma = {};
-    for (const v of lista) if (v.status !== 'cancelada') soma[v.vendedorNome] = (soma[v.vendedorNome] || 0) + v.pessoas;
-    const ranking = el('ol', 'ranking');
-    for (const [nome, n] of Object.entries(soma).sort((a, b) => b[1] - a[1])) ranking.append(el('li', '', `${nome}: ${n} ${n === 1 ? 'pessoa' : 'pessoas'}`));
-    itens.push(el('h3', 'sub', 'Quem mais vendeu'), ranking);
-  }
-  $('vendas-campanha').replaceChildren(...itens, ...lista.map(linhaVenda));
-}
-function linhaVenda(v) {
-  const linha = el('div', 'pessoa'), info = el('div'), acoes = el('div', 'acoes-card'), [txt, cls] = STATUS_VENDA[v.status] || STATUS_VENDA.pendente;
-  info.append(el('strong', '', `${v.cliente}, ${v.pessoas} ${v.pessoas === 1 ? 'pessoa' : 'pessoas'}`),
-    el('small', '', [eMaster() && `Vendedor: ${v.vendedorNome}`, v.telefone, v.embarque && `Embarque: ${v.embarque}`, v.pagamento,
-      v.sinal_pago ? 'Sinal pago' : 'Sinal não pago', v.obs].filter(Boolean).join(' · ')),
-    el('span', `selo ${cls}`, txt));
-  linha.append(info);
-  const mudar = (status, texto, pergunta) => botaoPlanilha(texto, async () => {
-    if (pergunta && !confirm(pergunta)) return;
-    try {
-      await api('salvarVenda', { token: sessao.token, venda: { id: v.id, status } });
-      aviso(status === 'cancelada' ? 'Venda cancelada' : 'Venda confirmada');
-      await Promise.allSettled([carregarVendas(v.campanha), carregarCampanhas().then(() => fichaId === v.campanha && desenharFicha())]);
-    } catch (e) {
-      if (sessaoInvalida(e)) sair(e.message); else aviso(e.message);
-    }
-  }, status === 'cancelada' ? 'perigo' : '');
-  if (eMaster() && v.status !== 'confirmada') acoes.append(mudar('confirmada', v.status === 'cancelada' ? 'Reativar e confirmar' : 'Confirmar'));
-  if (v.status !== 'cancelada' && (eMaster() || v.status === 'pendente')) acoes.append(mudar('cancelada', 'Cancelar', `Cancelar a venda de ${v.cliente}? As vagas voltam para a campanha.`));
-  if (acoes.children.length) linha.append(acoes);
-  return linha;
-}
-
-// formulário da campanha (master)
-const CAMPOS_CAMPANHA = ['nome', 'resumo', 'limite_venda', 'vagas_total', 'embarques', 'retorno', 'sinal', 'quitar_ate', 'comissao',
-  'criancas', 'roteiro', 'inclui', 'nao_inclui', 'documentos', 'cancelamento', 'regras', 'contato_guia', 'textos', 'links'];
-let editandoId = null;
-async function montarFormCampanha(id) {
-  const f = $('form-campanha');
-  editandoId = id && id !== 'nova' ? id : null;
-  let c = editandoId && campanhaPorId(editandoId);
-  if (editandoId && !c) {
-    try { await carregarCampanhas(); } catch {}
-    c = campanhaPorId(editandoId);
-    if (!c) return location.replace('#/campanhas');
-  }
-  f.reset();
-  mostrarErro(f.querySelector('.erro'), '');
-  $('titulo-editar').textContent = c ? 'Editar campanha' : 'Nova campanha';
-  $('voltar-campanha').href = c ? `#/campanha/${c.id}` : '#/campanhas';
-  for (const k of CAMPOS_CAMPANHA) f.elements[k].value = c?.[k] ?? '';
-  f.elements.status.value = c?.status || 'rascunho';
-  f.querySelectorAll('[name=pagamento]').forEach(x => x.checked = !!c?.pagamento?.includes(x.value));
-  $('arte-campanha').replaceChildren(...(c?.arte?.campos
-    ? [miniDe(c.mini), el('p', '', [datasCampanha(c), valorCampanha(c)].filter(Boolean).join('. '))]
-    : [el('p', 'ajuda', 'Datas, valor, título e foto são escolhidos na arte. Os vendedores só trocam o telefone.')]));
-  f.querySelector('[value=arte]').textContent = c?.arte?.campos ? 'Salvar e editar a arte' : 'Salvar e montar a arte';
-  $('excluir-campanha').hidden = !c;
-}
-$('form-campanha').onsubmit = async e => {
-  e.preventDefault();
-  const f = e.target, erro = f.querySelector('.erro'), bt = e.submitter || f.querySelector('.botao-grande'), paraArte = bt.value === 'arte';
-  const dados = Object.fromEntries(CAMPOS_CAMPANHA.map(k => [k, f.elements[k].value.trim()]));
-  dados.status = f.elements.status.value;
-  dados.pagamento = [...f.querySelectorAll('[name=pagamento]:checked')].map(x => x.value);
-  const atual = editandoId && campanhaPorId(editandoId);
-  const msg = !dados.nome ? 'Dê um nome para a campanha.'
-    : dados.status === 'ativa' && !paraArte && !atual?.arte?.campos ? 'Monte a arte antes de colocar a campanha para vender: use "Salvar e montar a arte".' : '';
-  if (msg) {
-    mostrarErro(erro, msg);
-    aviso(msg);
-    if (!dados.nome) f.elements.nome.focus();
-    return;
-  }
-  mostrarErro(erro, '');
-  ocupado(bt, 'Salvando…');
-  const parar = esperar(bt.parentElement, 'Salvando a campanha');
-  try {
-    const r = await api('salvarCampanha', { token: sessao.token, campanha: { id: editandoId || '', ...dados } });
-    guardarCampanha(r.campanha);
-    aviso('Campanha salva');
-    location.hash = paraArte ? `#/campanha-arte/${r.campanha.id}` : `#/campanha/${r.campanha.id}`;
-  } catch (err) {
-    if (sessaoInvalida(err)) return sair(err.message);
-    mostrarErro(erro, err.message);
-    aviso(err.message);
-  } finally {
-    parar();
-    livre(bt);
-  }
-};
-$('excluir-campanha').onclick = async () => {
-  const c = campanhaPorId(editandoId), bt = $('excluir-campanha');
-  if (!c || !confirm(`Excluir a campanha "${c.nome}"? Não dá pra desfazer.`)) return;
-  ocupado(bt, 'Excluindo na planilha…');
-  try {
-    await api('excluirCampanha', { token: sessao.token, id: c.id });
-    gravar(campanhasCache().filter(x => x.id !== c.id), chaveCampanhas());
-    aviso('Campanha excluída');
-    location.hash = '#/campanhas';
-  } catch (e) {
-    if (sessaoInvalida(e)) return sair(e.message);
-    aviso(e.message);
-  } finally {
-    livre(bt);
-  }
-};
-
 // arte da campanha: mesmo editor, sem o passo de dados; fica como rascunho no aparelho até salvar
 function rascunhoArteCampanha(id) {
-  const c = campanhaPorId(id);
-  if (!c) return null;
   const lista = ler(chaveArteCampanha());
   let r = lista.find(x => x.id === id);
-  if (!r) {
-    const a = c.arte?.campos ? arteDe(c)
-      : { atual: 0, foto: 'layout', personagem: true, ajuste: {}, campos: Object.fromEntries(Object.keys(VALORES).filter(k => EDITAVEL.test(k)).map(k => [k, VALORES[k]])) };
-    r = { id, tipo: 'campanha', versao: 0, nova: false, pendente: false, ...a, mini: c.mini || '' };
-    gravar([r, ...lista], chaveArteCampanha());
-  }
+  if (r) return r;
+  const c = id === 'nova' ? { id: novoId(), nome: '', status: 'rascunho' } : campanhaPorId(id);
+  if (!c) return null;
+  const a = c.arte?.campos ? arteDe(c)
+    : { atual: 0, foto: 'layout', personagem: 'arte', ajuste: {}, campos: Object.fromEntries(Object.keys(VALORES).filter(k => EDITAVEL.test(k) || TITULO.test(k)).map(k => [k, VALORES[k]])) };
+  r = { id: c.id, tipo: 'campanha', versao: 0, nova: false, pendente: false, ...a, campos: { ...a.campos, dx_nome: c.nome },
+    layouts: layoutsDe(c), motions: c.motions || [], arquivos: c.arquivos || [], datas: c.datas === 'master' ? 'master' : 'agente', status: c.status === 'ativa' ? 'ativa' : 'rascunho', mini: c.mini || '' };
+  gravar([r, ...lista], chaveArteCampanha());
   return r;
+}
+// o que não é campo do formulário (artes, vídeos, arquivos, publicação) muda aqui e vai direto para o rascunho
+function mudarCampanha(fn) {
+  const lista = ler(chaveArteCampanha()), r = lista.find(x => x.id === aberta?.id);
+  if (!r) return;
+  fn(r); fn(aberta);
+  gravar(lista, chaveArteCampanha());
 }
 $('salvar-campanha').onclick = async () => {
   const r = aberta, bt = $('salvar-campanha');
   if (r?.tipo !== 'campanha' || !validarValores()) return;
+  const d = estadoAtual(r), nome = (d.campos.dx_nome || '').trim();
+  if (!nome) { irPara(P_CONTATO, 'dx_nome'); return aviso('Dê um nome para a campanha.'); }
+  if (!r.layouts.length) { irPara(P_ARTE); return aviso('Marque pelo menos uma arte para a campanha.'); }
   clearTimeout(salvarTimer);
-  const d = estadoAtual(r);
   ocupado(bt, 'Salvando…');
   const parar = esperar($('espera-editor'), 'Salvando a arte na campanha');
   try {
-    const res = await api('salvarCampanha', { token: sessao.token, campanha: { id: r.id, mini: miniatura(),
+    const res = await api('salvarCampanha', { token: sessao.token, campanha: { id: r.id, nome, status: r.status, layouts: r.layouts,
+      motions: r.motions, arquivos: r.arquivos, datas: r.datas, mini: miniatura(),
       arte: { atual: d.atual, foto: d.foto, personagem: d.personagem, ajuste: d.ajuste, campos: d.campos } } });
     guardarCampanha(res.campanha);
     gravar(ler(chaveArteCampanha()).filter(x => x.id !== r.id), chaveArteCampanha());
     aberta = null; // saiu salvo: não volta a gravar rascunho
-    aviso('Arte salva na campanha');
-    location.hash = `#/campanha/${r.id}`;
+    aviso(r.status === 'ativa' ? 'Campanha salva e publicada' : 'Campanha salva como rascunho');
+    location.hash = '#/campanhas';
   } catch (err) {
     if (sessaoInvalida(err)) return sair(err.message);
     aviso(err.message);
@@ -1788,191 +1218,168 @@ $('salvar-campanha').onclick = async () => {
   }
 };
 
-// ---------- passageiros: a planilha de quem vai em cada excursão ----------
-const COLUNAS = [['nome', 'Nome', 200, 'text'], ['telefone', 'Telefone', 150, 'tel'], ['documento', 'Documento', 140, 'text'],
-  ['nascimento', 'Nascimento', 150, 'date'], ['embarque', 'Embarque', 180, 'text'], ['poltrona', 'Poltrona', 90, 'text'],
-  ['pagamento', 'Pagamento', 140, 'text'], ['sinal', 'Sinal pago', 90, 'check'], ['falta', 'Falta (R$)', 110, 'text'],
-  ['obs', 'Observação', 240, 'text']];
-const passageiroCheio = p => Object.values(p || {}).some(v => v !== '' && v !== false && v != null);
-function idade(d) {
-  if (!d) return '';
-  const n = new Date(d + 'T12:00:00'), h = new Date();
-  let a = h.getFullYear() - n.getFullYear();
-  if (h < new Date(h.getFullYear(), n.getMonth(), n.getDate())) a--;
-  return a >= 0 && a < 130 ? a : '';
-}
-function dataISO(v) {  // "5/3/1990" ou "1990-03-05" -> "1990-03-05"
-  const s = String(v).trim(), m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
-  if (m) {
-    const ano = m[3].length === 2 ? (+m[3] > 30 ? '19' : '20') + m[3] : m[3];
-    return `${ano}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
-  }
-  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : '';
-}
-(() => {  // cabeçalho da tabela
-  const t = $('pass-tabela'), cols = t.appendChild(el('colgroup'));
-  const ws = [44, ...COLUNAS.map(c => c[2]), 44];
-  for (const w of ws) cols.appendChild(el('col')).style.width = w + 'px';
-  t.style.width = ws.reduce((a, b) => a + b) + 'px';
-  const tr = t.createTHead().insertRow();
-  tr.append(el('th', '', 'Nº'), ...COLUNAS.map(c => el('th', '', c[1])), el('th'));
-  t.createTBody();
-})();
-let passId = null;
-const excursaoPass = () => excursoes().find(e => e.id === passId);
-function montarPassageiros(id) {
-  passId = id;
-  const ex = excursaoPass();
-  if (!ex) return location.replace('#/excursoes');
-  $('pass-titulo').textContent = `Passageiros – ${nomeDe(ex)}`;
-  desenharPassageiros();
-}
-function resumoPassageiros() {
-  const ex = excursaoPass(), n = (ex.passageiros || []).filter(passageiroCheio).length, [ida, volta] = periodo(ex);
-  const vagas = ex.campos.dx_vagas;
-  $('pass-resumo').textContent = [ida ? `Ida ${dataBR(ida)}, volta ${dataBR(volta)}` : 'Sem datas',
-    `${n} ${n === 1 ? 'passageiro' : 'passageiros'}${vagas ? ` de ${vagas} vagas` : ''}`,
-    vagas && n > +vagas ? 'passou do número de vagas' : ''].filter(Boolean).join(' · ');
-  $('sinc-pass').textContent = textoSinc();
-}
-function desenharPassageiros(foco) {
-  const ex = excursaoPass(), lista = ex.passageiros || [];
-  const linha = (p, i, nova) => {
-    const tr = el('tr', nova ? 'nova' : '');
-    tr.append(el('td', 'num', nova ? '+' : String(i + 1)));
-    for (const [k, nome, , tipo] of COLUNAS) {
-      const td = el('td'), inp = el('input');
-      if (tipo === 'check') { inp.type = 'checkbox'; inp.checked = !!p[k]; } else { inp.type = tipo; inp.value = p[k] ?? ''; }
-      if (k === 'nome' && nova) inp.placeholder = 'Novo passageiro…';
-      Object.assign(inp.dataset, { linha: i, col: k });
-      inp.setAttribute('aria-label', `${nome}, ${nova ? 'nova linha' : `linha ${i + 1}`}`);
-      td.append(inp);
-      if (k === 'nascimento') td.append(el('small', 'idade', idade(p[k]) !== '' ? `${idade(p[k])} anos` : ''));
-      tr.append(td);
-    }
-    const td = tr.appendChild(el('td'));
-    if (!nova) {
-      td.append(Object.assign(el('button', 'tirar', '×'), { type: 'button', title: 'Tirar da lista', onclick: () => {
-        if (confirm(`Tirar ${p.nome || 'este passageiro'} da lista?`)) mudarPassageiros(l => l.splice(i, 1));
-      } }));
-    }
-    return tr;
-  };
-  $('pass-tabela').tBodies[0].replaceChildren(...lista.map((p, i) => linha(p, i)), linha({}, lista.length, true));
-  if (foco) $('pass-tabela').querySelector(`input[data-linha="${foco.linha}"][data-col="${foco.col}"]`)?.focus();
-  resumoPassageiros();
-}
-function mudarPassageiros(fn, redesenhar = true) {
-  const lista = excursoes(), i = lista.findIndex(e => e.id === passId);
-  if (i < 0) return;
-  const ex = lista[i], pass = structuredClone(ex.passageiros || []);
-  fn(pass);
-  while (pass.length && !passageiroCheio(pass.at(-1))) pass.pop();  // linha vazia no fim não conta
-  const n = pass.filter(passageiroCheio).length;
-  Object.assign(ex, { passageiros: pass, campos: n ? { ...ex.campos, dx_vendidas: String(n) } : ex.campos,  // vendidas = passageiros
-    atualizada: Date.now(), versao: (ex.versao || 0) + 1, pendente: true, nova: false });
-  if (!gravar(lista)) return;
-  agendarSinc(2000);
-  if (redesenhar) desenharPassageiros(redesenhar === true ? null : redesenhar); else resumoPassageiros();
-}
-$('pass-tabela').addEventListener('input', e => {
-  const t = e.target, i = +t.dataset.linha, k = t.dataset.col;
-  if (!k) return;
-  let v = t.type === 'checkbox' ? t.checked : t.value;
-  if (k === 'telefone') t.value = v = formatarTelefone(v);
-  if (k === 'nascimento') t.nextSibling.textContent = idade(v) !== '' ? `${idade(v)} anos` : '';
-  const nova = i >= (excursaoPass().passageiros || []).length;
-  mudarPassageiros(l => { (l[i] ??= {})[k] = v; }, nova ? { linha: i, col: k } : false);  // linha nova: redesenha e volta pra célula
+// ---------- materiais: vídeos animados e arquivos ----------
+// arquivos ficam no IndexedDB deste navegador (na demonstração); no sistema do resort vão para o servidor
+// ponytail: arquivo tirado da lista continua no IndexedDB até limpar o navegador
+const banco = new Promise((ok, erro) => {
+  const r = indexedDB.open('village-arquivos', 1);
+  r.onupgradeneeded = () => r.result.createObjectStore('arquivos');
+  r.onsuccess = () => ok(r.result);
+  r.onerror = () => erro(r.error);
 });
-// colar da planilha (Excel/Google): cada linha vira um passageiro, as colunas seguem a ordem da tabela
-$('pass-tabela').addEventListener('paste', e => {
-  const txt = (e.clipboardData?.getData('text') || '').replace(/\r/g, '').replace(/\n+$/, '');
-  const k = e.target.dataset?.col;
-  if (!k || !/[\t\n]/.test(txt)) return;
-  e.preventDefault();
-  const i0 = +e.target.dataset.linha, c0 = COLUNAS.findIndex(c => c[0] === k);
-  const linhas = txt.split('\n').map(l => l.split('\t'));
-  mudarPassageiros(l => linhas.forEach((cols, j) => {
-    const p = l[i0 + j] ??= {};
-    cols.forEach((v, m) => {
-      const col = COLUNAS[c0 + m];
-      if (!col) return;
-      const [chave, , , tipo] = col;
-      p[chave] = tipo === 'check' ? /^(s|sim|x|ok|pago|1|true|verdadeiro)$/i.test(v.trim())
-        : tipo === 'date' ? dataISO(v) : chave === 'telefone' ? formatarTelefone(v) : v.trim();
-    });
-  }));
-  aviso(`${linhas.length} ${linhas.length === 1 ? 'linha colada' : 'linhas coladas'}`);
-});
-$('pass-baixar').onclick = () => {
-  const ex = excursaoPass(), lista = (ex.passageiros || []).filter(passageiroCheio);
-  const cab = ['Nº', ...COLUNAS.map(c => c[1]), 'Idade'];
-  const linhas = lista.map((p, i) => [i + 1, ...COLUNAS.map(([k, , , tipo]) =>
-    tipo === 'check' ? (p[k] ? 'Sim' : 'Não') : tipo === 'date' ? dataBR(p[k] || '') : p[k] ?? ''), idade(p.nascimento)]);
-  // CSV com ; e BOM: o Excel em português abre direto com acentos e colunas certas
-  const csv = '\ufeff' + [cab, ...linhas].map(l => l.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\r\n');
-  const nome = nomeDe(ex).replace(/[\\/:*?"<>|]+/g, ' ').trim();
-  Object.assign(el('a'), { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })), download: `Passageiros - ${nome}.csv` }).click();
-  aviso('Planilha baixada');
-};
+async function arquivoDB(modo, fn) {
+  const db = await banco;
+  return new Promise((ok, erro) => {
+    const t = db.transaction('arquivos', modo), r = fn(t.objectStore('arquivos'));
+    t.oncomplete = () => ok(r.result);
+    t.onerror = () => erro(t.error);
+  });
+}
+const tamanhoArq = b => b > 1e6 ? `${(b / 1e6).toFixed(1).replace('.', ',')} MB` : `${Math.max(1, Math.round(b / 1e3))} KB`;
+function baixar(blob, nome) {
+  const a = Object.assign(el('a'), { href: URL.createObjectURL(blob), download: nome });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+}
+async function baixarArquivo(x) {
+  const blob = await arquivoDB('readonly', st => st.get(x.id)).catch(() => null);
+  if (blob) baixar(blob, x.nome); else aviso('Esse arquivo não está neste aparelho (na demonstração os arquivos ficam no navegador de quem enviou).');
+}
 
-// ---------- agenda: excursões e campanhas no calendário ----------
-let mesAgenda = null;
-const isoDia = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-function montarAgenda() {
-  if (!mesAgenda) { const h = new Date(); mesAgenda = new Date(h.getFullYear(), h.getMonth(), 1); }
-  desenharAgenda();
-  carregarCampanhas().then(() => { if (!$('agenda').hidden) desenharAgenda(); }).catch(() => {});
+// animação: foto se afasta devagar e os textos entram de cima para baixo; t de 0 a 1
+const suave = x => 1 - (1 - x) ** 3;
+let tocando = null;
+function tocar(cv2, i) { // repete até parar
+  const g = cv2.getContext('2d'), k = cv2.width / tamanho(i)[0];
+  let t0 = performance.now();
+  const passo = () => {
+    let s = (performance.now() - t0) / 1000;
+    if (s > 9) { t0 = performance.now(); s = 0; }
+    desenhar(g, i, k, null, s);
+    tocando.raf = requestAnimationFrame(passo);
+  };
+  tocando = { cv2, raf: requestAnimationFrame(passo) };
 }
-function eventosAgenda() {
-  const evs = excursoes().map(ex => {
-    const [ida, volta] = periodo(ex), n = (ex.passageiros || []).filter(passageiroCheio).length;
-    return ida && { tipo: 'excursao', nome: nomeDe(ex), ida, volta: volta || ida, href: `#/passageiros/${ex.id}`,
-      info: `${n} ${n === 1 ? 'passageiro' : 'passageiros'}` };
+async function gravarVideo(i, seg = 8) {
+  const [W, H] = tamanho(i), c = Object.assign(document.createElement('canvas'), { width: W, height: H }), g = c.getContext('2d');
+  const tipo = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'].find(t => MediaRecorder.isTypeSupported?.(t));
+  if (!tipo || !c.captureStream) throw new Error('Este navegador não grava vídeo. Use o Chrome.');
+  desenhar(g, i, 1, null, 0);
+  // ponytail: MediaRecorder grava em tempo real (8 s levam 8 s); trocar por WebCodecs + Mediabunny se ficar lento
+  const rec = new MediaRecorder(c.captureStream(30), { mimeType: tipo, videoBitsPerSecond: 8e6 }), partes = [];
+  rec.ondataavailable = e => e.data.size && partes.push(e.data);
+  const parou = new Promise(ok => rec.onstop = ok);
+  rec.start();
+  const t0 = performance.now();
+  await new Promise(ok => {
+    const passo = () => {
+      const s = (performance.now() - t0) / 1000;
+      desenhar(g, i, 1, null, s);
+      if (s < seg) requestAnimationFrame(passo); else ok();
+    };
+    requestAnimationFrame(passo);
   });
-  if (eMaster() && painelDados) {
-    evs.push(...painelDados.filter(x => x.vendedor !== sessao.usuario.email && x.ida).map(x => ({
-      tipo: 'outros', nome: `${x.nome || 'Excursão'} · ${x.vendedorNome}`, ida: x.ida, volta: x.volta || x.ida, href: '#/painel',
-      info: textoVagas(x.vagas_total, x.vagas_vendidas) })));
-  }
-  evs.push(...campanhasCache().map(c => {
-    const [ida, volta] = c.arte?.campos ? periodo(c.arte) : [];
-    return ida && { tipo: 'campanha', nome: c.nome || 'Campanha', ida, volta: volta || ida, href: `#/campanha/${c.id}`,
-      info: SELO_CAMPANHA[situacaoCampanha(c)][0] };
-  }));
-  return evs.filter(Boolean);
+  rec.stop();
+  await parou;
+  return new Blob(partes, { type: tipo.split(';')[0] });
 }
-function desenharAgenda() {
-  const ano = mesAgenda.getFullYear(), mes = mesAgenda.getMonth(), h = hoje(), evs = eventosAgenda();
-  const titulo = mesAgenda.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-  $('agenda-mes').textContent = titulo.charAt(0).toUpperCase() + titulo.slice(1);
-  const inicio = new Date(ano, mes, 1 - new Date(ano, mes, 1).getDay());  // domingo da primeira semana
-  const dias = Array.from({ length: 42 }, (_, k) => {
-    const d = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate() + k), s = isoDia(d);
-    const cel = el('div', `dia${d.getMonth() !== mes ? ' fora' : ''}${s === h ? ' hoje' : ''}`);
-    cel.append(el('span', 'num-dia', String(d.getDate())));
-    for (const ev of evs.filter(e => e.ida <= s && s <= e.volta)) {
-      cel.append(Object.assign(el('a', `ev ${ev.tipo}`, ev.nome), { href: ev.href, title: `${ev.nome} · ${dataBR(ev.ida)} a ${dataBR(ev.volta)}` }));
+
+function linhaMotion(m, extra) {
+  const i = layoutDe(m), [W, H] = tamanho(i), box = el('div', 'material');
+  const mini = Object.assign(el('canvas'), { width: 144, height: Math.round(144 * H / W) }), info = el('div'), acoes = el('div', 'acoes-card');
+  desenhar(mini.getContext('2d'), i, 144 / W);
+  const ver = Object.assign(el('button', '', 'Ver'), { type: 'button' });
+  ver.onclick = () => {
+    const parar = tocando?.cv2 === mini;
+    cancelAnimationFrame(tocando?.raf);
+    tocando = null;
+    document.querySelectorAll('.material button[data-ver]').forEach(b => b.textContent = 'Ver');
+    if (parar) return desenhar(mini.getContext('2d'), i, 144 / W);
+    ver.textContent = 'Parar';
+    tocar(mini, i);
+  };
+  ver.dataset.ver = '';
+  info.append(el('strong', '', m.nome), el('small', '', m.desc), acoes);
+  acoes.append(...extra, ver);
+  box.append(mini, info);
+  return box;
+}
+// baixa o MP4 do motion; serve ao agente e a quem cria a campanha (ele também quer o vídeo pronto)
+function botaoVideo(m) {
+  const bt = Object.assign(el('button', 'abrir', 'Baixar vídeo'), { type: 'button' });
+  bt.onclick = async () => {
+    if (!validarTelefone()) return;
+    ocupado(bt, 'Gravando…');
+    const caixa = $('espera-video').appendChild(el('p', 'espera'));
+    caixa.textContent = `Gravando o vídeo "${m.nome}" com o contato da arte. Leva uns 8 segundos, não saia desta tela.`;
+    try {
+      const blob = await gravarVideo(layoutDe(m));
+      baixar(blob, `village-${m.id}.${blob.type.includes('mp4') ? 'mp4' : 'webm'}`);
+      aviso('Vídeo baixado');
+    } catch (e) {
+      aviso(e.message);
+    } finally {
+      caixa.remove();
+      livre(bt);
     }
-    return cel;
-  });
-  $('calendario').replaceChildren(...['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(d => el('div', 'dia-semana', d)), ...dias);
-  const ini = isoDia(new Date(ano, mes, 1)), fim = isoDia(new Date(ano, mes + 1, 0));
-  const doMes = evs.filter(e => e.ida <= fim && e.volta >= ini).sort((a, b) => a.ida.localeCompare(b.ida));
-  $('agenda-lista').replaceChildren(...(doMes.length ? doMes.map(ev => {
-    const a = Object.assign(el('a', `item-agenda ${ev.tipo}`), { href: ev.href });
-    a.append(el('strong', '', ev.nome), el('small', '', [`${dataBR(ev.ida)} a ${dataBR(ev.volta)}`, ev.info].filter(Boolean).join(' · ')));
-    return a;
-  }) : [el('div', 'vazio', 'Nada marcado neste mês.')]));
+  };
+  return bt;
 }
-$('mes-ant').onclick = () => { mesAgenda = new Date(mesAgenda.getFullYear(), mesAgenda.getMonth() - 1, 1); desenharAgenda(); };
-$('mes-prox').onclick = () => { mesAgenda = new Date(mesAgenda.getFullYear(), mesAgenda.getMonth() + 1, 1); desenharAgenda(); };
-$('mes-hoje').onclick = () => { mesAgenda = null; montarAgenda(); };
+function montarMateriais() {
+  cancelAnimationFrame(tocando?.raf);
+  tocando = null;
+  const criador = aberta?.tipo === 'campanha', c = aberta?.campanha && campanhaPorId(aberta.campanha);
+  $('mat-criador').hidden = !criador;
+  $('mat-agente').hidden = criador;
+  if (criador) {
+    $('motions').replaceChildren(...MOTIONS.map(m => {
+      const lb = el('label', 'inclui'), cb = Object.assign(el('input'), { type: 'checkbox', checked: aberta.motions.includes(m.id) });
+      cb.onchange = () => mudarCampanha(r => r.motions = cb.checked ? [...new Set([...r.motions, m.id])] : r.motions.filter(x => x !== m.id));
+      lb.append(cb, 'Incluir');
+      return linhaMotion(m, [lb, botaoVideo(m)]);
+    }));
+    $('arquivos').replaceChildren(...aberta.arquivos.map(x => {
+      const box = el('div', 'material arq'), info = el('div');
+      info.append(el('strong', '', x.nome), el('small', '', tamanhoArq(x.tamanho)));
+      box.append(info, Object.assign(el('button', 'leve', 'Tirar'), { type: 'button', onclick: () => {
+        mudarCampanha(r => r.arquivos = r.arquivos.filter(y => y.id !== x.id));
+        montarMateriais();
+      } }));
+      return box;
+    }));
+    $('publicar').checked = aberta.status === 'ativa';
+    return;
+  }
+  const motions = MOTIONS.filter(m => c?.motions?.includes(m.id)), arqs = c?.arquivos || [];
+  $('videos-agente').replaceChildren(...(motions.length ? motions.map(m => linhaMotion(m, [botaoVideo(m)]))
+    : [el('p', 'nota', 'Esta campanha não tem vídeos.')]));
+  $('arquivos-agente').replaceChildren(...(arqs.length ? arqs.map(x => {
+    const box = el('div', 'material arq'), info = el('div');
+    info.append(el('strong', '', x.nome), el('small', '', tamanhoArq(x.tamanho)));
+    box.append(info, Object.assign(el('button', 'leve', 'Baixar'), { type: 'button', onclick: () => baixarArquivo(x) }));
+    return box;
+  }) : [el('p', 'nota', 'Esta campanha não tem arquivos.')]));
+}
+const validarTelefone = () => form.elements.telefone.value.replace(/\D/g, '').length >= 10 || (irPara(P_CONTATO, 'telefone'), aviso('Coloque o seu telefone antes de baixar.'), false);
+$('add-arquivo').onclick = () => $('arquivo-input').click();
+$('arquivo-input').onchange = async e => {
+  const arqs = [...e.target.files];
+  e.target.value = '';
+  for (const a of arqs) {
+    if (a.size > 20e6) { aviso(`"${a.name}" passa de 20 MB.`); continue; }
+    const x = { id: novoId(), nome: a.name, tamanho: a.size, tipo: a.type };
+    try { await arquivoDB('readwrite', st => st.put(a, x.id)); }
+    catch { aviso('Não deu pra guardar o arquivo neste navegador.'); continue; }
+    mudarCampanha(r => r.arquivos = [...r.arquivos, x]);
+  }
+  montarMateriais();
+};
+$('publicar').onchange = e => mudarCampanha(r => r.status = e.target.checked ? 'ativa' : 'rascunho');
+$('datas-agente').onchange = e => mudarCampanha(r => r.datas = e.target.checked ? 'agente' : 'master');
 
 // ---------- telas ----------
 const TELAS = { entrar: 'Entrar', 'criar-senha': 'Crie sua senha', 'criar-master': 'Criar conta master', inicio: 'Início',
-  editor: 'Criar arte', excursoes: 'Minhas excursões', agenda: 'Agenda', passageiros: 'Passageiros', campanhas: 'Campanhas', campanha: 'Campanha', 'campanha-editar': 'Campanha',
-  painel: 'Painel', contas: 'Contas' };
+  editor: 'Criar arte', excursoes: 'Minhas artes', campanhas: 'Campanhas' };
 function rota() {
   const [pagina, id] = location.hash.replace(/^#\/?/, '').split('/');
   let tela;
@@ -1988,7 +1395,8 @@ function rota() {
     abrirExcursao(ex);
   } else if (pagina === 'campanha-arte' && eGestor()) {
     const r = rascunhoArteCampanha(id);
-    if (!r) return location.replace(id ? `#/campanha/${id}` : '#/campanhas');
+    if (!r) return location.replace('#/campanhas');
+    if (id === 'nova') return location.replace(`#/campanha-arte/${r.id}`);
     tela = 'editor';
     abrirExcursao(r);
   } else {
@@ -1997,22 +1405,13 @@ function rota() {
     aberta = null;
     const velho = Date.now() - ultimoPuxar > 60000;
     if (pagina === 'excursoes') { tela = 'excursoes'; montarExcursoes(); if (velho) puxar(); }
-    else if (pagina === 'painel' && eMaster()) { tela = 'painel'; montarPainel(); }
-    else if (pagina === 'contas' && eMaster()) { tela = 'contas'; $('resultado-conta').hidden = true; montarContas(); }
-    else if (pagina === 'agenda') { tela = 'agenda'; montarAgenda(); if (velho) puxar(); }
-    else if (pagina === 'passageiros' && id) { tela = 'passageiros'; montarPassageiros(id); }
     else if (pagina === 'campanhas') { tela = 'campanhas'; montarCampanhas(); }
-    else if (pagina === 'campanha' && id) { tela = 'campanha'; montarFicha(id); }
-    else if (pagina === 'campanha-editar' && eGestor()) { tela = 'campanha-editar'; montarFormCampanha(id); }
     else { tela = 'inicio'; montarInicio(); if (velho) puxar(); }
   }
   for (const t of Object.keys(TELAS)) $(t).hidden = t !== tela;
   $('menu').hidden = $('conta').hidden = !sessao;
   if (sessao) $('nome-usuario').textContent = sessao.usuario.nome;
-  document.querySelectorAll('[data-master]').forEach(e => e.hidden = !eMaster());
-  document.querySelectorAll('[data-gestor]').forEach(e => e.hidden = !eGestor());
-  const noMenu = tela.startsWith('campanha') || aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas'
-    : tela === 'passageiros' ? 'excursoes' : tela;
+  const noMenu = aberta?.tipo === 'campanha' || aberta?.campanha ? 'campanhas' : tela;
   document.querySelectorAll('.menu a').forEach(a => {
     if (a.dataset.tela === noMenu) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
@@ -2022,6 +1421,8 @@ function rota() {
   mostrarSinc();
 }
 
+const numero = s => parseFloat(String(s ?? '').replace(/\./g, '').replace(',', '.')) || 0;
+
 // ---------- campos da arte ----------
 const nPacotes = Math.max(...Object.keys(VALORES).map(k => +(k.match(/^preco_(\d+)$/)?.[1] ?? 0)));
 for (let n = 1; n <= nPacotes; n++) {
@@ -2029,6 +1430,14 @@ for (let n = 1; n <= nPacotes; n++) {
   p.dataset.pacote = n;
   const formas = String(VALORES[`pag_${n}`] ?? '').split(',').filter(Boolean);
   p.innerHTML = `<h3>${nPacotes === 2 ? (n === 1 ? 'Pacote de cima' : 'Pacote de baixo') : 'Pacote ' + n}</h3>
+    <details class="calc" data-calc="${n}"><summary>Calcular pelo preço do pacote</summary>
+      <label>Preço do pacote sem desconto<span class="dinheiro"><span>R$</span>
+        <input class="campo" name="total_${n}" inputmode="decimal" autocomplete="off" placeholder="5.250,00"></span></label>
+      <label>Preço do pacote com desconto<span class="dinheiro"><span>R$</span>
+        <input class="campo" name="total_desc_${n}" inputmode="decimal" autocomplete="off" placeholder="2.916,00"></span></label>
+      <output aria-live="polite"></output>
+      <span class="ajuda">Divide pelas parcelas e preenche o valor e o valor antigo. O selo de % OFF se ajusta sozinho.</span>
+    </details>
     <label>Valor por dia para o casal<span class="dinheiro"><span>R$</span>
       <input class="campo" name="preco_${n}" inputmode="decimal" autocomplete="off" placeholder="416,57"></span></label>
     <label>Valor antigo (sai riscado)<span class="dinheiro"><span>R$</span>
@@ -2051,12 +1460,14 @@ for (let n = 1; n <= nPacotes; n++) {
 
 function preencher(campos) {
   for (const c of form.querySelectorAll('input[name], textarea[name]')) c.value = campos[c.name] ?? VALORES[c.name] ?? '';
+  document.querySelectorAll('.calc').forEach(d => d.open = !!campos[`total_desc_${d.dataset.calc}`]);
   for (let n = 1; n <= nPacotes; n++) { // excursões antigas tinham um "parcelas" só para todos os pacotes
     const k = `parcelas_${n}`;
     if (!(k in campos) && campos.parcelas) form.elements[k].value = campos.parcelas;
   }
   mostrarParcelas();
   mostrarPagamentos();
+  calcular();
 }
 
 function formatarTelefone(s) {
@@ -2068,6 +1479,23 @@ function formatarTelefone(s) {
 function normalizarPreco(s) {
   const m = s.replace(/[^\d,.]/g, '').replace('.', ',').match(/^(\d{1,3})(?:,(\d{0,2}))?$/);
   return m ? `${m[1]},${(m[2] ?? '').padEnd(2, '0')}` : s;
+}
+
+// preço total do pacote -> valor da parcela (o número grande) e valor antigo riscado
+const reais = v => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function calcular(n) {
+  for (const d of document.querySelectorAll('.calc')) {
+    const k = d.dataset.calc;
+    if (n && n !== k) continue;
+    const cheio = numero(form.elements[`total_${k}`].value), desc = numero(form.elements[`total_desc_${k}`].value), x = nParcelas(`parcelas_${k}`);
+    const out = d.querySelector('output');
+    if (!desc) { out.textContent = ''; continue; }
+    const por = Math.round(desc / x * 100) / 100, de = cheio > desc ? Math.round(cheio / x) : 0;
+    if (Math.max(por, de) >= 1000) { out.textContent = `A parcela fica R$ ${reais(Math.max(por, de))}: aumente as parcelas (a arte cabe até R$ 999).`; continue; }
+    form.elements[`preco_${k}`].value = reais(por);
+    form.elements[`preco_de_${k}`].value = de ? String(de) : '';
+    out.textContent = `${x}x de ${de ? `R$ ${de} por ` : ''}R$ ${reais(por)}${de ? ` (${Math.round((1 - desc / cheio) * 100)}% OFF)` : ''}`;
+  }
 }
 
 // parcelas e formas de pagamento são por pacote; o campo escondido guarda o texto que vai na arte
@@ -2093,6 +1521,7 @@ $('pacotes').addEventListener('click', e => {
   const k = bt.closest('[data-key]').dataset.key;
   form.elements[k].value = `${nParcelas(k) + +bt.dataset.delta}x de`;
   mostrarParcelas();
+  calcular(k.split('_')[1]);
   render();
 });
 $('pacotes').addEventListener('change', e => {
@@ -2101,11 +1530,18 @@ $('pacotes').addEventListener('change', e => {
   form.elements[box.dataset.key].value = [...box.querySelectorAll('input:checked')].map(i => i.value).join(',');
   render();
 });
-preencher(Object.fromEntries([...q].filter(([k]) => EDITAVEL.test(k))));
+preencher(Object.fromEntries([...q].filter(([k]) => EDITAVEL.test(k) || TITULO.test(k))));
 
 form.addEventListener('input', e => {
   const c = e.target;
-  if (c.name === 'telefone' || c.name === 'dx_telefone_grupo') c.value = formatarTelefone(c.value);
+  if (c.name === 'telefone') c.value = formatarTelefone(c.value);
+  if (c.name === 'comissao') { c.value = c.value.replace(/[^\d,]/g, ''); mostrarComissao(); }
+  if (/^total_/.test(c.name)) calcular(c.name.split('_').at(-1));
+  if (/^preco(_de)?_/.test(c.name)) { // mexeu à mão: a conta pelo total não vale mais
+    const p = c.closest('.pacote');
+    p.querySelectorAll('[name^=total_]').forEach(i => i.value = '');
+    p.querySelector('.calc output').textContent = '';
+  }
   if (/^ida_/.test(c.name)) { // volta nunca antes da ida
     const volta = form.elements[c.name.replace('ida', 'volta')];
     volta.min = c.value;
@@ -2118,13 +1554,6 @@ form.addEventListener('focusout', e => {
 });
 form.addEventListener('submit', e => e.preventDefault());
 
-function validarDados() {
-  const vagas = form.elements.dx_vagas.value, vendidas = form.elements.dx_vendidas.value;
-  const msg = vagas !== '' && vendidas !== '' && +vendidas > +vagas ? 'Vendidas não pode ser maior que o total de vagas.' : '';
-  mostrarErro($('erro-dados'), msg);
-  if (msg) form.elements.dx_vendidas.focus();
-  return !msg;
-}
 function validarValores() {
   let ok = true;
   for (const p of document.querySelectorAll('.pacote:not([hidden])')) {
@@ -2197,7 +1626,6 @@ function fotoRet(L, item, im, a) {
   return { r: [lx, ly, w, h], corr: [lx - x, ly - y] };
 }
 
-const numero = s => parseFloat(String(s ?? '').replace(/\./g, '').replace(',', '.')) || 0;
 function valorDe(t, v) {  // textos da arte nova que saem de outros campos
   const n = t.key.split('_')[1], ida = v[`ida_${n}`], volta = v[`volta_${n}`];
   switch (t.formato) {
@@ -2289,11 +1717,16 @@ function preco(c, t, v, marca) {
   marca?.(t.key, t.x, t.y - t.tam * k * .74, t.x + t.larg, t.y + 4);
 }
 
+// título maior que o do .ai: a letra diminui até caber na largura da linha mais longa do .ai
+const largura = (c, l, s) => { c.font = F(l.peso, l.tam); c.letterSpacing = '0px'; return c.measureText(s).width + l.ls * (s.length - 1); };
+const limites = new Map();
 function titulo(c, t, v, marca) {
+  if (!limites.has(t)) limites.set(t, Math.max(...t.linhas.map(l => largura(c, l, VALORES[l.key].toLocaleUpperCase('pt-BR')))));
   // contorno de todas as letras primeiro (empilhado = sombra), depois o preenchimento, igual ao .ai
-  const linhas = t.linhas.map(l => {
-    const s = (v[l.key] ?? '').trim();
+  const linhas = t.linhas.map(l0 => {
+    const s = (v[l0.key] ?? '').trim();
     if (!s) return [];
+    const k = Math.min(1, limites.get(t) / largura(c, l0, s)), l = k < 1 ? { ...l0, tam: l0.tam * k, ls: l0.ls * k } : l0;
     c.font = F(l.peso, l.tam); c.letterSpacing = '0px';
     const cap = c.measureText('H').actualBoundingBoxAscent, adv = ch => c.measureText(ch).width;
     if (!l.curva) {
@@ -2339,22 +1772,100 @@ function titulo(c, t, v, marca) {
   glifos.forEach(g => passo(g, 0, 'fill'));
 }
 
+// logo do agente: caixa branca à direita da pílula do telefone, largura conforme a logo
+// mesmo selo do "Village Resort" da arte (medido no .ai): borda navy de 3 pt, base de 6,5 pt, fundo #f4f4f4
+function logo(c, L, im, marca) {
+  const [x, y, h] = L.logo, e = h / 57.5, w = Math.min(131.5 * e, (L.w || 1080) - 20 - x);
+  const b = 3 * e, bb = 6.5 * e, ih = h - b - bb, pad = ih * .12;
+  const k = Math.min((ih - 2 * pad) / im.naturalHeight, (w - 2 * b - 2 * pad) / im.naturalWidth);
+  c.save();
+  c.fillStyle = '#26324f';
+  c.beginPath(); c.roundRect(x, y, w, h, 8 * e); c.fill();
+  c.fillStyle = '#f4f4f4';
+  c.beginPath(); c.roundRect(x + b, y + b, w - 2 * b, ih, 5.5 * e); c.fill();
+  c.drawImage(im, x + (w - im.naturalWidth * k) / 2, y + b + (ih - im.naturalHeight * k) / 2, im.naturalWidth * k, im.naturalHeight * k);
+  c.restore();
+  marca?.('logo', x, y, x + w, y + h);
+}
+
 const DESENHA = { texto, preco, titulo, pagamentos };
 let fontesOk = false, entregue = false, caixas = {};
 
+const pctComissao = () => aberta?.campanha ? Math.min(100, Math.max(0, numero(form.elements.comissao.value))) : 0;
 function valores() {
   const v = { ...VALORES, ...Object.fromEntries(new FormData(form)) }; // travados vêm sempre do .ai
   for (const k of Object.keys(v)) if (/^titulo\d+$/.test(k)) v[k] = v[k].toLocaleUpperCase('pt-BR');
+  const f = 1 + pctComissao() / 100; // arte de campanha: preço do resort + comissão do agente
+  if (f > 1) for (const k of Object.keys(v)) {
+    if (/^preco_\d+$/.test(k) && numero(v[k])) v[k] = reais(Math.round(numero(v[k]) * f * 100) / 100);
+    if (/^preco_de_\d+$/.test(k) && numero(v[k])) v[k] = String(Math.round(numero(v[k]) * f));
+  }
   return v;
+}
+function mostrarComissao() {
+  if (!aberta?.campanha) return;
+  const v = valores(), ks = chaves(estado.atual).filter(k => /^preco_\d+$/.test(k)), p = pctComissao();
+  const alto = ks.some(k => numero(v[k]) >= 1000);
+  $('ajuda-comissao').textContent = alto ? 'Com essa comissão a parcela passa de R$ 999 e não cabe na arte. Diminua a porcentagem.'
+    : p ? `Na arte: ${ks.map(k => `R$ ${v[k]}`).join(' e ')} (campanha: ${ks.map(k => `R$ ${form.elements[k].value}`).join(' e ')}).`
+    : 'Somada ao valor da campanha. O preço da arte já sai com ela.';
+  $('ajuda-comissao').classList.toggle('erro', alto);
 }
 
 const offs = {};
-function desenhar(c, i, escala, marca) {
-  const L = LAYOUTS[i], item = fotoItem(), im = img(item.src);
-  const p = estado.personagem && L.foto.personagem;
-  const precisa = [im, img(L.foto.base), img(L.foto.mascara), ...(p ? [img(p.src)] : []), ...(L.foto.frente ? [img(L.foto.frente)] : [])];
+
+// ---------- vídeo: cada peça do .ai entra sozinha (desliza da borda ou "pula" com leve passo além),
+// o texto entra junto com a peça onde está, o personagem sobe, o preço pulsa; a foto se afasta devagar
+const volta = x => 1 + 2.7 * (x - 1) ** 3 + 1.7 * (x - 1) ** 2; // ease-out-back
+const entre = (s, ini, dur) => Math.max(0, Math.min(1, (s - ini) / dur));
+const roteiros = new Map();
+function roteiro(L) {
+  if (roteiros.has(L)) return roteiros.get(L);
+  const W = L.w || 1080, H = L.h || 1350;
+  const pecas = (L.foto.pecas || []).map((p, n) => {
+    const [x0, y0, x1, y1] = p.rect;
+    const modo = y1 > H - 2 && x1 - x0 > .8 * W ? 'baixo' : x0 < 2 && x1 < .7 * W ? 'esq' : x1 > W - 2 && x0 > .3 * W ? 'dir' : 'pula';
+    return { ...p, modo, ini: modo === 'baixo' ? .1 : .3 + n * .22 };
+  });
+  const ponto = t => t.linhas ? [t.linhas[0].x + 5, t.linhas[0].y - 5] : t.cx != null ? [t.cx, t.y0 + 2] : [t.x + 2, t.y - 2];
+  const area = r => (r[2] - r[0]) * (r[3] - r[1]);
+  const donos = new Map(), vistos = {};
+  for (const t of [...L.textos].sort((a, b) => ponto(a)[1] - ponto(b)[1])) {
+    const [x, y] = ponto(t);
+    const n = pecas.map((_, k) => k)
+      .filter(k => { const r = pecas[k].rect; return x >= r[0] - 4 && x <= r[2] + 4 && y >= r[1] - 4 && y <= r[3] + 4; })
+      .sort((a, b) => area(pecas[a].rect) - area(pecas[b].rect))[0];
+    const ordem = vistos[n ?? 'x'] = (vistos[n ?? 'x'] ?? -1) + 1;
+    donos.set(t, { n, ini: n != null ? pecas[n].ini + .25 + ordem * .07 : .4 + 1.6 * y / H });
+  }
+  const r = { pecas, donos };
+  roteiros.set(L, r);
+  return r;
+}
+function mover(c, L, p, s) { // transforma o canvas para a peça no instante s; devolve a opacidade
+  const q = entre(s, p.ini, .6);
+  if (!q) return 0;
+  const [x0, y0, x1, y1] = p.rect, W = L.w || 1080, H = L.h || 1350;
+  if (p.modo === 'baixo') c.translate(0, (1 - suave(q)) * (H - y0));
+  // peça colada na borda: sem passo além, senão o corte reto dela aparece dentro da arte
+  else if (p.modo === 'esq') c.translate(-(1 - suave(q)) * x1, 0);
+  else if (p.modo === 'dir') c.translate((1 - suave(q)) * (W - x0), 0);
+  else {
+    const k = .4 + .6 * volta(q), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    c.translate(cx, cy); c.scale(k, k); c.translate(-cx, -cy);
+  }
+  return Math.min(1, q * 3);
+}
+
+function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem anim, a arte parada
+  const L = LAYOUTS[i], item = fotoItem(), im = img(item.src), v = valores();
+  const lugar = L.foto.personagem, escolhido = PERSONAGENS.find(x => x.id === estado.personagem);
+  const p = lugar && (escolhido ? img(escolhido.src) : estado.personagem === 'arte' && img(lugar.src));
+  const lg = L.logo && v.logo === '1' && minhaLogo() && img(minhaLogo());
+  const R = anim != null && L.foto.pecas?.length ? roteiro(L) : null, s = anim ?? 99;
+  const camadas = R ? [img(L.foto.fundo), ...R.pecas.map(x => img(x.src))] : [img(L.foto.base), ...(L.foto.frente ? [img(L.foto.frente)] : [])];
+  const precisa = [im, img(L.foto.mascara), ...camadas, ...(p ? [p] : []), ...(lg ? [lg] : [])];
   if (!fontesOk || !precisa.every(pronta)) return false; // onload das imagens chama de novo
-  const v = valores();
   c.setTransform(escala, 0, 0, escala, 0, 0);
   c.fillStyle = '#fff';
   const [W, H] = tamanho(i);
@@ -2364,15 +1875,58 @@ function desenhar(c, i, escala, marca) {
   o.setTransform(escala, 0, 0, escala, 0, 0);
   o.globalCompositeOperation = 'source-over';
   o.clearRect(0, 0, W, H);
-  o.drawImage(im, ...fotoRet(L, item, im, aj(i)).r);
+  const a = anim == null ? aj(i) : { ...aj(i), zoom: aj(i).zoom * (1.15 - .15 * suave(Math.min(1, s / 8))) };
+  o.drawImage(im, ...fotoRet(L, item, im, a).r);
   o.globalCompositeOperation = 'destination-in'; // a foto só aparece onde o .ai tinha foto
   o.drawImage(img(L.foto.mascara), 0, 0, W, H);
   c.drawImage(o.canvas, 0, 0, W, H);
-  c.drawImage(img(L.foto.base), 0, 0, W, H);
-  if (p) { const [x0, y0, x1, y1] = p.rect; c.drawImage(img(p.src), x0, y0, x1 - x0, y1 - y0); }
-  if (L.foto.frente) c.drawImage(img(L.foto.frente), 0, 0, W, H); // o que o .ai tem na frente do personagem (rodapé...)
+  const peca = x => {
+    c.save();
+    c.globalAlpha = mover(c, L, x, s);
+    if (c.globalAlpha) c.drawImage(img(x.src), x.rect[0], x.rect[1], x.rect[2] - x.rect[0], x.rect[3] - x.rect[1]);
+    c.restore();
+  };
+  if (R) { c.drawImage(img(L.foto.fundo), 0, 0, W, H); R.pecas.filter(x => !x.frente).forEach(peca); }
+  else c.drawImage(img(L.foto.base), 0, 0, W, H);
+  if (p) { // outro personagem: cabe no lugar do original, apoiado embaixo e centralizado; no vídeo sobe de baixo
+    const [x0, y0, x1, y1] = lugar.rect, e = escolhido ? Math.min((x1 - x0) / p.naturalWidth, (y1 - y0) / p.naturalHeight) : 0;
+    const q = R ? entre(s, 1.3, .8) : 1;
+    if (q) {
+      c.save();
+      c.translate(0, (1 - volta(q)) * (y1 - y0) * .9);
+      if (!escolhido) c.drawImage(p, x0, y0, x1 - x0, y1 - y0);
+      else c.drawImage(p, (x0 + x1 - p.naturalWidth * e) / 2, y1 - p.naturalHeight * e, p.naturalWidth * e, p.naturalHeight * e);
+      c.restore();
+    }
+  }
+  if (R) R.pecas.filter(x => x.frente).forEach(peca);
+  else if (L.foto.frente) c.drawImage(img(L.foto.frente), 0, 0, W, H); // o que o .ai tem na frente do personagem (rodapé...)
   const fim = {}; // onde cada texto terminou (o preço riscado vem logo depois das parcelas)
-  for (const t of L.textos) DESENHA[t.tipo](c, t, v, marca, fim);
+  for (const t of L.textos) {
+    if (!R) { DESENHA[t.tipo](c, t, v, marca, fim); continue; }
+    const d = R.donos.get(t), q = entre(s, d.ini, .45);
+    c.save();
+    if (q && (d.n == null || mover(c, L, R.pecas[d.n], s))) {
+      c.globalAlpha = q;
+      c.translate(0, (1 - suave(q)) * 14);
+      if (t.tipo === 'preco' && s > 3.6 && s < 4.3) { // o preço dá uma pulsada
+        const k = 1 + .08 * Math.sin(Math.PI * (s - 3.6) / .7), cx = t.x + t.larg / 2, cy = t.y - t.tam * .35;
+        c.translate(cx, cy); c.scale(k, k); c.translate(-cx, -cy);
+      }
+      DESENHA[t.tipo](c, t, v, marca, fim);
+    }
+    c.restore();
+  }
+  if (lg) {
+    const q = R ? entre(s, 2.4, .6) : 1, [x, y, h] = L.logo, cx = x + h, cy = y + h / 2, k = .4 + .6 * volta(q);
+    if (q) {
+      c.save();
+      c.globalAlpha = Math.min(1, q * 3);
+      c.translate(cx, cy); c.scale(k, k); c.translate(-cx, -cy);
+      logo(c, L, lg, marca);
+      c.restore();
+    }
+  }
   return true;
 }
 
@@ -2403,7 +1957,8 @@ function mostrarAlvo() {
   });
 }
 form.addEventListener('focusin', e => {
-  const k = e.target.closest('[data-key]')?.dataset.key ?? e.target.name;
+  const k0 = e.target.closest('[data-key]')?.dataset.key ?? e.target.name;
+  const k = k0 === 'comissao' ? chaves(estado.atual).find(x => /^preco_\d+$/.test(x)) : k0;
   estado.foco = editavel(k) ? k : null;
   mostrarAlvo();
 });
@@ -2428,7 +1983,6 @@ function usarPassos(lista) {
 }
 function irPara(n, campo) {
   if (!ativos.includes(n)) return;
-  if (estado.passo === P_DADOS && n > P_DADOS && ativos.includes(P_DADOS) && !validarDados()) return;
   if (ativos.includes(P_VALORES) && n > P_VALORES && estado.passo <= P_VALORES && !validarValores()) {
     if (estado.passo !== P_VALORES) { irPara(P_VALORES); validarValores(); }
     return;
@@ -2446,6 +2000,8 @@ function irPara(n, campo) {
   $('baixar').hidden = !ultimo || deCampanha;
   $('enviar').hidden = !ultimo || !podeEnviar || deCampanha;
   $('salvar-campanha').hidden = !ultimo || !deCampanha;
+  $('finalizar').hidden = !ultimo || deCampanha;
+  if (n === P_MAT) montarMateriais(); else if (tocando) { cancelAnimationFrame(tocando.raf); tocando = null; }
   form.scrollTop = 0;
   const sec = document.querySelector(`.passo[data-passo="${n}"]`);
   const grupo = campo && document.querySelector(`[data-key="${campo}"]`); // parcelas e pagamentos: foca o primeiro controle
@@ -2460,10 +2016,18 @@ $('continuar').onclick = () => irPara(ativos[ativos.indexOf(estado.passo) + 1]);
 
 // passo: artes
 const opcoes = LAYOUTS.map((L, i) => {
-  const bt = $('artes').appendChild(Object.assign(el('button', 'opcao'), { type: 'button' }));
+  const wrap = $('artes').appendChild(el('div', 'opcao-wrap'));
+  const bt = wrap.appendChild(Object.assign(el('button', 'opcao'), { type: 'button' }));
   const mini = bt.appendChild(Object.assign(el('canvas'), { width: 432, height: Math.round(432 * tamanho(i)[1] / tamanho(i)[0]) }));
   bt.append(el('strong', '', L.nome), el('small', '', DESCRICAO[L.nome] ?? ''));
   bt.onclick = () => selecionarArte(i);
+  const lb = wrap.appendChild(el('label', 'inclui')), cb = Object.assign(el('input'), { type: 'checkbox' });
+  lb.hidden = true;
+  lb.append(cb, 'Na campanha');
+  cb.onchange = () => {
+    mudarCampanha(r => r.layouts = cb.checked ? [...new Set([...r.layouts, i])].sort() : r.layouts.filter(x => x !== i));
+    if (cb.checked) selecionarArte(i); else mostrarPacotes();
+  };
   return mini;
 });
 function miniaturas() { opcoes.forEach((mini, i) => desenhar(mini.getContext('2d'), i, 0.4)); }
@@ -2473,18 +2037,32 @@ function selecionarArte(i) {
   const ks = chaves(i), L = LAYOUTS[i], [W, H] = tamanho(i);
   if (cv.width !== W * S || cv.height !== H * S) { cv.width = W * S; cv.height = H * S; }
   document.querySelector('.arte-wrap').style.setProperty('--r', W / H);
-  $('linha-restam').hidden = !ks.includes('restam');
   // ainda na foto padrão de alguma arte: troca pela foto que o designer pôs nesta
   if (LAYOUTS.some(l => (l.foto.padrao || 'layout') === estado.foto) && estado.foto !== (L.foto.padrao || 'layout')) {
     estado.foto = L.foto.padrao || 'layout';
     montarBanco();
   }
   document.querySelectorAll('.opcao').forEach((b, j) => b.setAttribute('aria-pressed', j === i));
-  document.querySelectorAll('.pacote').forEach(p => p.hidden = !ks.includes(`preco_${p.dataset.pacote}`));
-  document.querySelectorAll('.pacote h3').forEach(h => h.hidden = ks.filter(k => /^preco_\d+$/.test(k)).length < 2);
+  mostrarPacotes();
   $('linha-pers').hidden = !L.foto.personagem;
+  montarPersonagens();
   zoom.value = aj(i).zoom;
   render();
+}
+
+// campanha: aparecem os pacotes de todas as artes marcadas
+function mostrarPacotes() {
+  const ks = (aberta?.tipo === 'campanha' ? [...new Set([...aberta.layouts, estado.atual])] : [estado.atual]).flatMap(chaves);
+  document.querySelectorAll('.pacote').forEach(p => p.hidden = !ks.includes(`preco_${p.dataset.pacote}`));
+  document.querySelectorAll('.pacote h3').forEach(h => h.hidden = new Set(ks.filter(k => /^preco_\d+$/.test(k))).size < 2);
+  $('linha-restam').hidden = !ks.includes('restam');
+  const criadorCamp = aberta?.tipo === 'campanha';
+  $('linha-datas-agente').hidden = $('ajuda-datas').hidden = !criadorCamp;
+  if (criadorCamp) $('datas-agente').checked = aberta.datas !== 'master';
+  const soDatas = !!aberta?.campanha;
+  $('pacotes').classList.toggle('so-datas', soDatas);
+  $('titulo-valores').textContent = soDatas ? 'Datas e vagas' : 'Valores e datas';
+  $('nota-datas').hidden = !soDatas;
 }
 
 // passo: foto e personagem
@@ -2507,7 +2085,53 @@ function montarBanco() {
 }
 zoom.oninput = () => { aj(estado.atual).zoom = +zoom.value; limitar(); render(); };
 $('padrao').onclick = () => { estado.ajuste[estado.atual] = { dx: 0, dy: 0, zoom: 1 }; zoom.value = 1; render(); };
-pers.onchange = () => { estado.personagem = pers.checked; render(); };
+function montarPersonagens() {
+  const L = LAYOUTS[estado.atual], lugar = L.foto.personagem;
+  if (!lugar) return;
+  const opcoes = [['', 'Nenhum'], ['arte', 'Da arte', lugar.src], ...PERSONAGENS.map(x => [x.id, x.nome, x.src])];
+  $('pers').replaceChildren(...opcoes.map(([id, nome, src]) => {
+    const bt = Object.assign(el('button'), { type: 'button' });
+    bt.setAttribute('aria-pressed', id === estado.personagem);
+    bt.append(src ? Object.assign(el('img'), { src, alt: '' }) : el('span', 'nenhum', '—'), el('small', '', nome));
+    bt.onclick = () => { estado.personagem = id; montarPersonagens(); render(); };
+    return bt;
+  }));
+}
+
+// logo do agente: guardada no aparelho (uma por conta), vale para todas as artes
+const chaveLogo = () => `village.logo.${sessao?.usuario.email}`;
+function minhaLogo() { try { return sessao && localStorage[chaveLogo()] || ''; } catch { return ''; } }
+function mostrarLogo() {
+  const src = minhaLogo();
+  $('logo-img').hidden = $('logo-tirar').hidden = $('linha-usar-logo').hidden = !src;
+  if (src) $('logo-img').src = src;
+  $('logo-escolher').textContent = src ? 'Trocar logo' : 'Escolher logo';
+  $('usar-logo').checked = form.elements.logo.value === '1';
+}
+$('logo-escolher').onclick = () => $('logo-arquivo').click();
+$('logo-arquivo').onchange = async e => {
+  const arq = e.target.files[0];
+  e.target.value = '';
+  if (!arq) return;
+  try {
+    const bmp = await createImageBitmap(arq), k = Math.min(1, 600 / Math.max(bmp.width, bmp.height));
+    const m = Object.assign(document.createElement('canvas'), { width: Math.round(bmp.width * k), height: Math.round(bmp.height * k) });
+    m.getContext('2d').drawImage(bmp, 0, 0, m.width, m.height);
+    localStorage[chaveLogo()] = m.toDataURL('image/png');
+  } catch {
+    return aviso('Não deu pra usar essa imagem. Tente um PNG ou JPG menor.');
+  }
+  form.elements.logo.value = '1';
+  mostrarLogo();
+  render();
+};
+$('logo-tirar').onclick = () => {
+  if (!confirm('Apagar a sua logo deste aparelho? Ela sai de todas as artes.')) return;
+  try { localStorage.removeItem(chaveLogo()); } catch {}
+  mostrarLogo();
+  render();
+};
+$('usar-logo').onchange = e => { form.elements.logo.value = e.target.checked ? '1' : ''; render(); };
 
 // ---------- mexer na arte: tocar edita, arrastar move a foto ----------
 function limitar() {
@@ -2548,8 +2172,8 @@ cv.addEventListener('pointerup', e => {
       const [x0, y0, x1, y1] = caixas[k];
       return editavel(k) && x >= x0 - 8 && x <= x1 + 8 && y >= y0 - 8 && y <= y1 + 8;
     }).sort((a, b) => area(a) - area(b))[0]; // o "7x de" fica dentro da caixa do preço: vence a menor
-    if (achado) irPara(passoDe(achado), achado);
-    else if (fotoNoPonto(x, y)) irPara(P_FOTO);
+    if (achado) irPara(passoDe(achado), aberta?.campanha && /^preco_/.test(achado) ? 'comissao' : achado); // agente: preço = comissão
+    else if (fotoNoPonto(x, y) && !aberta?.campanha) irPara(P_FOTO);
   }
   toque = null;
 });
@@ -2561,6 +2185,20 @@ const imagem = () => new Promise(ok => cv.toBlob(ok, 'image/png'));
 $('baixar').onclick = async () => {
   Object.assign(el('a'), { href: URL.createObjectURL(await imagem()), download: nomeArquivo() }).click();
   aviso('Imagem baixada');
+};
+// terminou a própria arte: guarda (mesmo sem ter mexido) e volta para Minhas artes
+$('finalizar').onclick = () => {
+  clearTimeout(salvarTimer);
+  const lista = excursoes(), i = lista.findIndex(e => e.id === aberta?.id);
+  if (i >= 0) {
+    lista[i] = { ...estadoAtual(lista[i]), mini: miniatura() || lista[i].mini, nova: false, pendente: true,
+      atualizada: Date.now(), versao: (lista[i].versao || 0) + 1 };
+    if (!gravar(lista)) return;
+    agendarSinc(300);
+  }
+  aberta = null;
+  aviso('Arte salva em Minhas artes');
+  location.hash = '#/excursoes';
 };
 const podeEnviar = !!navigator.canShare?.({ files: [new File([''], 'a.png', { type: 'image/png' })] });
 $('enviar').onclick = async () => {

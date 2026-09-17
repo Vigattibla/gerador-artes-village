@@ -1,5 +1,11 @@
 # API do servidor — contrato para migrar o banco de dados
 
+> 17/09/2026: o gerador ficou **só com a geração de arte**. Campanhas, vendas, vagas, passageiros e contas são do
+> sistema do resort. Das ações abaixo o site usa hoje: `status`, `criarMaster`, `entrar`, `criarSenha`, `eu`,
+> `listar`, `salvar`, `excluir`, `campanhas`, `salvarCampanha` (cria ou atualiza: `nome, status, layouts, motions,
+> arquivos, arte, mini`) e `excluirCampanha`. Falta no servidor: guardar os arquivos da campanha. As demais seguem no
+> `Codigo.gs`, mas o site não chama mais.
+
 O site (`index.html`, estático no GitHub Pages) conversa com **um único endereço**. Hoje é o App da Web do
 Google Apps Script (`apps-script/Codigo.gs`) gravando numa planilha Google. Para trocar o banco basta
 um servidor que responda igual a este documento e trocar a constante `API` no `index.html`.
@@ -38,12 +44,15 @@ Implementações de referência (mesmas regras):
 ## Objetos
 ```
 usuario  = { email, nome, papel: "master"|"vendedor" }
-excursao = { id, vendedor, vendedorNome?, nome, observacoes, ida, volta,          // datas "AAAA-MM-DD"
-             vagas_total (número ou null), vagas_vendidas, grupo_responsavel, grupo_telefone,
-             atualizada (ms), arte: {atual, foto, personagem, ajuste, campos, campanha?, passageiros?}, mini: dataURL JPEG }
-// passageiros = [{nome, telefone, documento, nascimento "AAAA-MM-DD", embarque, poltrona, pagamento, sinal (bool), falta, obs}]
-// o site grava vagas_vendidas = número de passageiros quando a lista não está vazia
-campanha = { id, nome, status: "rascunho"|"ativa"|"pausada"|"encerrada", limite_venda "AAAA-MM-DD"|"",
+excursao = { id, vendedor, vendedorNome?, nome, ida, volta,          // arte salva do agente; datas "AAAA-MM-DD"
+             atualizada (ms), arte: {atual, foto, personagem, ajuste, campos, campanha?}, mini: dataURL JPEG }
+// personagem: id da pasta personagens/, "arte" (o do .ai) ou "" (nenhum); antes de 17/09 era true/false
+// campos.logo = "1" mostra a logo do agente (a imagem fica só no aparelho dele, não vai ao servidor)
+campanha = { id, nome, status: "rascunho"|"ativa",   // montada no construtor do gerador pelo criador (17/09/2026)
+             layouts: [índices de LAYOUTS], motions: ["story"|"vagas"|"feed"], arquivos: [{id, nome, tamanho, tipo}],
+             // arquivos: na demonstração o conteúdo fica no IndexedDB do navegador; no servidor precisa de upload/download por id
+             // campos antigos abaixo não são mais usados pelo gerador:
+             limite_venda "AAAA-MM-DD"|"",
              vagas_total (número ou null), criada_por, atualizada (ms), mini,
              resumo, embarques, retorno, sinal, quitar_ate, pagamento: [texto], comissao, criancas, roteiro,
              inclui, nao_inclui, documentos, cancelamento, regras, contato_guia, textos, links,

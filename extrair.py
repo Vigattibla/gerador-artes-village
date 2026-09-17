@@ -527,7 +527,66 @@ def camadas(pno, remover, n):
                 box=ret([xs.min() * k, ys.min() * k, (xs.max() + 1) * k, (ys.max() + 1) * k]),
                 visivel=ret([vx.min() * k, vy.min() * k, (vx.max() + 1) * k, (vy.max() + 1) * k]),
                 original=ret(foto['bbox']), personagem=personagem[1] if personagem else None)
+    spec['pecas'], spec['fundo'] = pecas(pno, remover, n, seq if personagem else 1e9)
     return spec, foto['xref']
+
+
+def pecas(pno, remover, n, seq_pers):
+    """Peças soltas da arte (título, cards, etiquetas, rodapé) em camadas próprias, para o vídeo animar uma a uma.
+    Tira o fundo grande, separa o resto pelas manchas que se tocam na imagem e recorta cada mancha pela própria
+    máscara. A arte parada continua usando a base."""
+    from scipy import ndimage
+    pg = fitz.open(SRC)[pno]
+    W, H = pg.rect.width, pg.rect.height
+    tirar = {d['seqno'] for d in remover}
+    desenhos = [d for d in pg.get_drawings() if d['seqno'] not in tirar and d['rect'].intersects(pg.rect)]
+    fundo = [d for d in desenhos if d['rect'].width * d['rect'].height > .25 * W * H]
+    soltos = [d for d in desenhos if d not in fundo]
+    k = 72 / DPI
+    todas = render_sem(pno, list(remover) + fundo)
+    rgba = np.frombuffer(todas.samples, np.uint8).reshape(todas.height, todas.width, 4)
+    rotulos, _ = ndimage.label(rgba[..., 3] > 8)
+    area = np.bincount(rotulos.ravel())
+    grandes = [r for r in range(1, len(area)) if area[r] >= 6000]  # ~40x40 pt; menores ficam no fundo
+    # desenho -> mancha onde ele está (maioria dos pixels), para tirar do fundo só o que vai animar
+    animados, frente = [], {}
+    for d in soltos:
+        r = d['rect'] & pg.rect
+        bloco = rotulos[int(r.y0 / k):int(r.y1 / k) + 1, int(r.x0 / k):int(r.x1 / k) + 1]
+        vals = bloco[bloco > 0]
+        if vals.size:
+            m = np.bincount(vals).argmax()
+            if m in grandes:
+                animados.append(d)
+                frente[m] = min(frente.get(m, 1e9), d['seqno'])
+    # fundo = as formas grandes redesenhadas numa página limpa (tirar desenhos do PDF falha nos contornos
+    # empilhados) + os pedacinhos que não animam
+    pag = fitz.open().new_page(width=W, height=H)
+    for d in fundo:
+        sh = pag.new_shape()
+        for it in d['items']:
+            {'l': sh.draw_line, 'c': sh.draw_bezier, 're': sh.draw_rect, 'qu': sh.draw_quad}[it[0]](*it[1:])
+        sh.finish(fill=d.get('fill'), color=d.get('color'), width=d.get('width') or 0, closePath=d.get('closePath', True),
+                  even_odd=bool(d.get('even_odd')), fill_opacity=d.get('fill_opacity') or 1, stroke_opacity=d.get('stroke_opacity') or 1)
+        sh.commit()
+    bg = pag.get_pixmap(dpi=DPI, alpha=True)
+    bg = Image.frombytes('RGBA', (bg.width, bg.height), bg.samples)
+    miudos = rgba.copy()
+    miudos[..., 3] = np.where((rotulos > 0) & ~np.isin(rotulos, grandes), miudos[..., 3], 0)
+    bg.alpha_composite(Image.fromarray(miudos, 'RGBA'))
+    bg.save(AQUI / f'camadas/arte{n}-fundo.png')
+    saida = []
+    for r in grandes:
+        ys, xs = np.nonzero(rotulos == r)
+        y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+        corte = rgba[y0:y1, x0:x1].copy()
+        corte[..., 3] = np.where(rotulos[y0:y1, x0:x1] == r, corte[..., 3], 0)
+        nome = f'camadas/arte{n}-peca{len(saida) + 1}.png'
+        Image.fromarray(corte, 'RGBA').save(AQUI / nome)
+        saida.append(dict(src=nome, rect=ret([x0 * k, y0 * k, x1 * k, y1 * k]), frente=frente.get(r, 0) > seq_pers))
+    saida.sort(key=lambda p: (p['rect'][1], p['rect'][0]))
+    print(f'  {len(saida)} peças para o vídeo')
+    return saida, f'camadas/arte{n}-fundo.png'
 
 
 # ---------------------------------------------------------------- banco
@@ -556,6 +615,36 @@ def banco(doc, fotos_artes):
     return itens
 
 
+def vaga_logo(n, textos):
+    """Lugar da logo do agente: à direita da pílula do telefone, com a altura dela (borda escura).
+    ponytail: medido nas camadas; se o designer marcar o lugar no .ai, ler de lá."""
+    tel = next((t for t in textos if t['key'] == 'telefone'), None)
+    if not tel:
+        return None
+    img = Image.open(AQUI / f'camadas/arte{n}-base.png').convert('RGBA')
+    if (AQUI / f'camadas/arte{n}-frente.png').exists():
+        img.alpha_composite(Image.open(AQUI / f'camadas/arte{n}-frente.png').convert('RGBA'))
+    a = np.asarray(img)
+    k = 72 / DPI
+    escuro = lambda y, x: a[y, x, 3] > 200 and a[y, x, :3].max() < 90
+
+    def borda(y, x, dy, dx):  # anda até a borda e atravessa ela
+        while 0 < y < a.shape[0] - 1 and 0 < x < a.shape[1] - 1 and not escuro(y, x): y, x = y + dy, x + dx
+        while 0 < y < a.shape[0] - 1 and 0 < x < a.shape[1] - 1 and escuro(y, x): y, x = y + dy, x + dx
+        return y, x
+    x, y = int(tel['x'] / k) + 4, int((tel['y'] - tel['tam'] * .35) / k)
+    x1 = borda(y, x, 0, 1)[1]
+    y0, y1 = borda(y, x, -1, 0)[0], borda(y, x, 1, 0)[0]
+    h = (y1 - y0) * k
+    return ret([x1 * k + h * .217, y0 * k, h])  # x, y, altura; mesmo vão entre o selo do Village e o telefone
+
+
+def personagens():
+    """personagens/*.png: as opções que o agente escolhe (fundo transparente)."""
+    return [dict(id=f.stem, nome=f.stem.replace('-', ' ').capitalize(), src=f'personagens/{f.name}')
+            for f in sorted((AQUI / 'personagens').glob('*.png'))]
+
+
 # ---------------------------------------------------------------- principal
 def main():
     for d in ('camadas', 'banco/fotos', 'banco/mini'):
@@ -577,7 +666,7 @@ def main():
         foto['padrao'] = fotos.setdefault(xref, 'layout' if not fotos else f'layout-{n}')
         textos = sorted(a['textos'], key=lambda t: t['tipo'] != 'preco')  # preço embaixo do "7x de"
         r = doc[pno].rect
-        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto,
+        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto, logo=vaga_logo(n, textos),
                             textos=textos + ([a['titulo']] if a['titulo'] else [])))
         print(f'  {len(textos)} textos, personagem: {"sim" if foto["personagem"] else "não"}, foto: {foto["padrao"]}')
     itens = banco(doc, [(nome, xref) for xref, nome in fotos.items()])
@@ -585,7 +674,8 @@ def main():
     js = ('// gerado por extrair.py – não editar à mão\n'
           f'const LAYOUTS = {json.dumps(layouts, ensure_ascii=False)};\n'
           f'const VALORES = {json.dumps(valores, ensure_ascii=False)};\n'
-          f'const BANCO = {json.dumps(itens, ensure_ascii=False)};\n')
+          f'const BANCO = {json.dumps(itens, ensure_ascii=False)};\n'
+          f'const PERSONAGENS = {json.dumps(personagens(), ensure_ascii=False)};\n')
     (AQUI / 'dados.js').write_text(js, encoding='utf-8')
 
 
