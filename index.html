@@ -247,10 +247,10 @@
       Início</a>
     <a href="#/nova" data-tela="editor">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      <span class="longo">Criar arte</span><span class="curto">Criar</span></a>
+      <span class="longo">Nova excursão</span><span class="curto">Nova</span></a>
     <a href="#/excursoes" data-tela="excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      <span class="longo">Minhas artes</span><span class="curto">Artes</span></a>
+      <span class="longo">Minhas excursões</span><span class="curto">Excursões</span></a>
     <a href="#/campanhas" data-tela="campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       Campanhas</a>
@@ -315,10 +315,10 @@
   <div class="atalhos">
     <a class="atalho principal" href="#/nova">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      <strong>Criar arte</strong>Escolha um modelo, coloque seu contato e baixe</a>
+      <strong>Nova excursão</strong>Dê um nome e vá juntando os criativos dela</a>
     <a class="atalho" href="#/excursoes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      <strong>Minhas artes</strong><span id="inicio-qtd"></span></a>
+      <strong>Minhas excursões</strong><span id="inicio-qtd"></span></a>
     <a class="atalho" href="#/campanhas">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
       <strong>Campanhas</strong>Artes prontas do resort para divulgar</a>
@@ -331,7 +331,7 @@
 </section>
 
 <section class="tela" id="excursoes" hidden>
-  <h1>Minhas artes</h1>
+  <div class="cabeca"><h1>Minhas excursões</h1><a class="botao-acao" href="#/nova">+ Nova excursão</a></div>
   <p class="sinc" id="sinc-lista" aria-live="polite"></p>
   <div class="abas" id="abas"></div>
   <div class="lista" id="lista"></div>
@@ -344,7 +344,8 @@
 </section>
 
 <section class="tela larga" id="pasta" hidden>
-  <div class="cabeca"><h1 id="pasta-nome">Pasta</h1><a class="botao-acao" id="pasta-add">+ Criar mais criativos</a></div>
+  <div class="cabeca"><h1 id="pasta-nome">Excursão</h1><a class="botao-acao" id="pasta-add">+ Adicionar criativo</a></div>
+  <label id="pasta-linha-nome">Nome da excursão<input class="campo" id="pasta-nome-in" autocomplete="off" maxlength="60" placeholder="Ex.: Feriado de Novembro"></label>
   <p class="sinc" id="pasta-info"></p>
   <h2 class="rotulo-secao">Movimento dos vídeos</h2>
   <p class="ajuda">Toque para ver como fica. Vale para os vídeos desta pasta.</p>
@@ -911,7 +912,7 @@ function novaExcursao() {
   campos.logo = '1'; // aparece se o agente tiver logo
   const agora = Date.now();
   const ex = { id: novoId(), idRemoto: '', criada: agora, atualizada: agora, versao: 0, pendente: false, nova: true,
-    atual: 0, layouts: [0], anim: ANIMS[0].id, foto: 'layout', personagem: 'arte', ajuste: {}, campos, mini: '' };
+    atual: 0, layouts: [], anim: ANIMS[0].id, foto: 'layout', personagem: 'arte', ajuste: {}, campos, mini: '' };
   gravar([ex, ...excursoes()]);
   return ex;
 }
@@ -924,7 +925,7 @@ function abrirExcursao(ex) {
       campos: { ...a.campos, ...Object.fromEntries(dele) } };
   }
   aberta = ex;
-  if (!ex.campanha && ex.tipo !== 'campanha') ex.layouts = pastaLayouts(ex); // pasta antiga: a arte que ela já tinha
+  if (!ex.campanha && ex.tipo !== 'campanha') ex.layouts = ex.layouts ? pastaLayouts(ex) : [ex.atual ?? 0]; // excursão antiga: a arte que ela já tinha
   estado.anim = ANIMS.some(a => a.id === ex.anim) ? ex.anim : ANIMS[0].id;
   Object.assign(estado, { atual: Math.min(LAYOUTS.length - 1, ex.atual ?? 0), foto: ex.foto, personagem: qualPersonagem(ex.personagem), ajuste: structuredClone(ex.ajuste ?? {}), foco: null });
   preencher(ex.campos);
@@ -941,10 +942,8 @@ function abrirExcursao(ex) {
   $('titulo-artes').textContent = criador ? 'Artes da campanha' : 'Escolha a arte';
   $('ajuda-artes').hidden = !criador;
   $('titulo-contato').textContent = criador ? 'Nome, título e local' : 'Contato e logo';
-  const marcar = criador || !ex.campanha; // só a arte de campanha não escolhe: os layouts vêm prontos
   document.querySelectorAll('#artes .inclui').forEach((l, j) => {
-    l.hidden = !marcar;
-    l.lastChild.textContent = criador ? 'Na campanha' : 'Nesta pasta';
+    l.hidden = !criador;
     l.querySelector('input').checked = !!ex.layouts?.includes(j);
   });
   document.querySelectorAll('#artes .opcao-wrap').forEach((w, j) => w.hidden = !!lays && !lays.includes(j));
@@ -1035,7 +1034,7 @@ function miniDe(src) {
 
 function montarInicio() {
   const lista = excursoes().sort((a, b) => b.atualizada - a.atualizada);
-  $('inicio-qtd').textContent = lista.length ? `${lista.length} ${lista.length > 1 ? 'artes' : 'arte'}` : 'Nenhuma arte ainda';
+  $('inicio-qtd').textContent = lista.length ? `${lista.length} ${lista.length > 1 ? 'excursões' : 'excursão'}` : 'Nenhuma excursão ainda';
   $('inicio-conta').textContent = `Conta de ${sessao.usuario.nome} (${sessao.usuario.email})`;
   $('inicio-ultima').hidden = !lista.length;
   if (!lista.length) return;
@@ -1066,8 +1065,8 @@ function montarExcursoes() {
   grupos.encerradas.reverse(); // mais recentes primeiro
   abas($('abas'), grupos, aba, k => { aba = k; montarExcursoes(); });
   if (!grupos[aba].length) {
-    const vazio = el('div', 'vazio', lista.length ? 'Nenhuma arte aqui.' : 'Você ainda não tem artes.');
-    vazio.append(el('br'), Object.assign(el('a', '', 'Criar arte'), { href: '#/nova' }));
+    const vazio = el('div', 'vazio', lista.length ? 'Nenhuma excursão aqui.' : 'Você ainda não tem excursões.');
+    vazio.append(el('br'), Object.assign(el('a', '', 'Nova excursão'), { href: '#/nova' }));
     return $('lista').replaceChildren(vazio);
   }
   $('lista').replaceChildren(...grupos[aba].map(ex => {
@@ -1103,7 +1102,8 @@ const ANIMS = [
   { id: 'desliza', nome: 'Deslizar', desc: 'As peças entram deslizando pelas laterais.' },
 ];
 const pastaLayouts = ex => ex.campanha ? layoutsDe(campanhaPorId(ex.campanha) || {})
-  : ex.layouts?.length ? ex.layouts.filter(i => LAYOUTS[i]) : [ex.atual ?? 0];
+  : (ex.layouts || []).filter(i => LAYOUTS[i]);
+const minhaPasta = () => aberta && !aberta.campanha && aberta.tipo !== 'campanha';
 const temVideo = (ex, i) => LAYOUTS[i].foto.pecas?.length
   && (!ex.campanha || (campanhaPorId(ex.campanha)?.motions || []).some(m => MOTIONS.find(x => x.id === m)?.layout === LAYOUTS[i].nome));
 const esperarDesenho = fn => new Promise(ok => { const t = () => fn() ? ok() : setTimeout(t, 120); t(); });
@@ -1115,9 +1115,12 @@ function montarPasta(ex) {
   $('pasta-info').textContent = detalhesDe(ex).join(' · ');
   $('pasta-add').href = `#/arte/${ex.id}?passo=${P_ARTE}`;
   $('pasta-add').hidden = !!ex.campanha; // na campanha as artes são as que o criador liberou
+  $('pasta-linha-nome').hidden = !!ex.campanha;
+  $('pasta-nome-in').value = ex.campos.dx_nome || '';
   const lays = pastaLayouts(ex);
   $('pasta-anims').replaceChildren(...(lays.some(i => temVideo(ex, i)) ? ANIMS.map(a => opcaoAnim(a, lays)) : []));
-  $('pasta-itens').replaceChildren(...lays.map(i => cartaoCriativo(ex, i)));
+  $('pasta-itens').replaceChildren(...(lays.length ? lays.map(i => cartaoCriativo(ex, i))
+    : [el('div', 'vazio', 'Nenhum criativo ainda. Toque em "+ Adicionar criativo".')]));
   const arqs = (ex.campanha && campanhaPorId(ex.campanha)?.arquivos) || [];
   $('pasta-arquivos').replaceChildren(...(arqs.length
     ? [el('h2', 'rotulo-secao', 'Arquivos da campanha'), ...arqs.map(x => {
@@ -1127,6 +1130,14 @@ function montarPasta(ex) {
         return box;
       })] : []));
 }
+
+// o nome da excursão é o mesmo campo escondido do editor (dx_nome)
+$('pasta-nome-in').oninput = () => {
+  if (!aberta) return;
+  form.elements.dx_nome.value = $('pasta-nome-in').value;
+  $('pasta-nome').textContent = nomeDe(estadoAtual(aberta));
+  salvarAberta();
+};
 
 function opcaoAnim(a, lays) { // cada estilo se mostra rodando na primeira arte da pasta
   const i = lays.find(j => LAYOUTS[j].foto.pecas?.length) ?? lays[0], [W, H] = tamanho(i);
@@ -1180,9 +1191,22 @@ function cartaoCriativo(ex, i) {
       livre(vid);
     }
   };
+  const tirar = Object.assign(el('button', 'leve', 'Tirar'), { type: 'button' });
+  tirar.onclick = () => {
+    if (!confirm(`Tirar "${LAYOUTS[i].nome}" desta excursão?`)) return;
+    const lista = excursoes(), n = lista.findIndex(e => e.id === ex.id);
+    if (n < 0) return;
+    ex.layouts = lista[n].layouts = (lista[n].layouts || []).filter(x => x !== i);
+    if (aberta?.id === ex.id) aberta.layouts = ex.layouts;
+    Object.assign(lista[n], { atualizada: Date.now(), versao: (lista[n].versao || 0) + 1, pendente: true });
+    if (!gravar(lista)) return;
+    agendarSinc(300);
+    montarPasta(ex);
+  };
   info.append(el('h2', '', LAYOUTS[i].nome), el('p', '', DESCRICAO[LAYOUTS[i].nome] ?? ''));
   acoes.append(img, ...(temVideo(ex, i) ? [vid] : []),
-    Object.assign(el('a', 'leve', 'Editar'), { href: `#/arte/${ex.id}?layout=${i + 1}` }));
+    Object.assign(el('a', 'leve', 'Editar'), { href: `#/arte/${ex.id}?layout=${i + 1}` }),
+    ...(ex.campanha ? [] : [tirar]));
   info.append(acoes);
   box.append(mini, info);
   return box;
@@ -1497,7 +1521,7 @@ $('datas-agente').onchange = e => mudarCampanha(r => r.datas = e.target.checked 
 
 // ---------- telas ----------
 const TELAS = { entrar: 'Entrar', 'criar-senha': 'Crie sua senha', 'criar-master': 'Criar conta master', inicio: 'Início',
-  editor: 'Criar arte', excursoes: 'Minhas artes', campanhas: 'Campanhas', pasta: 'Pasta' };
+  editor: 'Criativo', excursoes: 'Minhas excursões', campanhas: 'Campanhas', pasta: 'Excursão' };
 function rota() {
   const [pagina, cru] = location.hash.replace(/^#\/?/, '').split('/');
   const [id, busca] = (cru || '').split('?'); // #/arte/<id>?layout=3&passo=1 vem da pasta
@@ -1507,7 +1531,7 @@ function rota() {
     tela = pagina === 'criar-master' ? 'criar-master' : pagina === 'criar-senha' && senhaPendente ? 'criar-senha' : 'entrar';
     if (tela === 'entrar') verificarMaster();
   } else if (pagina === 'nova') {
-    return location.replace(`#/arte/${novaExcursao().id}`);
+    return location.replace(`#/pasta/${novaExcursao().id}`);
   } else if (pagina === 'pasta') {
     const ex = excursoes().find(e => e.id === id);
     if (!ex) return location.replace('#/excursoes');
@@ -2147,7 +2171,10 @@ function irPara(n, campo) {
   if (n === P_ARTE) miniaturas();
 }
 $('voltar').onclick = () => irPara(ativos[ativos.indexOf(estado.passo) - 1]);
-$('continuar').onclick = () => irPara(ativos[ativos.indexOf(estado.passo) + 1]);
+$('continuar').onclick = () => {
+  if (estado.passo === P_ARTE) juntarNaPasta(estado.atual); // seguiu sem trocar: fica a arte que está na tela
+  irPara(ativos[ativos.indexOf(estado.passo) + 1]);
+};
 
 // passo: artes
 const opcoes = LAYOUTS.map((L, i) => {
@@ -2155,24 +2182,24 @@ const opcoes = LAYOUTS.map((L, i) => {
   const bt = wrap.appendChild(Object.assign(el('button', 'opcao'), { type: 'button' }));
   const mini = bt.appendChild(Object.assign(el('canvas'), { width: 432, height: Math.round(432 * tamanho(i)[1] / tamanho(i)[0]) }));
   bt.append(el('strong', '', L.nome), el('small', '', DESCRICAO[L.nome] ?? ''));
-  bt.onclick = () => selecionarArte(i);
+  bt.onclick = () => { juntarNaPasta(i); selecionarArte(i); };
   const lb = wrap.appendChild(el('label', 'inclui')), cb = Object.assign(el('input'), { type: 'checkbox' });
   lb.hidden = true;
   lb.append(cb, 'Na campanha');
   cb.onchange = () => {
-    const muda = r => r.layouts = cb.checked ? [...new Set([...r.layouts, i])].sort() : r.layouts.filter(x => x !== i);
-    if (aberta?.tipo === 'campanha') mudarCampanha(muda);
-    else if (aberta) {
-      if (!cb.checked && aberta.layouts.length < 2) { cb.checked = true; return aviso('A pasta precisa de pelo menos uma arte.'); }
-      muda(aberta);
-      salvarAberta();
-    }
+    mudarCampanha(r => r.layouts = cb.checked ? [...new Set([...r.layouts, i])].sort() : r.layouts.filter(x => x !== i));
     if (cb.checked) selecionarArte(i); else mostrarPacotes();
   };
   return mini;
 });
 function miniaturas() { opcoes.forEach((mini, i) => desenhar(mini.getContext('2d'), i, 0.4)); }
 
+// tocar numa arte no passo 1 já a põe na excursão (não existe "marcar": o criativo é criado um por um)
+function juntarNaPasta(i) {
+  if (!minhaPasta() || aberta.layouts.includes(i)) return;
+  aberta.layouts = [...aberta.layouts, i].sort((a, b) => a - b);
+  salvarAberta();
+}
 function selecionarArte(i) {
   estado.atual = i;
   const ks = chaves(i), L = LAYOUTS[i], [W, H] = tamanho(i);
@@ -2354,9 +2381,10 @@ $('finalizar').onclick = () => {
     if (!gravar(lista)) return;
     agendarSinc(300);
   }
+  const volta = aberta?.campanha ? '#/excursoes' : `#/pasta/${aberta?.id}`;
   aberta = null;
-  aviso('Arte salva em Minhas artes');
-  location.hash = '#/excursoes';
+  aviso('Criativo salvo');
+  location.hash = volta;
 };
 const podeEnviar = !!navigator.canShare?.({ files: [new File([''], 'a.png', { type: 'image/png' })] });
 $('enviar').onclick = async () => {

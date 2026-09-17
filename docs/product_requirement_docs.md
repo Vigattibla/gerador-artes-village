@@ -50,10 +50,12 @@ Vendedores / agentes de viagem. Não são designers. Usam pelo link do site, inc
 12. Novas artes (layouts) vêm do `.ai` pelo `extrair.py`, rodado com o Claude (o site não lê Illustrator).
 13. Removido em 17/09/2026 (vai para o sistema do resort): agenda, planilha de passageiros, painel, contas,
     ficha/vendas/formulário de campanha e o passo "Dados da excursão".
-13a. Pasta (17/09/2026): cada excursão é uma pasta com vários criativos. No passo "Escolha a arte" o agente
-    marca quais artes ficam na pasta; a tela `#/pasta/<id>` mostra cada criativo com "Baixar imagem",
-    "Baixar vídeo" e "Editar", os arquivos da campanha e os três movimentos de vídeo (cascata, zoom,
-    deslizar) com preview. O movimento escolhido vale para os vídeos daquela pasta.
+13a. Excursão primeiro, criativos um por um (17/09/2026): "Nova excursão" cria a excursão vazia e abre
+    `#/pasta/<id>`, onde se dá o nome. "+ Adicionar criativo" leva ao editor; a arte tocada entra na
+    excursão e "Finalizar" volta para ela. A tela mostra cada criativo com "Baixar imagem",
+    "Baixar vídeo", "Editar" e "Tirar", os arquivos da campanha e os três movimentos de vídeo
+    (cascata, zoom, deslizar) com preview. O movimento escolhido vale para os vídeos daquela excursão.
+    Arte de campanha: os criativos são os que o criador liberou, sem adicionar nem tirar.
 14. Próximo (ideia do usuário, 17/09/2026): kit por campanha com outros formatos — impressos (PDF A5/A4) e
     vídeo/GIF animado para Reels/Status.
 

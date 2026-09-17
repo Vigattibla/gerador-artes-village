@@ -127,3 +127,8 @@ usa o mesmo `gravarVideo` do motion da campanha, com a arte que estiver aberta.
 (o movimento dos vídeos). A tela lista cada criativo com imagem/vídeo/editar, os arquivos da campanha
 e os três movimentos com preview rodando (cascata, zoom, deslizar). `paraServidor`/`deServidor` levam
 `layouts` e `anim`; o hash aceita `#/arte/<id>?layout=&passo=`.
+
+17/09 (8): fluxo invertido (pedido do usuário): cria-se a excursão (nome) e depois os criativos, um por um.
+`#/nova` cria com `layouts: []` e abre a pasta; tocar na arte no passo 1 já a põe na excursão (as caixinhas
+"marcar" voltaram a ser só da campanha); "Finalizar" volta para a pasta; card tem "Tirar". Menu e telas
+falam "excursão" em vez de "arte".
