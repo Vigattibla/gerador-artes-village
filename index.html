@@ -2207,11 +2207,27 @@ function roteiro(L, estilo = ANIMS[0].id) {
     const ordem = vistos[n ?? 'x'] = (vistos[n ?? 'x'] ?? -1) + 1;
     donos.set(t, { n, ini: n != null ? pecas[n].ini + .25 + ordem * .07 : .4 + 1.6 * y / H });
   }
+  // só o que importa se mexe: título, preço, desconto e a etiqueta de vagas. O resto já nasce na tela
+  const principal = t => t.tipo === 'titulo' || t.tipo === 'preco' || ['desconto', 'restam', 'parcelasX'].includes(t.formato);
+  const donas = new Set([...donos].filter(([t]) => principal(t)).map(([, d]) => d.n).filter(n => n != null));
+  if (![...donos.keys()].some(t => t.tipo === 'titulo')) { // título desenhado no .ai: entra a peça dele
+    const topo = pecas.map((p, n) => [p, n]).filter(([p]) => (p.rect[1] + p.rect[3]) / 2 < .4 * H)
+      .sort((a, b) => area(b[0].rect) - area(a[0].rect))[0];
+    if (topo) { donas.add(topo[1]); topo[0].ini = Math.min(topo[0].ini, .3); }
+  }
+  pecas.forEach((p, n) => { if (!donas.has(n)) { p.modo = 'nada'; p.ini = 0; } });
+  let ordem = 0;
+  for (const [t, d] of donos) {
+    d.anima = principal(t); // o resto do texto entra junto com o card, sem entrada própria
+    if (!d.anima) { d.ini = 0; continue; }
+    d.ini = (d.n != null ? pecas[d.n].ini : .3) + .25 + (ordem++) * .07;
+  }
   const r = { pecas, donos };
   roteiros.set(cache, r);
   return r;
 }
 function mover(c, L, p, s) { // transforma o canvas para a peça no instante s; devolve a opacidade
+  if (p.modo === 'nada') return 1; // peça de apoio: fica parada
   const q = entre(s, p.ini, .6);
   if (!q) return 0;
   const [x0, y0, x1, y1] = p.rect, W = L.w || 1080, H = L.h || 1350;
@@ -2244,7 +2260,9 @@ function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem 
   o.setTransform(escala, 0, 0, escala, 0, 0);
   o.globalCompositeOperation = 'source-over';
   o.clearRect(0, 0, W, H);
-  const a = anim == null ? aj(i) : { ...aj(i), zoom: aj(i).zoom * (1.15 - .15 * suave(Math.min(1, s / 8))) };
+  // a foto se mexe o vídeo inteiro: afasta devagar, ou aproxima no estilo Zoom
+  const passo = suave(Math.min(1, s / 8)), perto = animDe(i) === 'zoom';
+  const a = anim == null ? aj(i) : { ...aj(i), zoom: aj(i).zoom * (perto ? 1 + .15 * passo : 1.15 - .15 * passo) };
   o.drawImage(im, ...fotoRet(L, item, im, a).r);
   o.globalCompositeOperation = 'destination-in'; // a foto só aparece onde o .ai tinha foto
   o.drawImage(img(L.foto.mascara), 0, 0, W, H);
@@ -2290,11 +2308,11 @@ function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem 
   for (const t of L.textos) {
     if (t.formato === 'desconto' && v.selo === '0') continue; // sem selo, sem "% OFF"
     if (!R) { DESENHA[t.tipo](c, t, v, marca, fim); continue; }
-    const d = R.donos.get(t), q = entre(s, d.ini, .45);
+    const d = R.donos.get(t), q = d.anima ? entre(s, d.ini, .45) : 1;
     c.save();
     if (q && (d.n == null || mover(c, L, R.pecas[d.n], s))) {
       c.globalAlpha = q;
-      c.translate(0, (1 - suave(q)) * 14);
+      if (d.anima) c.translate(0, (1 - suave(q)) * 14);
       if (t.tipo === 'preco' && s > 3.6 && s < 4.3) { // o preço dá uma pulsada
         const k = 1 + .08 * Math.sin(Math.PI * (s - 3.6) / .7), cx = t.x + t.larg / 2, cy = t.y - t.tam * .35;
         c.translate(cx, cy); c.scale(k, k); c.translate(-cx, -cy);
@@ -2304,7 +2322,7 @@ function desenhar(c, i, escala, marca, anim) { // anim: segundos do vídeo; sem 
     c.restore();
   }
   if (lg) {
-    const q = R ? entre(s, 2.4, .6) : 1, [x, y, h] = L.logo, cx = x + h, cy = y + h / 2, k = .4 + .6 * volta(q);
+    const q = 1, [x, y, h] = L.logo, cx = x + h, cy = y + h / 2, k = .4 + .6 * volta(q); // a logo não entra animada
     if (q) {
       c.save();
       c.globalAlpha = Math.min(1, q * 3);

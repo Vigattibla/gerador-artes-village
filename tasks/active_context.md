@@ -148,3 +148,8 @@ todas as artes: `extrair.py` tira as três formas do .ai e guarda `LAYOUTS[].sel
 o selo espelhado na borda direita (`SELO_EXTRA`). Campo `selo` (1/0) com interruptor "Mostrar o selo
 de % OFF", editável também na arte de campanha.
 Falta do pedido: escolher o layout e depois a dimensão (a arte se adaptar a outros formatos).
+
+17/09 (11): o vídeo anima só o principal (pedido do usuário): título, selo de desconto, card do preço e
+o próprio preço. As peças de apoio (rodapé, etiquetas, lista, contato) e a logo nascem prontas na tela;
+o texto dentro do card entra junto com ele, sem entrada própria. A foto continua se movendo o vídeo
+inteiro: afasta nos estilos Cascata/Deslizar e aproxima no Zoom.
