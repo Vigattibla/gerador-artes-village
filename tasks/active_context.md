@@ -115,3 +115,7 @@ Pendente do usuário: letra miúda das artes (aviso legal em 12,5 px num 1080 = 
 
 17/09 (4): quem cria a campanha também baixa o MP4 (botão "Baixar vídeo" ao lado de "Incluir"; mesmo
 `gravarVideo` do agente). Subido para o GitHub Pages.
+
+17/09 (5): letra miúda do rodapé maior. `subir_miudo` no extrair.py sobe o bloco até 18 px mantendo a
+base no lugar e para antes de encostar na linha das pílulas: 18 no Story/Feed/Vagas/Carrossel,
+17 em "2 pacotes" e 15,5 em "1 pacote" (caixa estreita).

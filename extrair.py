@@ -208,6 +208,39 @@ def largura_quebra(e):
     return round((lo + hi) / 2, 1) if hi > lo else round(lo + 1, 1)
 
 
+# a letra miúda do rodapé sai do .ai com 12,5 px num 1080: no celular vira ~4,5 px, ilegível.
+# sobe até MIUDO mantendo a base do bloco no lugar; se esbarrar no que está acima (as pílulas
+# do rodapé), usa o maior tamanho que ainda cabe
+MIUDO = 18.0
+
+
+def linhas_em(el, tam):
+    F, n, atual = fonte(el['_fonte']), 1, ''
+    for p in el['_txt'].split(' '):
+        t = f'{atual} {p}'.strip()
+        if atual and F.adv(t) * tam > el['quebra']:
+            n, atual = n + 1, p
+        else:
+            atual = t
+    return n
+
+
+def subir_miudo(el, teto):
+    if not el.get('quebra') or el['tam'] >= MIUDO or not el['key'].startswith('valores-para-o-casal'):
+        return
+    base, k = el['y'] + (linhas_em(el, el['tam']) - 1) * el['lh'], el['lh'] / el['tam']
+    tam = el['tam']
+    while tam + .5 <= MIUDO:
+        novo = tam + .5
+        y = base - (linhas_em(el, novo) - 1) * k * novo
+        if y - .78 * novo < teto:
+            break
+        tam = novo
+    el['y'] = round(base - (linhas_em(el, tam) - 1) * k * tam, 2)
+    el['lh'] = round(k * tam, 2)
+    el['tam'] = tam
+
+
 def estilo_traco(tracos, glifos):
     ts = sorted(tracos, key=lambda d: d['seqno'])
     n = max(1, round(len(ts) / glifos))
@@ -401,6 +434,7 @@ def ler_arte(p, titulo_fixo=False):
         if len(e['linhas']) > 1:
             el['lh'] = round(e['linhas'][1]['y'] - e['linhas'][0]['y'], 2)
             el['quebra'] = largura_quebra(e)
+            el['_fonte'], el['_txt'] = e['fonte'], e['txt']  # só para recalcular a quebra da letra miúda
         else:
             el['maxW'] = round((e['x1'] - e['x']) * 1.3, 1)
             if key == 'local':  # usa a largura toda da caixa em volta (a de cima, se houver outra atrás)
@@ -666,7 +700,11 @@ def main():
         foto['padrao'] = fotos.setdefault(xref, 'layout' if not fotos else f'layout-{n}')
         textos = sorted(a['textos'], key=lambda t: t['tipo'] != 'preco')  # preço embaixo do "7x de"
         r = doc[pno].rect
-        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto, logo=vaga_logo(n, textos),
+        vaga = vaga_logo(n, textos)
+        for t in textos:  # a letra miúda cresce sem invadir a linha das pílulas
+            subir_miudo(t, vaga[1] + vaga[2] + 8 if vaga else 0)
+            t.pop('_fonte', None), t.pop('_txt', None)
+        layouts.append(dict(nome=nome, w=round(r.width), h=round(r.height), foto=foto, logo=vaga,
                             textos=textos + ([a['titulo']] if a['titulo'] else [])))
         print(f'  {len(textos)} textos, personagem: {"sim" if foto["personagem"] else "não"}, foto: {foto["padrao"]}')
     itens = banco(doc, [(nome, xref) for xref, nome in fotos.items()])
